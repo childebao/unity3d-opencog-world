@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{01A2E614-80C5-5015-2808-6EE749F34C5D}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_0_0;UNITY_4_0;UNITY_STANDALONE_WIN;ENABLE_PROFILER;UNITY_EDITOR</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="UnityEngine">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Scripts\Animation\Actors\Avatar.cs" />
+     <Compile Include="Assets\Scripts\Animation\Actors\Player.cs" />
+     <Compile Include="Assets\Scripts\Animation\Animator.cs" />
+     <Compile Include="Assets\Scripts\Animation\FootstepHandler.cs" />
+     <Compile Include="Assets\Scripts\Camera\SmoothFollow.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Action\ActionManager.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Action\ActionParamType.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Action\EmbodimentXMLTags.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Action\MetaAction.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Action\PhysiologicalEffect.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Action\Rotation.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\FeedbackMessage.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\Message.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\MessageHandler.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\NetworkElement.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\PortManager.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\RawMessage.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\ServerListener.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\StringMessage.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Network\TickMessage.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCARepository.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCActionScheduler.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCConnector.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCEmotionalExpression.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCFeelingPanel.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCObjectMapInfo.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCObjectRepository.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCPerceptionCollector.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCPhysiologicalModel.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\OCPropertyManager.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Obsolete\NetworkElementConnectionHandler.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Obsolete\NetworkElementServerSocket.cs" />
+     <Compile Include="Assets\Scripts\Embodiment\Obsolete\OldNetworkElement.cs" />
+     <Compile Include="Assets\Scripts\Environment\Ball.cs" />
+     <Compile Include="Assets\Scripts\Environment\BatterySpin.cs" />
+     <Compile Include="Assets\Scripts\Environment\Claw.cs" />
+     <Compile Include="Assets\Scripts\Environment\ClawController.cs" />
+     <Compile Include="Assets\Scripts\Environment\Consumable.cs" />
+     <Compile Include="Assets\Scripts\Environment\FoodStuff.cs" />
+     <Compile Include="Assets\Scripts\Environment\IntegrityChangeArea.cs" />
+     <Compile Include="Assets\Scripts\Environment\Lift.cs" />
+     <Compile Include="Assets\Scripts\Environment\LiftButton.cs" />
+     <Compile Include="Assets\Scripts\Environment\LightningBolt.cs" />
+     <Compile Include="Assets\Scripts\Environment\OCBehaviour.cs" />
+     <Compile Include="Assets\Scripts\Environment\Picker.cs" />
+     <Compile Include="Assets\Scripts\Environment\PushableObject.cs" />
+     <Compile Include="Assets\Scripts\Environment\PutOnAbleObject.cs" />
+     <Compile Include="Assets\Scripts\Environment\SocialInteractioner.cs" />
+     <Compile Include="Assets\Scripts\Environment\SpawnAtCheckpoint.cs" />
+     <Compile Include="Assets\Scripts\Environment\SpawnSwitch.cs" />
+     <Compile Include="Assets\Scripts\Environment\Spinner.cs" />
+     <Compile Include="Assets\Scripts\Environment\StoveButton.cs" />
+     <Compile Include="Assets\Scripts\FX\ColoredNoise.cs" />
+     <Compile Include="Assets\Scripts\FX\HeightDepthOfField.cs" />
+     <Compile Include="Assets\Scripts\FX\MobileBloom.cs" />
+     <Compile Include="Assets\Scripts\FX\PostEffects.cs" />
+     <Compile Include="Assets\Scripts\FX\QualityManager.cs" />
+     <Compile Include="Assets\Scripts\FX\ReflectionFx.cs" />
+     <Compile Include="Assets\Scripts\FX\RenderFogPlane.cs" />
+     <Compile Include="Assets\Scripts\FX\ShaderDatabase.cs" />
+     <Compile Include="Assets\Scripts\Input\FPSInputController.cs" />
+     <Compile Include="Assets\Scripts\Managers\AnimationManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\MaterialImpactManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\SpawnManager.cs" />
+     <Compile Include="Assets\Scripts\Managers\TextAdventureManager.cs" />
+     <Compile Include="Assets\Scripts\Misc\AllowAllVersionDeserializationBinder.cs" />
+     <Compile Include="Assets\Scripts\Misc\BatchProcessors\BatchPoolProcessor.cs" />
+     <Compile Include="Assets\Scripts\Misc\BatchProcessors\BatchProcessor.cs" />
+     <Compile Include="Assets\Scripts\Misc\BatchProcessors\BatchSingleThreadProcessor.cs" />
+     <Compile Include="Assets\Scripts\Misc\BatchProcessors\CountdownWaitHandle.cs" />
+     <Compile Include="Assets\Scripts\Misc\Console\ActionCommand.cs" />
+     <Compile Include="Assets\Scripts\Misc\Console\Console.cs" />
+     <Compile Include="Assets\Scripts\Misc\Console\ListActionsCommand.cs" />
+     <Compile Include="Assets\Scripts\Misc\Console\LoadCommand.cs" />
+     <Compile Include="Assets\Scripts\Misc\Console\SaveMapCommand.cs" />
+     <Compile Include="Assets\Scripts\Misc\Console\TalkCommand.cs" />
+     <Compile Include="Assets\Scripts\Misc\Console\UnloadCommand.cs" />
+     <Compile Include="Assets\Scripts\Misc\DetectLeaks.cs" />
+     <Compile Include="Assets\Scripts\Misc\DialogInstance.cs" />
+     <Compile Include="Assets\Scripts\Misc\DrawMeshNormals.cs" />
+     <Compile Include="Assets\Scripts\Misc\EventManager.cs" />
+     <Compile Include="Assets\Scripts\Misc\HUD\HUD.cs" />
+     <Compile Include="Assets\Scripts\Misc\IGameObject.cs" />
+     <Compile Include="Assets\Scripts\Misc\Logger.cs" />
+     <Compile Include="Assets\Scripts\Misc\Math\IntVect.cs" />
+     <Compile Include="Assets\Scripts\Misc\Math\Random.cs" />
+     <Compile Include="Assets\Scripts\Misc\Math\TList.cs" />
+     <Compile Include="Assets\Scripts\Misc\Math\TQueue.cs" />
+     <Compile Include="Assets\Scripts\Misc\Math\Vector3i.cs" />
+     <Compile Include="Assets\Scripts\Misc\NumberUtil.cs" />
+     <Compile Include="Assets\Scripts\Misc\Persist.cs" />
+     <Compile Include="Assets\Scripts\Misc\RotatingText.cs" />
+     <Compile Include="Assets\Scripts\Misc\StateChangesRegister.cs" />
+     <Compile Include="Assets\Scripts\Misc\SystemParameters.cs" />
+     <Compile Include="Assets\Scripts\Misc\VectorUtil.cs" />
+     <Compile Include="Assets\Scripts\Misc\VerticalSizeCalculator.cs" />
+     <Compile Include="Assets\Scripts\Misc\VisualPathDebugger.cs" />
+     <Compile Include="Assets\Scripts\Modules\PlaySound.cs" />
+     <Compile Include="Assets\Scripts\Modules\ReceiverItem.cs" />
+     <Compile Include="Assets\Scripts\Modules\SignalSender.cs" />
+     <Compile Include="Assets\Scripts\Movement\CharacterGridMotor.cs" />
+     <Compile Include="Assets\Scripts\Movement\CharacterMotor.cs" />
+     <Compile Include="Assets\Scripts\Movement\FreeMovementMotor.cs" />
+     <Compile Include="Assets\Scripts\Movement\Joystick.cs" />
+     <Compile Include="Assets\Scripts\Movement\MovementMotor.cs" />
+     <Compile Include="Assets\Scripts\Movement\PlayerMoveController.cs" />
+     <Compile Include="Assets\Scripts\Noise\3dNoiseTest\NoiseTest.cs" />
+     <Compile Include="Assets\Scripts\Noise\PerlinNoise.cs" />
+     <Compile Include="Assets\Scripts\Noise\SimplexNoise.cs" />
+     <Compile Include="Assets\Scripts\Noise\SimplexNoiseGenerator.cs" />
+     <Compile Include="Assets\Scripts\Terrain\Block.cs" />
+     <Compile Include="Assets\Scripts\Terrain\Chunk.cs" />
+     <Compile Include="Assets\Scripts\Terrain\ChunkBatch.cs" />
+     <Compile Include="Assets\Scripts\Terrain\ChunkGameObject.cs" />
+     <Compile Include="Assets\Scripts\Terrain\ChunkMover.cs" />
+     <Compile Include="Assets\Scripts\Terrain\ChunkProcessor.cs" />
+     <Compile Include="Assets\Scripts\Terrain\ChunkSaver.cs" />
+     <Compile Include="Assets\Scripts\Terrain\LightProcessor.cs" />
+     <Compile Include="Assets\Scripts\Terrain\MeshDataGenerator.cs" />
+     <Compile Include="Assets\Scripts\Terrain\MeshGenerator.cs" />
+     <Compile Include="Assets\Scripts\Terrain\TerrainGenerationMethods\DualLayerTerrainWithMediumValleys.cs" />
+     <Compile Include="Assets\Scripts\Terrain\TerrainGenerationMethods\DualLayerTerrainWithMediumValleysForRivers.cs" />
+     <Compile Include="Assets\Scripts\Terrain\TerrainGenerationMethods\FileTerrainMethod.cs" />
+     <Compile Include="Assets\Scripts\Terrain\TerrainGenerationMethods\ITerrainGenerationMethod.cs" />
+     <Compile Include="Assets\Scripts\Terrain\TerrainGenerationMethods\StandardTerrainMediumCaves.cs" />
+     <Compile Include="Assets\Scripts\Terrain\TerrainGenerationMethods\StandardTerrainMethodNoCaves.cs" />
+     <Compile Include="Assets\Scripts\Terrain\TerrainGenerator.cs" />
+     <Compile Include="Assets\Scripts\Terrain\World.cs" />
+     <Compile Include="Assets\Scripts\Terrain\WorldData.cs" />
+     <Compile Include="Assets\Scripts\Terrain\WorldMover.cs" />
+     <Compile Include="Assets\Scripts\Unused\Detector.cs" />
+     <Compile Include="Assets\Scripts\Unused\Interactor.cs" />
+     <Compile Include="Assets\Scripts\Unused\OptionalParameterExtensions.cs" />
+     <Compile Include="Assets\Scripts\Weapons\Fire_Projectile.cs" />
+     <Compile Include="Assets\Scripts\Weapons\Health.cs" />
+     <Compile Include="Assets\Scripts\Weapons\HealthFlash.cs" />
+     <Compile Include="Assets\Scripts\Weapons\Ice_Projectile.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\Decoration.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\IDecoration.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\PalmTreeDecorator.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\PineTreeDecorator.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\PrefabDecorations\GameObjectCreationData.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\PrefabDecorations\GemDecorator.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\PrefabDecorations\TikiStatueDecoration.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\StandardTreeDecorator.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\WeavingRockPillarDecoration.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\WorldDecorator.cs" />
+     <Compile Include="Assets\Scripts\WorldGameObject.cs" />
+     <Compile Include="Assets\Third Party\DragonPack\RootMotionCharacterControlDRAGON.cs" />
+     <Compile Include="Assets\Third Party\DragonPack\RootMotionComputer.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI, Castle Storm Demo\Scripts\Menu\CastleStorm_DemoMenu.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI, Castle Storm Demo\Scripts\Menu\FogManager.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIActionBtn.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIBtnChangePanel.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIBtnLoadScene.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIBtnWWW.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIButton.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIButton3D.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIListButton.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIListItem.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIListItemContainer.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIPanelTab.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIProgressBar.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIRadioBtn.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIRadioBtn3D.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIScrollList.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UISlider.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIStateToggleBtn.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIStateToggleBtn3D.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UITextField.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Controls\UIVirtualScreen.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Management\UIBistateInteractivePanel.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Management\UIInteractivePanel.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Management\UIManager.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Management\UIPanel.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Management\UIPanelManager.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\AutoSpriteControlBase.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\ControlBase.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\EZDragDropHelper.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\IControl.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\IKeyFocusable.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\IPackableControl.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\IUIContainer.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\IUIObject.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\UIPanelBase.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\EZ\GUI\Support\UIScrollKnob.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\SimpleSprite.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\SpriteManager.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\SpriteText.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\AutoSprite.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\AutoSpriteBase.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\EZAnimator.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\EZScreenPlacement.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\FontStore.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\ISpriteAggregator.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\ISpriteAnimatable.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\ISpriteMesh.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\ISpritePackable.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\IUseCamera.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\PackableStub.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\SpriteAnimationPump.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\SpriteBase.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\SpriteFont.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\SpriteMesh.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\SpriteMesh_Managed.cs" />
+     <Compile Include="Assets\Third Party\EZ GUI\Plugins\Sprite Scripts\Support\SpriteRoot.cs" />
+     <Compile Include="Assets\Third Party\Gem Shader\Example\GemSpawner.cs" />
+     <Compile Include="Assets\Third Party\Gem Shader\Example\Sources\RotateAroundAxis.cs" />
+     <Compile Include="Assets\Third Party\MeshExtrusion.cs" />
+     <Compile Include="Assets\Third Party\Perlin.cs" />
+     <Compile Include="Assets\Third Party\iTween\Plugins\iTween.cs" />
+     <Compile Include="Assets\Third Party\iTween\Sample\MoveSample.cs" />
+     <Compile Include="Assets\Third Party\iTween\Sample\RotateSample.cs" />
+     <Compile Include="Assets\Third Party\iTween\Sample\SampleInfo.cs" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\ReflectiveBackgroundPlanar.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\PlanarRealtimeReflection.shader" />
+     <None Include="Assets\Third Party\EZ GUI\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\RealtimeReflectionInWaterFlow.shader" />
+     <None Include="Assets\Shaders\MobileBloom.shader" />
+     <None Include="Assets\Shaders\Fx\HeightFogBeforeTransparent.shader" />
+     <None Include="Assets\Shaders\Fx\AdditiveBlend.shader" />
+     <None Include="Assets\Shaders\Fx\InterlacePatternAdditive.shader" />
+     <None Include="Assets\Third Party\EZ GUI\Plugins\AnBSoft Common\Standard Font\Arial, Fancy.txt" />
+     <None Include="Assets\Scripts\ThirdParty\License.txt" />
+     <None Include="Assets\Shaders\HeightDepthOfField.shader" />
+     <None Include="Assets\Shaders\Fx\ParticleBlend.shader" />
+     <None Include="Assets\Third Party\EZ GUI\Plugins\AnBSoft Common\Standard Shaders\Sprite Simple Texture .shader" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Shaders\Fx\ParticleMultiply.shader" />
+     <None Include="Assets\Shaders\Fx\Additive.shader" />
+     <None Include="Assets\Standard Assets\Skyboxes\skybox info.txt" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\AngryInclude.cginc" />
+     <None Include="Assets\Third Party\EZ GUI\Plugins\AnBSoft Common\Standard Shaders\Sprite Vertex Colored, Fast.shader" />
+     <None Include="Assets\Shaders\ColoredNoise.shader" />
+     <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />
+     <None Include="Assets\Scripts\Terrain\CaveGeneration.txt" />
+     <None Include="Assets\Standard Assets\Skyboxes\ skybox info.txt" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\RealtimeReflectionReplacement.shader" />
+     <None Include="Assets\Shaders\Fx\InterlacePatternBlend.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\SuperSimpleSelfIllumination.shader" />
+     <None Include="Assets\Shaders\Fx\Multiply.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\ReflectiveBackgroundArbitrary.shader" />
+     <None Include="Assets\Shaders\Fx\ParticleAdditiveBlend.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\Fallback.shader" />
+     <None Include="Assets\Shaders\Fx\Rain.shader" />
+     <None Include="Assets\Shaders\Default.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\AlphaCutoutCheapFallback.shader" />
+     <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
+     <None Include="Assets\Shaders\Fx\Cursor.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\EnemySelfIlluminationReflective.shader" />
+     <None Include="Assets\Third Party\EZ GUI, Castle Storm Demo\Shaders\Text Shader - Z tested.shader" />
+     <None Include="Assets\Shaders\Fx\LaserScope.shader" />
+     <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
+     <None Include="Assets\Shaders\Fx\ParticleAdditive.shader" />
+     <None Include="Assets\Shaders\BlurPassesForDof.shader" />
+     <None Include="Assets\Third Party\EZ GUI\Plugins\AnBSoft Common\Standard Shaders\Sprite Cutout.shader" />
+     <None Include="Assets\Shaders\Fx\ScreenRefract.shader" />
+     <None Include="Assets\Shaders\TestShader.shader" />
+     <None Include="Assets\Shaders\Fx\RainSplash.shader" />
+     <None Include="Assets\Third Party\MineClone\Shaders\VertexColor.shader" />
+     <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Light.shader" />
+     <None Include="Assets\Third Party\iTween\ReadMe!\ReadMe!.txt" />
+     <None Include="Assets\Third Party\Gem Shader\diamond shader.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\CharacterSelfIlluminationReflective.shader" />
+     <None Include="Assets\Third Party\EZ GUI, Castle Storm Demo\Font\Old English.txt" />
+     <None Include="Assets\Shaders\Fx\Blend.shader" />
+     <None Include="Assets\Shaders\BackgroundAndCharacters\ReflectiveBackgroundSelfIllumination.shader" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
+ <Reference Include="Substrate">
+ <HintPath>Assets\Substrate.dll</HintPath>
+ </Reference>
+ <Reference Include="Ionic.Zip">
+ <HintPath>Assets\Scripts\ThirdParty\Ionic.Zip.dll</HintPath>
+ </Reference>
+ <Reference Include="protobuf-net">
+ <HintPath>Assets\Third Party\protobuf-net.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
+      <Project>{835BB3CC-263A-053C-73E6-ADF343AE389D}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>

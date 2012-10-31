@@ -1,0 +1,81 @@
+using UnityEngine;
+using System.Collections;
+
+/// <summary>
+/// Spawn at checkpoint.
+/// </summary>
+public class SpawnAtCheckpoint : MonoBehaviour
+{
+	//////////////////////////////////////////////////
+	
+	#region Public Member Data
+	
+	//////////////////////////////////////////////////
+	
+	/// <summary>
+	/// The checkpoint.
+	/// </summary>
+	public Transform checkpoint;
+	
+	//////////////////////////////////////////////////
+	
+	#endregion
+	
+	//////////////////////////////////////////////////
+		
+	#region Private Member Data
+	
+	//////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////
+	
+	#endregion
+	
+	//////////////////////////////////////////////////
+	
+	#region Public Member Functions
+	
+	//////////////////////////////////////////////////
+	
+	/// <summary>
+	/// Raises the signal event.
+	/// </summary>
+	public void OnSignal () 
+	{
+		transform.position = checkpoint.position;
+		transform.rotation = checkpoint.rotation;
+		
+		ResetHealthOnAll ();
+	}
+	
+	/// <summary>
+	/// Resets the health on all.
+	/// </summary>
+	static public void ResetHealthOnAll () 
+	{
+		Health[] healthObjects = (Health[])FindObjectsOfType(typeof(Health));
+		foreach(Health health in healthObjects) 
+		{
+			health.dead = false;
+			health.health = health.maxHealth;
+		}
+	}
+	
+	//////////////////////////////////////////////////
+	
+	#endregion
+	
+	//////////////////////////////////////////////////
+	
+	#region Private Member Functions
+	
+	//////////////////////////////////////////////////
+	
+
+	//////////////////////////////////////////////////
+	
+	#endregion
+	
+	//////////////////////////////////////////////////
+}
+
