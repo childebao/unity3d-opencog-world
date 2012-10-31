@@ -46,7 +46,7 @@ public class World : IWorld
     /// </summary>
     private void ProcessChunks()
     {
-		Debug.Log("In Process Chunks...0");
+		//Debug.Log("In Process Chunks...0");
         while (ContinueProcessingChunks)
         {
             // Complete each batch before moving onto the next
@@ -68,7 +68,7 @@ public class World : IWorld
             
             DateTime start = DateTime.Now;
 			
-			Debug.Log("In Process Chunks...2: " + batch.Chunks.Count);
+			//Debug.Log("In Process Chunks...2: " + batch.Chunks.Count);
             if (batch.BatchType == BatchType.TerrainGeneration)
             {
                 m_TerrainGenerator.GenerateTerrain(batch.Chunks);
@@ -80,7 +80,7 @@ public class World : IWorld
                 m_WorldDecorator.Decorate(batch.Chunks);
             }
 			
-			Debug.Log("In Process Chunks...3");
+			//Debug.Log("In Process Chunks...3");
             m_LightProcessor.LightChunks(batch.Chunks);
             m_MeshDataGenerator.GenerateMeshData(batch.Chunks);
             m_CurrentBatchBeingProcessed = null;
@@ -88,10 +88,16 @@ public class World : IWorld
             if (batch.Chunks.Count > 0)
             {
                 Debug.Log("Total Time: " + (DateTime.Now - start));
+				Debug.Log("Hurray! Level loaded!");
             }
+			else
+			{
+				Debug.Log ("No level loaded :(");
+			}
 
             Thread.Sleep(1);
-			Debug.Log("In Process Chunks...4");
+			//Debug.Log("In Process Chunks...4");
+			
         }
     }
 

@@ -144,7 +144,7 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 				}
 				else
 				{
-					Debug.Log("In FileTerrainMethod: chunk terrain is not populated or is dirty: " + chunk.ToString());
+					//Debug.Log("In FileTerrainMethod: chunk terrain is not populated or is dirty: " + chunk.ToString());
 				}
 			}
 		}
@@ -175,7 +175,7 @@ public class FileTerrainMethod : ITerrainGenerationMethod
     {
 		string blockTypes = "";
 		
-		Debug.Log("In FileTerrainMethod, GenerateTerrain: start");
+		//Debug.Log("In FileTerrainMethod, GenerateTerrain: start");
 		
 		//Console.print("In File Terrain Method Generate Terrain, chunk: " + chunk.ToString() + ", block (width, height): (" + worldData.ChunkBlockWidth + ", " + worldData.ChunkBlockHeight + ")");
 		
@@ -250,12 +250,12 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 		}
 		else
 		{
-			Debug.Log("cmChunk == NULL");
+			//Debug.Log("cmChunk == NULL");
 		}
 		//}
 		//}
 		
-		Debug.Log("In FileTerrainMethod, GenerateTerrain: end");
+		//Debug.Log("In FileTerrainMethod, GenerateTerrain: end");
 		
 //		// search for the correct position in the data where the chunk starts.
 //		using (Stream ms = new MemoryStream( ASCIIEncoding.Default.GetBytes(theData) )) 

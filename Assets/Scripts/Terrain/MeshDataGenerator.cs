@@ -98,10 +98,10 @@ public class MeshDataGenerator : IMeshDataGenerator
             }
         }
 		
-        Debug.Log("Mesh Data generation took " + (DateTime.Now - start) + ", Max Block X: " + max_blockX);
+        Debug.Log("Mesh Data generation took " + (DateTime.Now - start));
     }
 	
-	private int max_blockX = 0;
+	//private int max_blockX = 0;
 
     private int CreateDataMeshForBlock(int blockX, int blockY, int blockZ, Chunk chunk, int x, int y, int z, int index)
     {
@@ -172,7 +172,7 @@ public class MeshDataGenerator : IMeshDataGenerator
 		}
 		
 		
-		max_blockX = Math.Max(blockX, max_blockX);
+//		max_blockX = Math.Max(blockX, max_blockX);
 		
 		if(m_WorldData.DoesBlockExist(blockX + 1, blockY, blockZ))
 		{
