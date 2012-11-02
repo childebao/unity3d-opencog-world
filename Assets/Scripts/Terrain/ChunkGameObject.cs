@@ -36,6 +36,7 @@ public class ChunkGameObject : MonoBehaviour, IGameObject
 
     public void CreateFromChunk(Chunk chunk, Dictionary<string, Transform> decoratorPrefabs)
     {
+		Debug.Log("In CreateFromChunk...");
         CreateChunkGameObjectMesh(chunk);
         CreateGameObjectDecorations(chunk, decoratorPrefabs);
         m_ChunksDrawn++;
@@ -44,9 +45,11 @@ public class ChunkGameObject : MonoBehaviour, IGameObject
 
     private static void CheckIfInitialWorldChunksHaveBeenDrawn(Chunk chunk)
     {
+		Debug.Log ("In CheckIfInitialWorldChunksHaveBeenDrawn...");
         m_ChunksDrawn++;
         if (m_ChunksDrawn >= chunk.WorldData.TotalChunks)
         {
+			Debug.Log("World is ready here...");
             chunk.WorldData.WorldIsReady = true;
         }
     }
