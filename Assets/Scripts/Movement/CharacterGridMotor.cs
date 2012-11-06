@@ -259,7 +259,6 @@ public class CharacterGridMotor : MonoBehaviour
 	
 	public void attachFireToHand() 
 	{
-	
 		// Attach flame to left hand
 		GameObject magic = (GameObject)Instantiate(Resources.Load("Magic/handMagicFlame_fire"));
 		GameObject leftHand = GameObject.FindGameObjectWithTag("girlQ_leftHand");

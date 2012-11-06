@@ -752,10 +752,10 @@ public class WorldGameObject : MonoBehaviour
 	/// </summary>
 	private void CreatePrefabsFromFinishedChunks ()
 	{
-		if (!m_PlayerIsActivated) {
-				
-				ActivateThePlayer ();
-			}
+		if (!m_PlayerIsActivated) 
+		{
+			ActivateThePlayer ();
+		}
 		
 		while (m_ChunkProcessor.MeshCreationQueue.Count > 0) 
 		{
@@ -837,12 +837,12 @@ public class WorldGameObject : MonoBehaviour
 	{
 		// If the world is not ready...no playing yet.
 		if (!m_WorldData.WorldIsReady) {
-			Debug.Log("World is not ready...");
+			//Debug.Log("World is not ready...");
 			return;
 		}
 		else
 		{
-			Debug.Log("World is now ready...");
+			//Debug.Log("World is now ready...");
 		}
 
 		m_PlayerIsActivated = true;
