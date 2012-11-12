@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\Animation\Animator.cs" />
      <Compile Include="Assets\Scripts\Animation\FootstepHandler.cs" />
      <Compile Include="Assets\Scripts\Camera\SmoothFollow.cs" />
+     <Compile Include="Assets\Scripts\Camera\SmoothFollowAndMouseLook.cs" />
      <Compile Include="Assets\Scripts\Embodiment\Action\ActionManager.cs" />
      <Compile Include="Assets\Scripts\Embodiment\Action\ActionParamType.cs" />
      <Compile Include="Assets\Scripts\Embodiment\Action\EmbodimentXMLTags.cs" />

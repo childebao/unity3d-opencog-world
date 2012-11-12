@@ -82,12 +82,21 @@ public class SmoothFollow : MonoBehaviour
 //		}
 		if (Input.GetKeyDown ("w")) {
 			 target = GameObject.Find("Ghost").transform;
+			
+			MouseLook mouseLook = (MouseLook)gameObject.GetComponent("MouseLook");
+			mouseLook.enabled = false;
 		}
 		if (Input.GetKeyDown ("e")) {
 			 target = GameObject.Find("Girl").transform;
+			
+			MouseLook mouseLook = (MouseLook)gameObject.GetComponent("MouseLook");
+			mouseLook.enabled = false;
 		}
 		if (Input.GetKeyDown ("r")) {
 			 target = GameObject.Find("Robot").transform;
+			
+			MouseLook mouseLook = (MouseLook)gameObject.GetComponent("MouseLook");
+			mouseLook.enabled = false;
 		}
 	}
 	
@@ -96,6 +105,8 @@ public class SmoothFollow : MonoBehaviour
 	/// </summary>
 	public void LateUpdate () 
 	{
+		
+		
 		// Early out if we don't have a target
 		if (!target)
 			return;
@@ -106,6 +117,15 @@ public class SmoothFollow : MonoBehaviour
 	
 		float currentRotationAngle = transform.eulerAngles.y;
 		float currentHeight = transform.position.y;
+		
+		float rotationDiff = Mathf.Abs(currentRotationAngle - wantedRotationAngle);
+		float heightDiff = Mathf.Abs(currentHeight - wantedHeight);
+		float epsilon = 5f;//Mathf.Epsilon*1000000f;
+		
+		MouseLook mouseLook = (MouseLook)gameObject.GetComponent("MouseLook");
+		
+		if(mouseLook.enabled)
+			return;
 	
 		// Damp the rotation around the y-axis
 		currentRotationAngle = Mathf.LerpAngle (currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
@@ -126,6 +146,12 @@ public class SmoothFollow : MonoBehaviour
 	
 		// Always look at the target
 		transform.LookAt (target.position + targetRelatedPos);
+		
+		if(rotationDiff < epsilon)
+		{
+			mouseLook.enabled = true;
+			mouseLook.UpdateOriginalRotation();
+		}
 	}
 	
 	//////////////////////////////////////////////////
