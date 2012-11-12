@@ -50,7 +50,7 @@ public class CharacterGridMotor : MonoBehaviour
 	//private static int[,,] chkArr = new int[s,s,s];
 	private static Vector3 sum;
 	
-	private string currChar = "Player";
+	private static string currChar = "Girl";
 	
 	//////////////////////////////////////////////////
 	
@@ -306,7 +306,8 @@ public class CharacterGridMotor : MonoBehaviour
 	
 		//Debug.Log("In CharacterGridMotor.Update()... A");
 		
-		if (currChar == this.gameObject.name) 
+		//@TODO: Figure out why uncommenting the next line causes the characters to "hang"
+		//if (currChar == this.gameObject.name) 
 		{
 	
 			if (indicator != null) {
@@ -780,7 +781,7 @@ public class CharacterGridMotor : MonoBehaviour
 		// 		For all 4
 		// ------------------------------------
 		
-		if (transform.position.y < -2) transform.position = new Vector3(UnityEngine.Random.Range(0,7)+0.5f, 10.0f, UnityEngine.Random.Range(0,7)+0.5f);
+		if (transform.position.y < -2) transform.position = new Vector3(UnityEngine.Random.Range(0,7)+0.5f, 200.0f, UnityEngine.Random.Range(0,7)+0.5f);
 	
 	}
 	
