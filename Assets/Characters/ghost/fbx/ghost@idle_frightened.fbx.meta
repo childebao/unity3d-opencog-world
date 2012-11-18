@@ -1,0 +1,113 @@
+fileFormatVersion: 2
+guid: 803c82f3e4e061d49b9961dd415d5c48
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: eyeGlassesJ
+    100002: hatJ
+    100004: r_EyeJ
+    100006: jawJ
+    100008: l_EyeJ
+    100010: HeadTipJ
+    100012: HeadJ
+    100014: NeckJ
+    100016: Spine03J
+    100018: A_chainJ2
+    100020: A_chainJ1
+    100022: A_chainJ0
+    100024: heartJ
+    100026: connectJ
+    100028: r_ElbowJ
+    100030: r_ShoulderJ
+    100032: r_ClavicleJ
+    100034: l_ElbowJ
+    100036: l_ShoulderJ
+    100038: l_ClavicleJ
+    100040: Spine02J
+    100042: Spine01J
+    100044: WaistJ
+    100046: RootJ
+    100048: //RootNode
+    100050: HeadJFK2NeckJ_switchG
+    100052: l_arm_HOLDER
+    100054: r_arm_HOLDER
+    400000: eyeGlassesJ
+    400002: hatJ
+    400004: r_EyeJ
+    400006: jawJ
+    400008: l_EyeJ
+    400010: HeadTipJ
+    400012: HeadJ
+    400014: NeckJ
+    400016: Spine03J
+    400018: A_chainJ2
+    400020: A_chainJ1
+    400022: A_chainJ0
+    400024: heartJ
+    400026: connectJ
+    400028: r_ElbowJ
+    400030: r_ShoulderJ
+    400032: r_ClavicleJ
+    400034: l_ElbowJ
+    400036: l_ShoulderJ
+    400038: l_ClavicleJ
+    400040: Spine02J
+    400042: Spine01J
+    400044: WaistJ
+    400046: RootJ
+    400048: //RootNode
+    400050: HeadJFK2NeckJ_switchG
+    400052: l_arm_HOLDER
+    400054: r_arm_HOLDER
+    7400000: Take 001
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .100000001
+    meshCompression: 0
+    addColliders: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    handles: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  additionalBone: 1
+  animationType: 1
+  userData: 
