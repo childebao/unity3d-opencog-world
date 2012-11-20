@@ -745,7 +745,7 @@ public class CharacterGridMotor : MonoBehaviour
 		
 		if (this.gameObject.name == "Girl") {
 	
-			GameObject head = GameObject.Find("Girl/girlQG/bodyG/prt_07");
+			GameObject head = GameObject.Find("Girl/girlQG/mainG/head_GEO");
 			head.renderer.material.mainTexture = (Texture)Resources.Load("FaceTEX/girl_face_" + state, typeof(Texture2D));
 		}
 	
@@ -755,7 +755,7 @@ public class CharacterGridMotor : MonoBehaviour
 		
 		if (this.gameObject.name == "Ghost") {
 	
-			GameObject ghostBody = GameObject.Find("Ghost/ghostG/ghost_prt_04");
+			GameObject ghostBody = GameObject.Find("Ghost/ghostG/body_GEO");
 			GameObject iconPlaneG = GameObject.Find("Ghost/ghostG/icon_planeG");
 			GameObject iconPlane1 = GameObject.Find("Ghost/ghostG/icon_planeG/icon_plane1");
 			GameObject rootJ = GameObject.Find("Ghost/RootJ");
