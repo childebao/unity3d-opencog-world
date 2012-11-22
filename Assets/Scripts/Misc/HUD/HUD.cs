@@ -139,7 +139,7 @@ public class HUD : MonoBehaviour
 			// If the gameobject is an avatar then make it the currently selected avatar
             // for the information shown on the HUD
             if (Input.GetKeyDown(KeyCode.Mouse0)) {
-                GameObject avatar = o;
+                var avatar = o.GetComponent("Avatar");
                 if (avatar != null)
                 {
                     // o is Avatar or Player object
@@ -152,17 +152,17 @@ public class HUD : MonoBehaviour
                         // current selected avatar has already been selected at last round.
                         return;
                     }
-                    selectedAvatar = avatar;
+                    selectedAvatar = avatar.gameObject;
                     removeSelectedSpinner();
                     removeSpinner();
                     addSelectedSpinner(o);
 
                 } else {
-                    if (selectedAvatar != null) {
-                        Debug.Log("Selecting none (object was=" + o.name +")");
-                        removeSelectedSpinner();
-                    }
-                    selectedAvatar = null;
+//                    if (selectedAvatar != null) {
+//                        Debug.Log("Selecting none (object was=" + o.name +")");
+//                        removeSelectedSpinner();
+//                    }
+//                    selectedAvatar = null;
                     
                 }
             }

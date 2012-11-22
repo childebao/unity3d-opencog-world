@@ -429,9 +429,14 @@ public class Console : MonoBehaviour
 		if (!this.isActive()) return;
 //		if(Event.curren && Event.current.type == EventType.KeyDown) 
 //			Debug.Log("Event.current =" + Event.current.ToString());
+		if(Input.GetKeyDown(KeyCode.Return))
+		{
+			Debug.Log("Input Field Length = " + inputField.Length.ToString() + ", Name of Focused Control = " + GUI.GetNameOfFocusedControl());
+		}
+		
         if (Input.GetKeyDown(KeyCode.Return) && 
-                inputField.Length > 0 &&
-                GUI.GetNameOfFocusedControl() == "CommandArea")
+                inputField.Length > 0)// &&
+                //GUI.GetNameOfFocusedControl() == "CommandArea")
 		{
 			this.ProcessConsoleLine(inputField);
 			inputField = ""; // blank input field

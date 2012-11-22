@@ -148,7 +148,7 @@ public class Player : Avatar {
             // If the gameobject is an avatar then make it the currently selected avatar
             // for the information shown on the HUD
             if (Input.GetKeyDown(KeyCode.Mouse0)) {
-                Avatar avatar = o.GetComponent<Avatar>();
+                var avatar = o.GetComponent("Avatar");
                 if (avatar != null)
                 {
                     // o is Avatar or Player object
@@ -167,11 +167,11 @@ public class Player : Avatar {
                     addSelectedSpinner(o);
 
                 } else {
-                    if (theHUD.selectedAvatar != null) {
-                        Debug.Log("Selecting none (object was=" + o.name +")");
-                        removeSelectedSpinner();
-                    }
-                    theHUD.selectedAvatar = null;
+//                    if (theHUD.selectedAvatar != null) {
+//                        Debug.Log("Selecting none (object was=" + o.name +")");
+//                        removeSelectedSpinner();
+//                    }
+//                    theHUD.selectedAvatar = null;
                     
                 }
             }

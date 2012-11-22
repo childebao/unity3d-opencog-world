@@ -19,7 +19,7 @@ public class OCEmotionalExpression : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        face = transform.Find("robot/robotG/mainG/prt_18");
+        face = transform.Find("robot/robotG/mainG/head_GEO");
         if (!face)
         {
             Debug.LogError("Face of the robot is not found");
