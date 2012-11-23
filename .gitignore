@@ -20,6 +20,11 @@ Library/*
 *.ncb
 *.log 
 *.DS_Store
+*.csproj
+*.pidb
+*.unityproj
+*.sln
+*.userprefs
 [Tt]humbs.db 
 _ReSharper.*
 *.resharper

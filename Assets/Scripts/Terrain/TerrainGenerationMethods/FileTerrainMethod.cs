@@ -27,6 +27,10 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 	public uint chunkHeight;
 	public uint chunkDepth;
 	
+	public uint worldWidthOffset;
+	public uint worldHeightOffset;
+	public uint worldDepthOffset;
+	
 //	public uint chunksWide() {
 //
 //		using (StringReader reader = new StringReader( theData )) {
