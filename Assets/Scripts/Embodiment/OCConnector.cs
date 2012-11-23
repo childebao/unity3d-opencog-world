@@ -417,6 +417,8 @@ public class OCConnector : NetworkElement
      */
     private void parseActionPlanElement(XmlElement element)
     {
+		Debug.Log("/////////////// In Parse Action Plan Element! //////////////////");
+		
         // Get the action performer id.
         string avatarId = element.GetAttribute(EmbodimentXMLTags.ENTITY_ID_ATTRIBUTE);
         if (avatarId != this.myBrainId)

@@ -97,6 +97,8 @@ public class OCActionScheduler : MonoBehaviour
 
     public void receiveActionPlan(LinkedList<MetaAction> actionPlan)
     {
+		Debug.Log("///////////// In Receive Action Plan! ///////////////");
+		
         cancelCurrentActionPlan();
         lock (this.actionList)
         { this.actionList = actionPlan; }

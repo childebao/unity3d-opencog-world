@@ -82,8 +82,10 @@
      <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />
      <None Include="Assets\Scripts\Terrain\CaveGeneration.txt" />
      <None Include="Assets\Materials\Hard Surface Free\HardSurface Shaders\HardSurface Free Cut Out Opaque Diffuse.shader" />
+     <None Include="Assets\Maps\white-list.txt" />
      <None Include="Assets\Standard Assets\Skyboxes\ skybox info.txt" />
      <None Include="Assets\Shaders\BackgroundAndCharacters\RealtimeReflectionReplacement.shader" />
+     <None Include="Assets\Maps\banned-ips.txt" />
      <None Include="Assets\Shaders\Fx\InterlacePatternBlend.shader" />
      <None Include="Assets\Shaders\BackgroundAndCharacters\SuperSimpleSelfIllumination.shader" />
      <None Include="Assets\Materials\Hard Surface Free\HardSurface Shaders\HardSurfacePro Hidden Front Opaque Bump.shader" />
@@ -93,6 +95,7 @@
      <None Include="Assets\Materials\Hard Surface Free\HardSurface Shaders\HardSurface Free Transparent Diffuse.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
      <None Include="Assets\Shaders\BackgroundAndCharacters\ReflectiveBackgroundArbitrary.shader" />
+     <None Include="Assets\Maps\banned-players.txt" />
      <None Include="Assets\Shaders\Fx\ParticleAdditiveBlend.shader" />
      <None Include="Assets\Materials\Hard Surface Free\HardSurface Shaders\HardSurfacePro Hidden Front Cut Out Diffuse.shader" />
      <None Include="Assets\Materials\Hard Surface Free\HardSurface Shaders\HardSurface Free Opaque Diffuse.shader" />
@@ -118,6 +121,7 @@
      <None Include="Assets\Shaders\Fx\LaserScope.shader" />
      <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
      <None Include="Assets\Shaders\Fx\ParticleAdditive.shader" />
+     <None Include="Assets\Maps\ops.txt" />
      <None Include="Assets\Shaders\BlurPassesForDof.shader" />
      <None Include="Assets\Third Party\EZ GUI\Plugins\AnBSoft Common\Standard Shaders\Sprite Cutout.shader" />
      <None Include="Assets\Shaders\Fx\ScreenRefract.shader" />

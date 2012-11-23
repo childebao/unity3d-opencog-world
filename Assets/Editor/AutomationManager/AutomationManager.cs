@@ -35,4 +35,24 @@ public class AutomationManager
 								  , "Players/Unity3DGameWorldPlayer_Linux"
 								  , BuildTarget.StandaloneLinux, BuildOptions.None );
 	}
+	
+	[MenuItem ("Build/BuildStandaloneWindowsPlayer")]
+	static void BuildStandaloneWindowsPlayer()
+	{
+		string[] scenes = { "Assets/Scenes/GameScenes/MainGameScene.unity" };
+		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows);
+		BuildPipeline.BuildPlayer(scenes
+								  , "Players/Unity3DGameWorldPlayer_Windows"
+								  , BuildTarget.StandaloneWindows, BuildOptions.None );
+	}
+	
+	[MenuItem ("Build/BuildStandaloneWindows64Player")]
+	static void BuildStandaloneWindows64Player()
+	{
+		string[] scenes = { "Assets/Scenes/GameScenes/MainGameScene.unity" };
+		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows64);
+		BuildPipeline.BuildPlayer(scenes
+								  , "Players/Unity3DGameWorldPlayer_Windows64"
+								  , BuildTarget.StandaloneWindows64, BuildOptions.None );
+	}
 }
