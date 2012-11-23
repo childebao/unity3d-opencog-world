@@ -6,8 +6,9 @@ syntax: glob
 *.sln
 *.userprefs
 *.sln
-Temp/
-Players/
+Temp/*
+Players/*
+Library/*
 
 #CSharp related
 [Oo]bj
