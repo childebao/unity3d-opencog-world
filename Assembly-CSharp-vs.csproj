@@ -182,6 +182,7 @@
      <Compile Include="Assets\Scripts\Weapons\Health.cs" />
      <Compile Include="Assets\Scripts\Weapons\HealthFlash.cs" />
      <Compile Include="Assets\Scripts\Weapons\Ice_Projectile.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\CarDecorator.cs" />
      <Compile Include="Assets\Scripts\WorldDecorations\Decoration.cs" />
      <Compile Include="Assets\Scripts\WorldDecorations\IDecoration.cs" />
      <Compile Include="Assets\Scripts\WorldDecorations\PalmTreeDecorator.cs" />

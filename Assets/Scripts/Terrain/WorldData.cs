@@ -9,6 +9,8 @@ public class WorldData
     private int m_ChunksWide = 69;
     private int m_ChunksHigh = 47;
     private int m_ChunksDeep = 1;
+	private int m_ChunksWidthOffset = 0;
+	private int m_ChunksHeightOffset = 0;
     private int m_ChunkBlockWidth = 16;
     private int m_ChunkBlockHeight = 16;
     private int m_ChunkBlockDepth = 128;
@@ -113,6 +115,7 @@ public class WorldData
 		SetBlockUVCoordinates(BlockType.StoneBrickStairs, 53,53,53);
 		SetBlockUVCoordinates(BlockType.Cauldron, 42,43,42);
 		SetBlockUVCoordinates(BlockType.EndPortal, 52,52,52);
+		SetBlockUVCoordinates(BlockType.Wheel, 52, 52, 52);
     }
 
     /// <summary>
@@ -148,6 +151,18 @@ public class WorldData
         get { return m_ChunksDeep; }
         set { m_ChunksDeep = value; }
     }
+	
+	public int ChunksWidthOffset
+	{
+		get {return m_ChunksWidthOffset;}
+		set { m_ChunksWidthOffset = value; }
+	}
+	
+	public int ChunksHeightOffset
+	{
+		get {return m_ChunksHeightOffset;}
+		set { m_ChunksHeightOffset = value; }
+	}
 
     public int ChunkBlockWidth
     {
@@ -227,13 +242,25 @@ public class WorldData
         get { return m_ChunksDeep * m_ChunkBlockDepth; }
     }
 
-    public const int BottomChunkBorderRow = 0;
+    public int BottomChunkBorderRow
+	{
+		get { return m_ChunksHeightOffset; }
+	}
+	
+    public int LeftChunkBorderColumn
+	{
+		get { return m_ChunksWidthOffset; }
+	}
 
-    public const int LeftChunkBorderColumn = 0;
-
-    public const int BottomVisibleChunkRow = 1;
-    public const int LeftVisibleChunkColumn = 1;
-
+    public int BottomVisibleChunkRow
+	{
+		get { return BottomChunkBorderRow + 1; }
+	}
+	
+    public int LeftVisibleChunkColumn 
+	{
+		get { return LeftChunkBorderColumn + 1; }
+	}
 
     public int TopChunkBorderRow
     {
@@ -259,7 +286,7 @@ public class WorldData
     {
         get {
 			Bounds b = new Bounds();
-			Vector3 min = new Vector3(LeftVisibleChunkColumn * m_ChunkBlockWidth,0,WorldData.BottomVisibleChunkRow * m_ChunkBlockHeight);
+			Vector3 min = new Vector3(LeftVisibleChunkColumn * m_ChunkBlockWidth,0,BottomVisibleChunkRow * m_ChunkBlockHeight);
 			Vector3 max = new Vector3(RightChunkBorderColumn * m_ChunkBlockWidth,
 			                          m_ChunksDeep*m_ChunkBlockDepth,
 			                          TopChunkBorderRow * m_ChunkBlockHeight);
@@ -574,11 +601,11 @@ public class WorldData
 			sw.WriteLine("Chunk height:" + ChunkBlockHeight);
 			sw.WriteLine("Chunk depth:" + ChunkBlockDepth);
 			// Then save all the chunks.
-	        for (uint x = LeftChunkBorderColumn; x <= RightChunkBorderColumn; x++)
+	        for (int x = LeftChunkBorderColumn; x <= RightChunkBorderColumn; x++)
 	        {
-	            for (uint y = BottomChunkBorderRow; y <= TopChunkBorderRow; y++)
+	            for (int y = BottomChunkBorderRow; y <= TopChunkBorderRow; y++)
 	            {
-	                for (uint z = 0; z < m_ChunksDeep; z++)
+	                for (int z = 0; z < m_ChunksDeep; z++)
 	                {
 	                    Chunks[x, y, z].saveData(sw);
 	                }

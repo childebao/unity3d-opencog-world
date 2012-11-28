@@ -24,9 +24,9 @@ public class WorldMover
         List<Chunk> chunksNeedingToBeDestroyed = new List<Chunk>();
         List<Chunk> chunksNeedingMeshGeneration = new List<Chunk>();
 
-        for (int x = WorldData.LeftChunkBorderColumn; x <= m_WorldData.RightChunkBorderColumn; x++)
+        for (int x = m_WorldData.LeftChunkBorderColumn; x <= m_WorldData.RightChunkBorderColumn; x++)
         {
-            for (int y = WorldData.BottomChunkBorderRow; y <= m_WorldData.TopChunkBorderRow; y++)
+            for (int y = m_WorldData.BottomChunkBorderRow; y <= m_WorldData.TopChunkBorderRow; y++)
             {
                 //Chunk.Move(m_World, x + xIncrement, y + yIncrement, x, y, chunksNeedingTerrainGen,
                 //           chunksNeedingToBeDestroyed,
@@ -36,9 +36,9 @@ public class WorldMover
 
         // Now actually replace the original chunks with the shifted chunks
 		//Debug.LogError("In ShiftAllWorldChunks");
-        for (int x = WorldData.LeftChunkBorderColumn; x <= m_WorldData.RightChunkBorderColumn; x++)
+        for (int x = m_WorldData.LeftChunkBorderColumn; x <= m_WorldData.RightChunkBorderColumn; x++)
         {
-            for (int y = WorldData.BottomChunkBorderRow; y <= m_WorldData.TopChunkBorderRow; y++)
+            for (int y = m_WorldData.BottomChunkBorderRow; y <= m_WorldData.TopChunkBorderRow; y++)
             {
                 if (m_WorldData.Chunks[x, y, 0].ReplacementChunk != null)
                 {
