@@ -14,6 +14,8 @@ public class AutomationManager
 	{
 		BuildStandaloneLinuxPlayer();
 		BuildStandaloneLinux64Player();
+		BuildStandaloneWindowsPlayer();
+		BuildStandaloneWindows64Player();
 	}
 	
 	[MenuItem ("Build/BuildStandaloneLinux64Player")]
@@ -42,7 +44,7 @@ public class AutomationManager
 		string[] scenes = { "Assets/Scenes/GameScenes/MainGameScene.unity" };
 		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows);
 		BuildPipeline.BuildPlayer(scenes
-								  , "Players/Unity3DGameWorldPlayer_Windows"
+								  , "Players/Unity3DGameWorldPlayer_Windows.exe"
 								  , BuildTarget.StandaloneWindows, BuildOptions.None );
 	}
 	
@@ -52,7 +54,7 @@ public class AutomationManager
 		string[] scenes = { "Assets/Scenes/GameScenes/MainGameScene.unity" };
 		EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneWindows64);
 		BuildPipeline.BuildPlayer(scenes
-								  , "Players/Unity3DGameWorldPlayer_Windows64"
+								  , "Players/Unity3DGameWorldPlayer_Windows64.exe"
 								  , BuildTarget.StandaloneWindows64, BuildOptions.None );
 	}
 }
