@@ -11,7 +11,7 @@ using System.Reflection;
 public class OCPerceptionCollector : MonoBehaviour
 {
 	// if has auto generated boundary chunks, like the stairs around the map
-	public static bool hasBoundaryChuncks = true; 
+	public static bool hasBoundaryChuncks = false; 
 	#region Private Variables
 	// Percept 5 times per second.
 	private float UpdatePerceptionInterval = 0.5f;

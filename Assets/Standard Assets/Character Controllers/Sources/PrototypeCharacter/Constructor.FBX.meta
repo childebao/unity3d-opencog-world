@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 449b48f7eb5d87a4baaa5fb73f875a59
 ModelImporter:
-  serializedVersion: 15
+  serializedVersion: 14
   fileIDToRecycleName:
     100000: Bip001 R Finger1
     100002: Bip001 R Finger21
@@ -138,8 +138,9 @@ ModelImporter:
     materialName: 3
     materialSearch: 1
   animations:
-    legacyGenerateAnimations: 4
+    generateAnimations: 4
     bakeSimulation: 0
+    splitAnimations: 1
     animationCompression: 0
     animationRotationError: .5
     animationPositionError: .5
@@ -164,10 +165,8 @@ ModelImporter:
       keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
-      keepAdditionalBonesAnimation: 1
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      skeletonMaskElements: []
     - name: run
       takeName: 
       firstFrame: 65
@@ -186,10 +185,8 @@ ModelImporter:
       keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
-      keepAdditionalBonesAnimation: 1
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      skeletonMaskElements: []
     - name: walk
       takeName: 
       firstFrame: 84
@@ -208,10 +205,8 @@ ModelImporter:
       keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
-      keepAdditionalBonesAnimation: 1
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      skeletonMaskElements: []
     - name: jump_pose
       takeName: 
       firstFrame: 118
@@ -230,10 +225,8 @@ ModelImporter:
       keepOriginalPositionXZ: 0
       heightFromFeet: 0
       mirror: 0
-      keepAdditionalBonesAnimation: 1
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      skeletonMaskElements: []
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -243,7 +236,8 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
+    optimizeMesh: 0
+    keepQuads: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -253,8 +247,6 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
-  importAnimation: 1
-  copyAvatar: 0
   humanDescription:
     human: []
     skeleton: []
@@ -266,8 +258,6 @@ ModelImporter:
     armStretch: .0500000007
     legStretch: .0500000007
     feetSpacing: 0
-    rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  additionalBone: 1
-  animationType: 1
+  createAvatar: 0
   userData: 

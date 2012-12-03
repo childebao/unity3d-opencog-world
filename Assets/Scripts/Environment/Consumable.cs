@@ -35,6 +35,8 @@ public class Consumable : OCBehaviour {
 	}
 	
 	public void RemoveAction(Avatar avatar){
+		if(avatar.inventory == gameObject)
+			return;
 		ActionManager AM = avatar.GetComponent<ActionManager>() as ActionManager;
 		AM.removeAction(gameObject.GetInstanceID(), "Consume");
         if (interactors.ContainsKey(avatar.GetInstanceID()))
@@ -52,12 +54,12 @@ public class Consumable : OCBehaviour {
 		    gameObject.SendMessage("RemoveAction", interactors[id]);
         }
 		if (a.inventory == gameObject) {
-			a.setTractorBeamState(false);
+			//a.setTractorBeamState(false);
 			// if inventory then play animation and wait till complete
 			animation.CrossFade("consume",0.1f);
 			StartCoroutine(removeAfter(animation["consume"].length));
 		} else {
-			a.setTractorBeamState(false);
+			//a.setTractorBeamState(false);
 			// otherwise, just make the object disappear
 			Destroy(gameObject);
 		}

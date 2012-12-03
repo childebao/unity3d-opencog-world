@@ -318,9 +318,9 @@ public class Avatar: Interactor {
 		
         Animation anim = gameObject.GetComponentInChildren<Animation>();
         DisableNormalAnimation();
-        Debug.LogWarning("playing move start");
-        anim.Play("move_start");
-        StartCoroutine(RestoreNormalAnimation(anim["move_start"].length));
+//        Debug.LogWarning("playing move start");
+//        anim.Play("move_start");
+//        StartCoroutine(RestoreNormalAnimation(anim["move_start"].length));
 
         // Wrap parameters for collision detection while moving.
         Hashtable onupdateparams = new Hashtable();
@@ -357,7 +357,7 @@ public class Avatar: Interactor {
 	/// an iTween MoveTo action.
 	/// </summary>
 	private void _MoveToCollisionDetect(object paramVals)
-	{
+	{/*
         bool isDestInFront = false;
         Hashtable paramMap = (Hashtable)paramVals;
         // Calculate the angle from current position to destination.
@@ -403,6 +403,7 @@ public class Avatar: Interactor {
                 if (h != null) h(ar);
 			}
 		}
+		*/
 	}
     
     public void DisableNormalAnimation() {
@@ -421,9 +422,9 @@ public class Avatar: Interactor {
     public void _ReachDestCoordinate(ActionCompleteHandler h) {
         moving = false;
         DisableNormalAnimation();
-        Animation anim = gameObject.GetComponentInChildren<Animation>();
-        anim.Play("move_end");
-        StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
+ //       Animation anim = gameObject.GetComponentInChildren<Animation>();
+ //       anim.Play("move_end");
+ //       StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
 		
 		ArrayList pp = new ArrayList();
         pp.Add(gameObject.transform.position);
@@ -491,10 +492,10 @@ public class Avatar: Interactor {
 		{
 	        //Debug.Log("Moving to " + Target + " at " + Dest);
 	        DisableNormalAnimation();
-	        Animation anim = gameObject.GetComponentInChildren<Animation>();
-	        Debug.LogWarning("playing move start");
-	        anim.Play("move_start");
-	        StartCoroutine(RestoreNormalAnimation(anim["move_start"].length));
+	//        Animation anim = gameObject.GetComponentInChildren<Animation>();
+	//        Debug.LogWarning("playing move start");
+	//        anim.Play("move_start");
+	//        StartCoroutine(RestoreNormalAnimation(anim["move_start"].length));
 	        
 	        iTween.MoveTo(gameObject, iTween.Hash("position", Dest,
 	                    "looktarget", Dest, 
@@ -513,9 +514,9 @@ public class Avatar: Interactor {
 		if (agentType != "player")
 		{
 	        DisableNormalAnimation();
-	        Animation anim = gameObject.GetComponentInChildren<Animation>();
-	        anim.Play("move_end");
-	        StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
+	//        Animation anim = gameObject.GetComponentInChildren<Animation>();
+	//        anim.Play("move_end");
+	//        StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
 		}
 		else
 		{
@@ -666,12 +667,10 @@ public class Avatar: Interactor {
     public void JumpToward(Vector3 Destination, ActionCompleteHandler h)
     {
         currentAction = jumpTowardAction;
-        Vector3 dest = Destination;
-        dest.y = gameObject.transform.position.y + Destination.y;
 
 		// Check if the destination is already occupied by a block.
-		IntVect destPoint = new IntVect((int)dest.x, (int)dest.z, (int)dest.y);
-        
+		//IntVect destPoint = new IntVect((int)dest.x, (int)dest.z, (int)dest.y);
+        /*
         if (worldGameObject)
 		{
 			if (worldGameObject.WorldData.GetBlock(destPoint.X, destPoint.Y, destPoint.Z).Type != BlockType.Air)
@@ -681,10 +680,10 @@ public class Avatar: Interactor {
 				return;
 			}
 		}
-		
-        LookAt(dest, 2.5f);
+		*/
+        LookAt(Destination, 2.5f);
         
-        iTween.MoveTo(gameObject, iTween.Hash("position", dest,
+        iTween.MoveTo(gameObject, iTween.Hash("position", Destination,
                     "speed", Speed,
                     "easetype", "linear",
                     "oncomplete", "_onJumpTowardComplete", "oncompleteparams", h)
@@ -787,15 +786,15 @@ public class Avatar: Interactor {
             // Hold the inventory above the avatar instead of its right hand.
             // If there is a spinner marking the avatar is selected, we should recalculate
             // the height of spinner.
-            Transform spinner = transform.FindChild("SelectionSpinner");
-            float objectHeight = VerticalSizeCalculator.getHeight(gameObject.transform, spinner);
+            //Transform spinner = transform.FindChild("SelectionSpinner");
+            float objectHeight = VerticalSizeCalculator.getHeight(gameObject.transform, null);
             go.transform.parent = gameObject.transform;
             Vector3 goSize = Vector3.up * go.collider.bounds.size.y;
             go.transform.position = gameObject.transform.position + goSize + (Vector3.up * 1.01f * objectHeight);
             go.transform.localRotation = Quaternion.identity;
             
             // Add the particle effect tractor beam
-            setTractorBeamState(true);
+            //setTractorBeamState(true);
         }
         // reset any actions...
         go.SendMessage("AddAction",this);
@@ -821,7 +820,7 @@ public class Avatar: Interactor {
             go.SendMessage("RemoveAction",this); 
             go.SendMessage("AddAction",this); 
         }
-        setTractorBeamState(false);
+        //setTractorBeamState(false);
 		
         PutOnAbleObject putOn = go.GetComponent<PutOnAbleObject>();
 		if (putOn != null)

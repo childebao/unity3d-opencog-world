@@ -392,7 +392,7 @@ public class WorldGameObject : MonoBehaviour
 		InitializeTextures ();
 		playerTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 0.5f);
 		ghostTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 - 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 0.5f);
-		girlTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 + 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 0.5f);
+		girlTransform.transform.position = new Vector3 (14.50012f, 128, 4.5f);
 		robotTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 2 + 0.5f);
 		CreateWorldChunkPrefabs ();
 		

@@ -48,8 +48,7 @@ public class Picker : OCBehaviour {
 	 */
 	public void AddAction(Avatar avatar)
     {
-        AddInteractor(avatar);
-        Avatar holder = null;
+		Avatar holder = null;
         foreach (Avatar a in interactors.Values)
         {
             if (a.inventory == gameObject)
@@ -57,6 +56,9 @@ public class Picker : OCBehaviour {
                 holder = a;
             }
         }
+		
+        AddInteractor(avatar);
+
 		if (holder != null) {
             ActionManager AM = holder.GetComponent<ActionManager>() as ActionManager;
 			AM.addAction(dropAction);
