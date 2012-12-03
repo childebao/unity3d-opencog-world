@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 
 [RequireComponent(typeof(Camera))]
 [AddComponentMenu("Image Effects/Mobile Bloom")]
