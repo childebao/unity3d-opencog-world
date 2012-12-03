@@ -27,9 +27,11 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 	public uint chunkHeight;
 	public uint chunkDepth;
 	
-	public uint worldWidthOffset;
-	public uint worldHeightOffset;
-	public uint worldDepthOffset;
+	public int worldWidthOffset;
+	public int worldHeightOffset;
+	
+	public int chunkWidthOffset;
+	public int chunkHeightOffset;
 	
 //	public uint chunksWide() {
 //
@@ -99,74 +101,100 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 		mcWorld = AnvilWorld.Open(mapName);
 		
 		RegionChunkManager rcm = mcWorld.GetChunkManager();
+		AnvilRegionManager arm = mcWorld.GetRegionManager();
 		
-		uint minWorldWidth = uint.MaxValue;
-		uint minWorldHeight = uint.MaxValue;
-		uint minWorldDepth = uint.MaxValue;
+		int minWorldWidth = int.MaxValue;
+		int minWorldHeight = int.MaxValue;
+		int minWorldDepth = int.MaxValue;
 		
-		uint minChunkHeight = uint.MaxValue;
-		uint minChunkWidth = uint.MaxValue;
-		uint minChunkDepth = uint.MaxValue;
+		int minChunkHeight = int.MaxValue;
+		int minChunkWidth = int.MaxValue;
+		int minChunkDepth = int.MaxValue;
 		
-		uint maxWorldWidth = uint.MinValue;
-		uint maxWorldHeight = uint.MinValue;
-		uint maxWorldDepth = uint.MinValue;
+		int maxWorldWidth = int.MinValue;
+		int maxWorldHeight = int.MinValue;
+		int maxWorldDepth = int.MinValue;
 		
-		uint maxChunkHeight = uint.MinValue;
-		uint maxChunkWidth = uint.MinValue;
-		uint maxChunkDepth = uint.MinValue;
+		int maxChunkHeight = int.MinValue;
+		int maxChunkWidth = int.MinValue;
+		int maxChunkDepth = int.MinValue;
+		
+		int minWorldWidthOffset = int.MaxValue;
+		int minWorldHeightOffset = int.MaxValue;
+		
+		int minChunkWidthOffset = int.MaxValue;
+		int minChunkHeightOffset = int.MaxValue;
 		
 		int count = 0;
 		
-		//lock (rcm)
+		foreach( AnvilRegion cmRegion in arm )
 		{
-			foreach( ChunkRef chunk in rcm )
+			minWorldWidthOffset = Math.Min (minWorldWidthOffset, cmRegion.X);
+			minWorldHeightOffset = Math.Min (minWorldHeightOffset, cmRegion.Z);
+		}
+		
+		foreach( ChunkRef chunk in rcm )
+		{
+			if( chunk.IsTerrainPopulated && !chunk.IsDirty )
 			{
-				if( chunk.IsTerrainPopulated && !chunk.IsDirty )
-				{
-					
-					minWorldWidth = (uint)Math.Min(minWorldWidth, (uint)chunk.LocalX);
-					maxWorldWidth = (uint)Math.Max(maxWorldWidth, (uint)chunk.LocalX);
-					
-					minWorldHeight = (uint)Math.Min(minWorldHeight, (uint)chunk.LocalZ);
-					maxWorldHeight = (uint)Math.Max(maxWorldHeight, (uint)chunk.LocalZ);
-					
-					minWorldDepth = 0;//No chunk.y because chunks are defined as a column
-					maxWorldDepth = 0;
-					
-					minChunkWidth = (uint)Math.Min(minChunkWidth, (uint)chunk.Blocks.XDim);
-					maxChunkWidth = (uint)Math.Max(maxChunkWidth, (uint)chunk.Blocks.XDim);
-					
-					minChunkDepth = (uint)Math.Min(minChunkDepth, (uint)chunk.Blocks.YDim);
-					maxChunkDepth = (uint)Math.Max(maxChunkDepth, (uint)chunk.Blocks.YDim);
-					
-					minChunkHeight = (uint)Math.Min(minChunkHeight, (uint)chunk.Blocks.ZDim);
-					maxChunkHeight = (uint)Math.Max(maxChunkHeight, (uint)chunk.Blocks.ZDim);
-					
-					++count;
-					
-				}
-				else
-				{
-					//Debug.Log("In FileTerrainMethod: chunk terrain is not populated or is dirty: " + chunk.ToString());
-				}
+				
+				minWorldWidth = Math.Min(minWorldWidth, chunk.X);
+				maxWorldWidth = Math.Max(maxWorldWidth, chunk.X);
+				
+				minWorldHeight = Math.Min(minWorldHeight, chunk.Z);
+				maxWorldHeight = Math.Max(maxWorldHeight, chunk.Z);
+				
+				minWorldDepth = 0;//No chunk.y because chunks are defined as a column
+				maxWorldDepth = 0;
+				
+				minChunkWidth = Math.Min(minChunkWidth, chunk.Blocks.XDim);
+				maxChunkWidth = Math.Max(maxChunkWidth, chunk.Blocks.XDim);
+				
+				minChunkDepth = Math.Min(minChunkDepth, chunk.Blocks.YDim);
+				maxChunkDepth = Math.Max(maxChunkDepth, chunk.Blocks.YDim);
+				
+				minChunkHeight = Math.Min(minChunkHeight, chunk.Blocks.ZDim);
+				maxChunkHeight = Math.Max(maxChunkHeight, chunk.Blocks.ZDim);
+				
+				++count;
+				
+			}
+			else
+			{
+				//Debug.Log("In FileTerrainMethod: chunk terrain is not populated or is dirty: " + chunk.ToString());
 			}
 		}
 		
-		worldWidth = maxWorldWidth - minWorldWidth + 1;
-		worldDepth = maxWorldDepth - minWorldDepth + 1;
-		worldHeight = maxWorldHeight - minWorldHeight + 1;
 		
-		chunkWidth = maxChunkWidth == minChunkWidth ? minChunkWidth : maxChunkWidth;
-		chunkHeight = maxChunkHeight == minChunkHeight ? minChunkHeight : maxChunkHeight;
-		chunkDepth = maxChunkDepth == minChunkDepth ? minChunkDepth : maxChunkDepth;
+//		foreach( AnvilRegion cmRegion in arm )
+//		{
+//			minWorldWidthOffset = (int)Math.Min (minWorldWidthOffset, (int)cmRegion.X);
+//			minWorldHeightOffset = (int)Math.Min (minWorldHeightOffset, (int)cmRegion.Z);
+//		}
+		
+		worldWidthOffset = -minWorldWidthOffset;
+		worldHeightOffset = -minWorldHeightOffset;
+		
+		chunkWidthOffset = -minWorldWidth;
+		chunkHeightOffset = -minWorldHeight;
+			
+//		worldWidthOffset = (uint)Math.Abs(minWorldWidthOffset);
+//		worldHeightOffset = (uint)Math.Abs(minWorldHeightOffset);
+		
+		worldWidth = (uint)(maxWorldWidth - minWorldWidth + 1);
+		worldDepth = (uint)(maxWorldDepth - minWorldDepth + 1);
+		worldHeight = (uint)(maxWorldHeight - minWorldHeight + 1);
+		
+		chunkWidth = (uint)(maxChunkWidth == minChunkWidth ? minChunkWidth : maxChunkWidth);
+		chunkHeight = (uint)(maxChunkHeight == minChunkHeight ? minChunkHeight : maxChunkHeight);
+		chunkDepth = (uint)(maxChunkDepth == minChunkDepth ? minChunkDepth : maxChunkDepth);
 		
 //		mapName = System.IO.Path.Combine(mapDir, mapName) + mapExt;
 //		using (StreamReader sr = new StreamReader(mapName)) {
 //			theData = sr.ReadToEnd();
 //		}
 		
-		Debug.Log("In FileTerrainMethod: end: " + maxWorldWidth + "-" + minWorldWidth + ", " + maxWorldHeight + "-" + minWorldHeight + ", " + count);
+		Debug.Log("In FileTerrainMethod: end: " + "(" + worldWidthOffset + ", " + worldHeightOffset + ") " + maxWorldWidth + "-" + minWorldWidth + ", " + maxWorldHeight + "-" + minWorldHeight + ", " + count);
 		
 	}
 	
@@ -186,6 +214,8 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 		//Open our world
 		//AnvilWorld mcWorld = AnvilWorld.Open(_mapName);
 		
+		lock(mcWorld)
+		{
 		// The chunk manager is more efficient than the block manager fr
 		// this purpose, since we'll inspect every block
 		AnvilRegionManager arm = mcWorld.GetRegionManager();
@@ -202,21 +232,16 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 		
 		foreach( AnvilRegion cmRegion in arm )
 		{
-			
-		ChunkRef cmChunk = cmRegion.GetChunkRef(chunk.ArrayX, chunk.ArrayY);
+		
+		//lock (cmRegion)
+		//{
+		
+		int clx = -1 * cmRegion.ChunkGlobalX(-1 * chunk.ArrayX + chunkWidthOffset);
+		int clz = -1 * cmRegion.ChunkGlobalZ(-1 * chunk.ArrayY + chunkHeightOffset);
+		ChunkRef cmChunk = cmRegion.GetChunkRef(clx, clz);
+						   
 		
 		if(cmChunk != null)
-//		foreach( ChunkRef cmChunk in rcm )
-//		foreach (AnvilRegion armRegion in arm)
-//		{
-//		
-//		Debug.Log("In FileTerrainMethod, GenerateTerrain: armRegion dimensions: " 
-//				+ armRegion.XDim + ", " + armRegion.ZDim);
-//			
-//		for( int rx = 0; rx < armRegion.XDim; ++rx)
-//		{
-//		
-//		for( int rz = 0; rz < armRegion.ZDim; ++rz)
 		{
 				
 			//ChunkRef cmChunk = armRegion.GetChunkRef(armRegion.ChunkLocalX(rx), armRegion.ChunkLocalZ(rz));
@@ -254,7 +279,13 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 		}
 		else
 		{
-			//Debug.Log("cmChunk == NULL");
+			Debug.Log("cmChunk == NULL");
+			
+			foreach (ChunkRef cmChunk2 in rcm)
+			{
+				Debug.Log("cmChunk2 = " + cmChunk2.LocalX + ", " + cmChunk2.LocalZ + " ... " + cmChunk2.ToString());
+			}
+				
 		}
 		//}
 		//}
@@ -358,8 +389,13 @@ public class FileTerrainMethod : ITerrainGenerationMethod
 //			//Console.print("After Async Line Read");
 //
 //	    }
-
-    }
+				
+		
+//		}
+			
+    	}
+		
+		}
 		
 	}
 

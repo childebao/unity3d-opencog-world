@@ -51,3 +51,23 @@
 2012-11-22 18:29:03 [INFO] Saving chunks for level 'flatland test 2'/Overworld
 2012-11-22 18:29:03 [INFO] Saving chunks for level 'flatland test 2'/Nether
 2012-11-22 18:29:03 [INFO] Saving chunks for level 'flatland test 2'/The End
+2012-11-27 18:04:05 [INFO] Starting minecraft server version 1.4.5
+2012-11-27 18:04:05 [INFO] Loading properties
+2012-11-27 18:04:05 [INFO] Default game type: SURVIVAL
+2012-11-27 18:04:05 [INFO] Generating keypair
+2012-11-27 18:04:06 [INFO] Starting Minecraft server on *:51531
+2012-11-27 18:04:06 [INFO] Preparing level "simple plain test 2"
+2012-11-27 18:04:06 [INFO] Preparing start region for level 0
+2012-11-27 18:04:08 [INFO] Preparing spawn area: 4%
+2012-11-27 18:04:09 [INFO] Preparing spawn area: 20%
+2012-11-27 18:04:10 [INFO] Preparing spawn area: 43%
+2012-11-27 18:04:11 [INFO] Preparing spawn area: 65%
+2012-11-27 18:04:12 [INFO] Preparing spawn area: 83%
+2012-11-27 18:04:13 [INFO] Done (7.309s)! For help, type "help" or "?"
+2012-11-27 18:04:14 [INFO] Stopping the server
+2012-11-27 18:04:14 [INFO] Stopping server
+2012-11-27 18:04:14 [INFO] Saving players
+2012-11-27 18:04:14 [INFO] Saving worlds
+2012-11-27 18:04:14 [INFO] Saving chunks for level 'simple plain test 2'/Overworld
+2012-11-27 18:04:21 [INFO] Saving chunks for level 'simple plain test 2'/Nether
+2012-11-27 18:04:21 [INFO] Saving chunks for level 'simple plain test 2'/The End

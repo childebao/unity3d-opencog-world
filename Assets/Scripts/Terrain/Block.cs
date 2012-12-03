@@ -138,6 +138,7 @@ public enum BlockType : byte
 ,	EndStone
 ,	DragonEgg
 ,   Light
+, 	Wheel
 }
 
 public enum BlockFace : byte
@@ -232,7 +233,7 @@ public struct Block
 		{"StoneBrickStairs", BlockType.StoneBrickStairs},
 		{"Cauldron", BlockType.Cauldron},
 		{"EndPortal", BlockType.EndPortal},
-		
+		{"Wheel", BlockType.Wheel}
 		
 		
 		
