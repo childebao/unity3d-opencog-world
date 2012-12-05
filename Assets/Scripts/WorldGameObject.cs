@@ -347,8 +347,8 @@ public class WorldGameObject : MonoBehaviour
 			m_WorldData.ChunksDeep = (int)ftm.worldDepth;//
 			//m_WorldData.ChunksWidthOffset = (int)ftm.worldWidthOffset;
 			//m_WorldData.ChunksHeightOffset = (int)ftm.worldHeightOffset;
-			Debug.Log("In WorldGameObject, Start: dimensions: " + WorldData.ChunksWide + ", " + WorldData.ChunksDeep + ", " + WorldData.ChunksHigh);
-			Debug.Log ("   Chunk Dimensions: " + WorldData.ChunkBlockWidth + ", " + WorldData.ChunkBlockDepth + ", " + WorldData.ChunkBlockHeight);
+			Debug.Log("In WorldGameObject, Start: dimensions: " + WorldData.ChunksWide + ", " + WorldData.ChunksHigh + ", " + WorldData.ChunksDeep);
+			Debug.Log ("   Chunk Dimensions: " + WorldData.ChunkBlockWidth + ", " + WorldData.ChunkBlockHeight + ", " + WorldData.ChunkBlockDepth);
 			t_generator = new TerrainGenerator(WorldData, m_ChunkProcessor, new BatchProcessor<Chunk>(),ftm);
 		} else {
 			InitializeDecoratorPrefabs ();

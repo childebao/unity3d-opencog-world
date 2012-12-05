@@ -331,7 +331,8 @@ public class WorldData
     public void InitializeGridChunks()
     {
 //		Debug.Log("In InitializeGridChunks...");
-        Chunks = new Chunk[m_ChunksWide,m_ChunksHigh,m_ChunksDeep];
+		//@TODO: Dude, standardize the Depth vs. Height!!!!
+        Chunks = new Chunk[m_ChunksWide, m_ChunksHigh, m_ChunksDeep];
         m_ChunkProcessor.ChunksAreBeingAdded = true;
         List<Chunk> newChunksToProcess = new List<Chunk>();
         // Add all world chunks to the batch for processing
@@ -402,26 +403,26 @@ public class WorldData
         int blockX = x % ChunkBlockWidth;
         int blockY = y % ChunkBlockHeight;
         int blockZ = z % ChunkBlockDepth;
-
+		
         Chunks[chunkX, chunkY, 0].SetBlockType(blockX, blockY, blockZ, blockType);
         Chunks[chunkX, chunkY, chunkZ].NeedsRegeneration = true;
 
         // If we change a block on the border of a chunk, the adjacent chunk
         // needs to be regenerated also.
-        if (blockX == ChunkBlockWidth - 1)
+        if (DoesBlockExist(blockX + 1, blockY, blockZ) && blockX == ChunkBlockWidth - 1)
         {
             Chunks[chunkX + 1, chunkY, chunkZ].NeedsRegeneration = true;
         }
-        else if (blockX == 0)
+        else if (DoesBlockExist(blockX - 1, blockY, blockZ) && blockX == 0)
         {
             Chunks[chunkX - 1, chunkY, chunkZ].NeedsRegeneration = true;
         }
 
-        if (blockY == 0)
+        if (DoesBlockExist(blockX, blockY - 1, blockZ) && blockY == 0)
         {
             Chunks[chunkX, chunkY - 1, chunkZ].NeedsRegeneration = true;
         }
-        else if (blockY == ChunkBlockHeight - 1)
+        else if (DoesBlockExist(blockX, blockY + 1, blockZ) && blockY == ChunkBlockHeight - 1)
         {
             Chunks[chunkX, chunkY + 1, chunkZ].NeedsRegeneration = true;
         }

@@ -500,7 +500,13 @@ public class CharacterGridMotor : MonoBehaviour
 					iTween.RotateBy(this.gameObject, turnR_HT);
 				}
 			}
+			
+			IntVect blockFront = new IntVect((int)(sum.x), (int)(sum.z), (int)(sum.y+0.5f)); // in chunk coordinates
+			IntVect blockFrontAbove = new IntVect(blockFront.X, blockFront.Y, blockFront.Z+1);
+			IntVect blockFrontBelow = new IntVect(blockFront.X, blockFront.Y, blockFront.Z-1);
 	
+			Vector3 ground_below_front = new Vector3(sum.x, sum.y-1, sum.z);
+			
 			if (world != null) {
 	
 				if(currChar == "Robot")
@@ -510,11 +516,20 @@ public class CharacterGridMotor : MonoBehaviour
 		
 						//if (isInValidRange(sum)) {
 							iTween.MoveBy(this.gameObject, createBlockHT);
-							m_lock = true;
+							
 		
-							//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
-							//wgo.world.GenerateBlockAt(new IntVect((int)sum.x, (int)sum.y+1, (int)sum.z), BlockType.Stone);
-							spawnTestFireAtBlockLocation(new Vector3((int)sum.x+0.5f, (int)sum.y+1+0.5f, (int)sum.z+0.5f));
+							
+							if(wgo.world.WorldData.DoesBlockExist(blockFrontAbove.X, blockFrontAbove.Y, blockFrontAbove.Z))
+							{
+								m_lock = true;
+								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
+								wgo.world.GenerateBlockAt(blockFrontAbove, BlockType.Stone);
+								spawnTestFireAtBlockLocation(ground_above_front);
+							}
+							else
+							{
+								Debug.Log("Block Does Not Exist, In CharacterGridMotor::Update: " + ground_above_front.ToString());
+							}
 						//}
 					}
 		
@@ -523,11 +538,18 @@ public class CharacterGridMotor : MonoBehaviour
 		
 						//if (isInValidRange(sum)) {
 							iTween.MoveBy(this.gameObject, createBlockHT);
-							m_lock = true;
-		
-							//wgo.createBlock(sum.x,sum.y,sum.z, 0.6);
-							//wgo.world.GenerateBlockAt(new IntVect((int)sum.x, (int)sum.y, (int)sum.z), BlockType.Stone);
-							spawnTestFireAtBlockLocation(new Vector3((int)sum.x+0.5f, (int)sum.y+0.5f, (int)sum.z+0.5f));
+						
+							if(wgo.world.WorldData.DoesBlockExist(blockFront.X, blockFront.Y, blockFront.Z))
+							{
+								m_lock = true;
+								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
+								wgo.world.GenerateBlockAt(blockFront, BlockType.Stone);
+								spawnTestFireAtBlockLocation(ground_front);
+							}
+							else
+							{
+								Debug.Log("Block Does Not Exist, In CharacterGridMotor::Update: " + ground_front.ToString());
+							}
 						//}
 					}
 		
@@ -535,15 +557,22 @@ public class CharacterGridMotor : MonoBehaviour
 					if (Input.GetKeyDown("b")) {
 		
 						//if (isInValidRange(sum)) {
-							if (ground_front == ground_above_front && climb_test.y > 0) {	// !A
+							//if (ground_front == ground_above_front && climb_test.y > 0) {	// !A
 		
 								iTween.MoveBy(this.gameObject, createBlockHT);
+								
+							if(wgo.world.WorldData.DoesBlockExist(blockFrontBelow.X, blockFrontBelow.Y, blockFrontBelow.Z))
+							{
 								m_lock = true;
-		
-								//wgo.createBlock(sum.x,sum.y-1,sum.z, 0.6);
-								//wgo.world.GenerateBlockAt(new IntVect((int)sum.x, (int)sum.y-1, (int)sum.z), BlockType.Stone);
-								spawnTestFireAtBlockLocation(new Vector3((int)sum.x+0.5f, (int)sum.y-1+0.5f, (int)sum.z+0.5f));
+								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
+								wgo.world.GenerateBlockAt(blockFrontBelow, BlockType.Stone);
+								spawnTestFireAtBlockLocation(ground_below_front);
 							}
+							else
+							{
+								Debug.Log("Block Does Not Exist, In CharacterGridMotor::Update: " + ground_below_front.ToString());
+							}
+							//}
 						//}
 					}
 				}
