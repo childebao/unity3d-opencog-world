@@ -39,13 +39,13 @@ public class CarDecorator : IDecoration
         }
 
         // Cars don't pile up too high
-        if (blockZ >= m_WorldData.DepthInBlocks - 20)
-        {
-            return false;
-        }
+//        if (blockZ >= (int)(m_WorldData.DepthInBlocks*0.1f))
+//        {
+//            return false;
+//        }
 
         // Cars like to have a minimum amount of space to drive in.
-        return SpaceAboveIsEmpty(blockX, blockY, blockZ, 6, 4, 4);
+        return SpaceAboveIsEmpty(blockX, blockY, blockZ, 8, 8, 8);
     }
 	
 	private void CreateCar(int blockX, int blockY, int blockZ, int frameWidth, int frameHeight, int frameDepth, bool isForward)
@@ -171,7 +171,7 @@ public class CarDecorator : IDecoration
             {
                 for (int y = blockY - heightAround; y <= blockY + heightAround; y++)
                 {
-                    if (m_WorldData.GetBlock(x, y, z).Type != BlockType.Air)
+                    if (m_WorldData.DoesBlockExist(x,y,z) && m_WorldData.GetBlock(x, y, z).Type != BlockType.Air)
                     {
                         return false;
                     }

@@ -46,17 +46,17 @@ public class WorldGameObject : MonoBehaviour
 	/// <summary>
 	/// Chunk Dimensions
 	/// </summary>
-	[NonSerialized]
-	public static uint chunkBlocksWidth = 16;
-	[NonSerialized]
-	public static uint chunkBlocksHeight = 16;
-	[NonSerialized]
-	public static uint chunkBlocksDepth = 256;
-	[NonSerialized]
-	public static uint chunksWide = 6;
-    [NonSerialized]
-	public static uint chunksHigh = 6;
-    [NonSerialized]
+	//[NonSerialized]
+	public static uint chunkBlocksWidth = 10;
+	//[NonSerialized]
+	public static uint chunkBlocksHeight = 10;
+	//[NonSerialized]
+	public static uint chunkBlocksDepth = 10;
+	//[NonSerialized]
+	public static uint chunksWide = 5;
+    //[NonSerialized]
+	public static uint chunksHigh = 5;
+    //[NonSerialized]
 	public static uint chunksDeep = 1;
 
 	/// <summary>
@@ -394,8 +394,8 @@ public class WorldGameObject : MonoBehaviour
 		InitializeTextures ();
 		playerTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 0.5f);
 		ghostTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 - 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 0.5f);
-		girlTransform.transform.position = new Vector3 (14.50012f, 128, 4.5f);
-		robotTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 2 + 0.5f);
+		girlTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 0.5f);
+		robotTransform.transform.position = new Vector3 (WorldData.WidthInBlocks / 2 + 2 + 0.5f, 128, WorldData.HeightInBlocks / 2 + 0.5f);
 		CreateWorldChunkPrefabs ();
 		
 		m_World.StartProcessingThread ();
