@@ -18,11 +18,11 @@ public class StoveButton : OCBehaviour {
 		
 		theStove = GameObject.Find("cookTop");
 		
-		AnimSummary animS = new AnimSummary("pickup");
+		AnimSummary animS = new AnimSummary("destroyBlockM");
         PhysiologicalEffect effect = new PhysiologicalEffect(PhysiologicalEffect.CostLevel.LOW);
 		turnOnAction = new ActionSummary(this,"TurnOnStove", animS, effect, true);
 		
-		animS = new AnimSummary("pickup");
+		animS = new AnimSummary("destroyBlockM");
         effect = new PhysiologicalEffect(PhysiologicalEffect.CostLevel.LOW);
 		turnOffAction = new ActionSummary(this, "TurnOffStove", animS, effect, true);
 		

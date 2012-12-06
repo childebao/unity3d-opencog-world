@@ -164,10 +164,10 @@ public class Avatar: Interactor {
                                                new PhysiologicalEffect(PhysiologicalEffect.CostLevel.LOW), false);
         rotateRightAction.usesCallback = true;
 
-        buildBlockAction = new ActionSummary(this, "BuildBlockInFrontWithOffset", new AnimSummary("pickup"),
+        buildBlockAction = new ActionSummary(this, "BuildBlockInFrontWithOffset", new AnimSummary("createBlock"),
                                                 new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
         buildBlockAction.usesCallback = false; 
-		destroyBlockAction = new ActionSummary(this, "DestroyBlockInFront", new AnimSummary("pickup"),
+		destroyBlockAction = new ActionSummary(this, "DestroyBlockInFront", new AnimSummary("destroyBlockM"),
 		                                        new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
 		destroyBlockAction.usesCallback = false;
 		

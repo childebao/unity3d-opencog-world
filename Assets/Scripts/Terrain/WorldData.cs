@@ -24,7 +24,7 @@ public class WorldData
 	
 	// This is the lowest point of the map after generation
 	// @warning this is NOT updated later when the characters interacting with the world make blocks disappear.
-	private int _floor = 0;
+	private int _floor = 55;
 	
 	public int floor
 	{

@@ -1473,8 +1473,8 @@ public class OCConnector : NetworkElement
 			if (OCPerceptionCollector.hasBoundaryChuncks)	
 			{
 				// Calculate the offset of the terrain.
-	            this.globalPositionOffsetX = WorldGameObject.chunkBlocksWidth * WorldGameObject.chunksWide - 2;
-				this.globalPositionOffsetY = WorldGameObject.chunkBlocksHeight * WorldGameObject.chunksHigh - 2;
+	            this.globalPositionOffsetX = (uint) WorldGameObject.chunkBlocksWidth * (uint)WorldGameObject.chunksWide - 2;
+				this.globalPositionOffsetY = (uint)WorldGameObject.chunkBlocksHeight * (uint)WorldGameObject.chunksHigh - 2;
 	 
 	            // There is an invisible chunk at the edge of the terrain, so we should take count of it.
 	            this.globalPositionX = (int)WorldGameObject.chunkBlocksWidth;
@@ -1483,14 +1483,14 @@ public class OCConnector : NetworkElement
 			else
 			{
 	            // Calculate the offset of the terrain.
-	            this.globalPositionOffsetX = WorldGameObject.chunkBlocksWidth * WorldGameObject.chunksWide;
-				this.globalPositionOffsetY = WorldGameObject.chunkBlocksHeight * WorldGameObject.chunksHigh;
+	            this.globalPositionOffsetX = (uint) WorldGameObject.chunkBlocksWidth * (uint)WorldGameObject.chunksWide;
+				this.globalPositionOffsetY = (uint) WorldGameObject.chunkBlocksHeight * (uint)WorldGameObject.chunksHigh;
 				
 	            // There is an invisible chunk at the edge of the terrain, so we should take count of it.
 	            this.globalPositionX = 0;
 	            this.globalPositionY = 0;
 			}
-			this.globalPositionOffsetZ = WorldGameObject.chunkBlocksDepth * WorldGameObject.chunksDeep ;
+			this.globalPositionOffsetZ = (uint) WorldGameObject.chunkBlocksDepth * (uint)WorldGameObject.chunksDeep ;
 			this.globalPositionZ = 0;
             // The floor height should be 1 unit larger than the block's z index.
             this.globalFloorHeight = world.WorldData.floor;

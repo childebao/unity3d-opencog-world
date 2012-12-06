@@ -11,12 +11,12 @@ public class Ball : OCBehaviour {
 
     void  Start (){
         // Right now we don't have kick animation!!
-        AnimSummary animS = new AnimSummary("throw");
+        AnimSummary animS = new AnimSummary("destroyBlockD");
         PhysiologicalEffect effect = new PhysiologicalEffect(PhysiologicalEffect.CostLevel.LOW);
         kickAction = new ActionSummary(this, "Kick", animS, effect, true);
         kickAction.usesCallback = true;
         
-        animS = new AnimSummary("throw");
+        animS = new AnimSummary("destroyBlockU");
         effect = new PhysiologicalEffect(PhysiologicalEffect.CostLevel.LOW);
         throwAction = new ActionSummary(this, "Throw", animS, effect, true);
         throwAction.usesCallback = true;

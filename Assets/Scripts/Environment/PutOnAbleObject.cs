@@ -19,7 +19,7 @@ public class PutOnAbleObject : OCBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		AnimSummary animPickup = new AnimSummary("pickup");
+		AnimSummary animPickup = new AnimSummary("destroyBlockM");
         PhysiologicalEffect pickupEffect = new PhysiologicalEffect(PhysiologicalEffect.CostLevel.LOW);
 		putOnAction = new ActionSummary(this,"PutOn", animPickup, pickupEffect, true);
 		putOnAction.usesCallback = true;

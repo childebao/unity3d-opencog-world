@@ -47,17 +47,17 @@ public class WorldGameObject : MonoBehaviour
 	/// Chunk Dimensions
 	/// </summary>
 	//[NonSerialized]
-	public static uint chunkBlocksWidth = 10;
+	public static int chunkBlocksWidth = 10;
 	//[NonSerialized]
-	public static uint chunkBlocksHeight = 10;
+	public static int chunkBlocksHeight = 10;
 	//[NonSerialized]
-	public static uint chunkBlocksDepth = 10;
+	public static int chunkBlocksDepth = 10;
 	//[NonSerialized]
-	public static uint chunksWide = 5;
+	public static int chunksWide = 5;
     //[NonSerialized]
-	public static uint chunksHigh = 5;
+	public static int chunksHigh = 5;
     //[NonSerialized]
-	public static uint chunksDeep = 1;
+	public static int chunksDeep = 1;
 
 	/// <summary>
 	/// Our Unity decorator prefabs
@@ -339,12 +339,12 @@ public class WorldGameObject : MonoBehaviour
 		if (loadFromFile.Length != 0 ) {
 			
 			FileTerrainMethod ftm = new FileTerrainMethod(loadFromFile);
-			m_WorldData.ChunkBlockWidth =  (int)ftm.chunkWidth;//
-			m_WorldData.ChunkBlockHeight = (int)ftm.chunkHeight;//
-			m_WorldData.ChunkBlockDepth = (int)ftm.chunkDepth;//
-			m_WorldData.ChunksWide = (int)ftm.worldWidth;//
-			m_WorldData.ChunksHigh = (int)ftm.worldHeight;//
-			m_WorldData.ChunksDeep = (int)ftm.worldDepth;//
+			m_WorldData.ChunkBlockWidth  = chunkBlocksWidth  = (int)ftm.chunkWidth;//
+			m_WorldData.ChunkBlockHeight = chunkBlocksHeight = (int)ftm.chunkHeight;//
+			m_WorldData.ChunkBlockDepth  = chunkBlocksDepth  = (int)ftm.chunkDepth;//
+			m_WorldData.ChunksWide = chunksWide = (int)ftm.worldWidth;//
+			m_WorldData.ChunksHigh = chunksHigh = (int)ftm.worldHeight;//
+			m_WorldData.ChunksDeep = chunksDeep = (int)ftm.worldDepth;//
 			//m_WorldData.ChunksWidthOffset = (int)ftm.worldWidthOffset;
 			//m_WorldData.ChunksHeightOffset = (int)ftm.worldHeightOffset;
 			Debug.Log("In WorldGameObject, Start: dimensions: " + WorldData.ChunksWide + ", " + WorldData.ChunksHigh + ", " + WorldData.ChunksDeep);
@@ -352,9 +352,9 @@ public class WorldGameObject : MonoBehaviour
 			t_generator = new TerrainGenerator(WorldData, m_ChunkProcessor, new BatchProcessor<Chunk>(),ftm);
 		} else {
 			InitializeDecoratorPrefabs ();
-			m_WorldData.ChunkBlockWidth = (int)chunkBlocksWidth;
+			m_WorldData.ChunkBlockWidth  =  (int)chunkBlocksWidth;
 			m_WorldData.ChunkBlockHeight = (int)chunkBlocksHeight;
-			m_WorldData.ChunkBlockDepth = (int)chunkBlocksDepth;
+			m_WorldData.ChunkBlockDepth  =  (int)chunkBlocksDepth;
 			m_WorldData.ChunksWide = (int)chunksWide;
 			m_WorldData.ChunksHigh = (int)chunksHigh;
 			m_WorldData.ChunksDeep = (int)chunksDeep;
