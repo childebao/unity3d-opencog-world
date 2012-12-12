@@ -1,144 +1,137 @@
 fileFormatVersion: 2
-guid: b8265c316ff3a9743b12a2ba404cbcd9
+guid: 0016169ce36e30747909be7111b191e9
 ModelImporter:
-  serializedVersion: 14
+  serializedVersion: 15
   fileIDToRecycleName:
-    100000: l_ShoulderJ
-    100002: A_chainJ0
-    100004: r_ShoulderJ
-    100006: ghost_prt_010
-    100008: Spine02J
-    100010: eyeGlassesJ
-    100012: icon_planeG
-    100014: l_ClavicleJ
-    100016: ghost_prt_02
-    100018: ghost_prt_04
-    100020: icon_plane1
-    100022: Spine03J
-    100024: NeckJ
-    100026: ghost_prt_05
-    100028: A_chainJ1
-    100030: ghost_prt_03
-    100032: RootJ
-    100034: A_chainJ2
-    100036: r_EyeJ
-    100038: jawJ
-    100040: ghostG
-    100042: WaistJ
-    100044: connectJ
-    100046: ghost_prt_01
-    100048: r_ClavicleJ
-    100050: r_ElbowJ
-    100052: ghost_prt_06
-    100054: hatJ
-    100056: HeadJ
-    100058: Spine01J
-    100060: //RootNode
+    100000: A_stick2
+    100002: A_stickG2
+    100004: A_stick1
+    100006: A_stickG1
+    100008: A_stickG
+    100010: HeadJFK2NeckJ_switchG
+    100012: body_GEO
+    100014: l_arm_GEO
+    100016: r_arm_GEO
+    100018: eyeGlasses_GEO
+    100020: backGear_GEO
+    100022: //RootNode
+    100024: helmet_GEO
+    100026: A_chainJ1
+    100028: r_ClavicleJ
+    100030: eyeGlassesJ
+    100032: ghostG
+    100034: r_EyeJ
+    100036: l_EyeJ
+    100038: RootJ
+    100040: Spine03J
+    100042: Spine02J
+    100044: Spine01J
+    100046: WaistJ
+    100048: l_ClavicleJ
+    100050: hatJ
+    100052: HeadTipJ
+    100054: HeadJ
+    100056: NeckJ
+    100058: r_ShoulderJ
+    100060: l_arm_HOLDER
     100062: l_ElbowJ
-    100064: HeadTipJ
-    100066: l_EyeJ
-    100068: heartJ
-    100070: A_stick1
-    100072: A_stick2
-    100074: A_stickG
-    100076: A_stickG1
-    100078: A_stickG2
-    100080: backGear_GEO
-    100082: body_GEO
-    100084: eyeGlasses_GEO
-    100086: HeadJFK2NeckJ_switchG
-    100088: helmet_GEO
-    100090: l_arm_GEO
-    100092: l_arm_HOLDER
-    100094: r_arm_GEO
-    100096: r_arm_HOLDER
-    400000: l_ShoulderJ
-    400002: A_chainJ0
-    400004: r_ShoulderJ
-    400006: ghost_prt_010
-    400008: Spine02J
-    400010: eyeGlassesJ
-    400012: icon_planeG
-    400014: l_ClavicleJ
-    400016: ghost_prt_02
-    400018: ghost_prt_04
-    400020: icon_plane1
-    400022: Spine03J
-    400024: NeckJ
-    400026: ghost_prt_05
-    400028: A_chainJ1
-    400030: ghost_prt_03
-    400032: RootJ
-    400034: A_chainJ2
-    400036: r_EyeJ
-    400038: jawJ
-    400040: ghostG
-    400042: WaistJ
-    400044: connectJ
-    400046: ghost_prt_01
-    400048: r_ClavicleJ
-    400050: r_ElbowJ
-    400052: ghost_prt_06
-    400054: hatJ
-    400056: HeadJ
-    400058: Spine01J
-    400060: //RootNode
+    100064: l_ShoulderJ
+    100066: A_chainJ0
+    100068: icon_planeG
+    100070: r_arm_HOLDER
+    100072: icon_plane1
+    100074: r_ElbowJ
+    100076: A_chainJ2
+    100078: heartJ
+    100080: connectJ
+    400000: A_stick2
+    400002: A_stickG2
+    400004: A_stick1
+    400006: A_stickG1
+    400008: A_stickG
+    400010: HeadJFK2NeckJ_switchG
+    400012: body_GEO
+    400014: l_arm_GEO
+    400016: r_arm_GEO
+    400018: eyeGlasses_GEO
+    400020: backGear_GEO
+    400022: //RootNode
+    400024: helmet_GEO
+    400026: A_chainJ1
+    400028: r_ClavicleJ
+    400030: eyeGlassesJ
+    400032: ghostG
+    400034: r_EyeJ
+    400036: l_EyeJ
+    400038: RootJ
+    400040: Spine03J
+    400042: Spine02J
+    400044: Spine01J
+    400046: WaistJ
+    400048: l_ClavicleJ
+    400050: hatJ
+    400052: HeadTipJ
+    400054: HeadJ
+    400056: NeckJ
+    400058: r_ShoulderJ
+    400060: l_arm_HOLDER
     400062: l_ElbowJ
-    400064: HeadTipJ
-    400066: l_EyeJ
-    400068: heartJ
-    400070: A_stick1
-    400072: A_stick2
-    400074: A_stickG
-    400076: A_stickG1
-    400078: A_stickG2
-    400080: backGear_GEO
-    400082: body_GEO
-    400084: eyeGlasses_GEO
-    400086: HeadJFK2NeckJ_switchG
-    400088: helmet_GEO
-    400090: l_arm_GEO
-    400092: l_arm_HOLDER
-    400094: r_arm_GEO
-    400096: r_arm_HOLDER
-    2300000: icon_plane1
-    3300000: icon_plane1
-    4300000: ghost_prt_01
-    4300002: ghost_prt_02
-    4300004: ghost_prt_03
-    4300006: ghost_prt_04
+    400064: l_ShoulderJ
+    400066: A_chainJ0
+    400068: icon_planeG
+    400070: r_arm_HOLDER
+    400072: icon_plane1
+    400074: r_ElbowJ
+    400076: A_chainJ2
+    400078: heartJ
+    400080: connectJ
+    2300004: icon_plane1
+    3300004: icon_plane1
+    4300000: ghost_prt_02
+    4300002: ghost_prt_03
+    4300004: ghost_prt_04
+    4300006: ghost_prt_05
     4300008: ghost_prt_06
-    4300010: ghost_prt_05
-    4300012: ghost_prt_010
-    4300014: icon_plane1
-    4300016: helmet_GEO
-    4300018: backGear_GEO
-    4300020: eyeGlasses_GEO
-    4300022: r_arm_GEO
-    4300024: l_arm_GEO
-    4300026: body_GEO
+    4300010: ghost_prt_07
+    4300012: ghost_prt_08
+    4300014: ghost_prt_09
+    4300016: ghost_prt_10
+    4300018: ghost_prt_11
+    4300020: ghost_prt_12
+    4300022: ghost_prt_13
+    4300024: ghost_prt_14
+    4300026: ghost_prt_15
+    4300028: polySurface1
+    4300030: polySurface4
+    4300032: ghost_prt_01
+    4300034: ghost_prt_010
+    4300036: icon_plane1
+    4300038: icon_plane2
+    4300040: icon_plane3
+    4300042: icon_plane4
+    4300044: icon_plane5
+    4300046: icon_plane6
+    4300048: shd_plane
+    4300050: helmet_GEO
+    4300052: backGear_GEO
+    4300054: eyeGlasses_GEO
+    4300056: r_arm_GEO
+    4300058: l_arm_GEO
+    4300060: body_GEO
     11100000: //RootNode
-    13700000: ghost_prt_010
-    13700002: ghost_prt_02
-    13700004: ghost_prt_04
-    13700006: ghost_prt_05
-    13700008: ghost_prt_03
-    13700010: ghost_prt_01
-    13700012: ghost_prt_06
-    13700014: backGear_GEO
-    13700016: body_GEO
-    13700018: eyeGlasses_GEO
-    13700020: helmet_GEO
-    13700022: l_arm_GEO
-    13700024: r_arm_GEO
+    13700000: l_arm_GEO
+    13700002: r_arm_GEO
+    13700004: helmet_GEO
+    13700006: eyeGlasses_GEO
+    13700008: body_GEO
+    13700010: backGear_GEO
   materials:
     importMaterials: 1
-    materialName: 0
+    materialName: 1
     materialSearch: 1
   animations:
-    generateAnimations: 4
+    legacyGenerateAnimations: 4
     bakeSimulation: 0
-    splitAnimations: 1
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -154,8 +147,7 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMesh: 0
-    keepQuads: 0
+    optimizeMeshForGPU: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -165,6 +157,8 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
   humanDescription:
     human: []
     skeleton: []
@@ -176,6 +170,8 @@ ModelImporter:
     armStretch: .0500000007
     legStretch: .0500000007
     feetSpacing: 0
+    rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  createAvatar: 0
+  additionalBone: 1
+  animationType: 1
   userData: 

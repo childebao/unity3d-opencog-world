@@ -1,120 +1,114 @@
 fileFormatVersion: 2
-guid: 3543aa0c6db469d4ebae6f65254e0523
+guid: 9d902c8421df96c43a6c7280502c645d
 ModelImporter:
-  serializedVersion: 14
+  serializedVersion: 15
   fileIDToRecycleName:
-    100000: r_ShoulderJ
-    100002: r_ClavicleJ
-    100004: l_ElbowJ
-    100006: l_ShoulderJ
-    100008: l_ClavicleJ
-    100010: eyeGlassesJ
-    100012: hatJ
-    100014: //RootNode
-    100016: A_chainJ2
-    100018: A_chainJ1
-    100020: A_chainJ0
-    100022: heartJ
-    100024: connectJ
-    100026: r_ElbowJ
-    100028: r_EyeJ
-    100030: jawJ
-    100032: l_EyeJ
-    100034: HeadTipJ
-    100036: HeadJ
-    100038: NeckJ
-    100040: Spine03J
-    100042: Spine02J
-    100044: Spine01J
-    100046: WaistJ
-    100048: RootJ
-    100050: shd_loc
-    100052: ghostG
-    100054: HeadJ_CAGE_SKN
-    100056: HeadJFK2NeckJ_switchG
-    100058: l_arm_HOLDER
-    100060: l_ClavicleJ_CAGE_SKN
-    100062: l_ElbowJ_CAGE_SKN
-    100064: l_ShoulderJ_CAGE_SKN
-    100066: NeckJ_CAGE_SKN
-    100068: r_arm_HOLDER
-    100070: r_ClavicleJ_CAGE_SKN
-    100072: r_ElbowJ_CAGE_SKN
-    100074: r_ShoulderJ_CAGE_SKN
+    100000: r_EyeJ
+    100002: r_arm_HOLDER
+    100004: l_EyeJ
+    100006: HeadTipJ
+    100008: HeadJ
+    100010: NeckJ
+    100012: Spine03J
+    100014: Spine02J
+    100016: Spine01J
+    100018: WaistJ
+    100020: RootJ
+    100022: //RootNode
+    100024: r_ElbowJ
+    100026: r_ShoulderJ
+    100028: r_ClavicleJ
+    100030: l_ElbowJ
+    100032: l_ShoulderJ
+    100034: l_ClavicleJ
+    100036: heartJ
+    100038: WaistJ_CAGE_SKN
+    100040: connectJ
+    100042: A_chainJ2
+    100044: A_chainJ1
+    100046: A_chainJ0
+    100048: Spine01J_CAGE_SKN
+    100050: hatJ
+    100052: eyeGlassesJ
+    100054: Spine02J_CAGE_SKN
+    100056: r_ClavicleJ_CAGE_SKN
+    100058: r_ShoulderJ_CAGE_SKN
+    100060: l_arm_HOLDER
+    100062: HeadJ_CAGE_SKN
+    100064: HeadJFK2NeckJ_switchG
+    100066: r_ElbowJ_CAGE_SKN
+    100068: l_ClavicleJ_CAGE_SKN
+    100070: l_ShoulderJ_CAGE_SKN
+    100072: l_ElbowJ_CAGE_SKN
+    100074: Spine03J_CAGE_SKN
     100076: RootJ_CAGE_SKN
-    100078: Spine01J_CAGE_SKN
-    100080: Spine02J_CAGE_SKN
-    100082: Spine03J_CAGE_SKN
-    100084: WaistJ_CAGE_SKN
-    400000: r_ShoulderJ
-    400002: r_ClavicleJ
-    400004: l_ElbowJ
-    400006: l_ShoulderJ
-    400008: l_ClavicleJ
-    400010: eyeGlassesJ
-    400012: hatJ
-    400014: //RootNode
-    400016: A_chainJ2
-    400018: A_chainJ1
-    400020: A_chainJ0
-    400022: heartJ
-    400024: connectJ
-    400026: r_ElbowJ
-    400028: r_EyeJ
-    400030: jawJ
-    400032: l_EyeJ
-    400034: HeadTipJ
-    400036: HeadJ
-    400038: NeckJ
-    400040: Spine03J
-    400042: Spine02J
-    400044: Spine01J
-    400046: WaistJ
-    400048: RootJ
-    400050: shd_loc
-    400052: ghostG
-    400054: HeadJ_CAGE_SKN
-    400056: HeadJFK2NeckJ_switchG
-    400058: l_arm_HOLDER
-    400060: l_ClavicleJ_CAGE_SKN
-    400062: l_ElbowJ_CAGE_SKN
-    400064: l_ShoulderJ_CAGE_SKN
-    400066: NeckJ_CAGE_SKN
-    400068: r_arm_HOLDER
-    400070: r_ClavicleJ_CAGE_SKN
-    400072: r_ElbowJ_CAGE_SKN
-    400074: r_ShoulderJ_CAGE_SKN
+    100078: NeckJ_CAGE_SKN
+    400000: r_EyeJ
+    400002: r_arm_HOLDER
+    400004: l_EyeJ
+    400006: HeadTipJ
+    400008: HeadJ
+    400010: NeckJ
+    400012: Spine03J
+    400014: Spine02J
+    400016: Spine01J
+    400018: WaistJ
+    400020: RootJ
+    400022: //RootNode
+    400024: r_ElbowJ
+    400026: r_ShoulderJ
+    400028: r_ClavicleJ
+    400030: l_ElbowJ
+    400032: l_ShoulderJ
+    400034: l_ClavicleJ
+    400036: heartJ
+    400038: WaistJ_CAGE_SKN
+    400040: connectJ
+    400042: A_chainJ2
+    400044: A_chainJ1
+    400046: A_chainJ0
+    400048: Spine01J_CAGE_SKN
+    400050: hatJ
+    400052: eyeGlassesJ
+    400054: Spine02J_CAGE_SKN
+    400056: r_ClavicleJ_CAGE_SKN
+    400058: r_ShoulderJ_CAGE_SKN
+    400060: l_arm_HOLDER
+    400062: HeadJ_CAGE_SKN
+    400064: HeadJFK2NeckJ_switchG
+    400066: r_ElbowJ_CAGE_SKN
+    400068: l_ClavicleJ_CAGE_SKN
+    400070: l_ShoulderJ_CAGE_SKN
+    400072: l_ElbowJ_CAGE_SKN
+    400074: Spine03J_CAGE_SKN
     400076: RootJ_CAGE_SKN
-    400078: Spine01J_CAGE_SKN
-    400080: Spine02J_CAGE_SKN
-    400082: Spine03J_CAGE_SKN
-    400084: WaistJ_CAGE_SKN
-    2300000: HeadJ_CAGE_SKN
-    2300002: l_ClavicleJ_CAGE_SKN
-    2300004: l_ElbowJ_CAGE_SKN
-    2300006: l_ShoulderJ_CAGE_SKN
-    2300008: NeckJ_CAGE_SKN
-    2300010: r_ClavicleJ_CAGE_SKN
+    400078: NeckJ_CAGE_SKN
+    2300000: WaistJ_CAGE_SKN
+    2300002: Spine01J_CAGE_SKN
+    2300004: Spine02J_CAGE_SKN
+    2300006: r_ClavicleJ_CAGE_SKN
+    2300008: r_ShoulderJ_CAGE_SKN
+    2300010: HeadJ_CAGE_SKN
     2300012: r_ElbowJ_CAGE_SKN
-    2300014: r_ShoulderJ_CAGE_SKN
-    2300016: RootJ_CAGE_SKN
-    2300018: Spine01J_CAGE_SKN
-    2300020: Spine02J_CAGE_SKN
-    2300022: Spine03J_CAGE_SKN
-    2300024: WaistJ_CAGE_SKN
-    3300000: HeadJ_CAGE_SKN
-    3300002: l_ClavicleJ_CAGE_SKN
-    3300004: l_ElbowJ_CAGE_SKN
-    3300006: l_ShoulderJ_CAGE_SKN
-    3300008: NeckJ_CAGE_SKN
-    3300010: r_ClavicleJ_CAGE_SKN
+    2300014: l_ClavicleJ_CAGE_SKN
+    2300016: l_ShoulderJ_CAGE_SKN
+    2300018: l_ElbowJ_CAGE_SKN
+    2300020: Spine03J_CAGE_SKN
+    2300022: RootJ_CAGE_SKN
+    2300024: NeckJ_CAGE_SKN
+    3300000: WaistJ_CAGE_SKN
+    3300002: Spine01J_CAGE_SKN
+    3300004: Spine02J_CAGE_SKN
+    3300006: r_ClavicleJ_CAGE_SKN
+    3300008: r_ShoulderJ_CAGE_SKN
+    3300010: HeadJ_CAGE_SKN
     3300012: r_ElbowJ_CAGE_SKN
-    3300014: r_ShoulderJ_CAGE_SKN
-    3300016: RootJ_CAGE_SKN
-    3300018: Spine01J_CAGE_SKN
-    3300020: Spine02J_CAGE_SKN
-    3300022: Spine03J_CAGE_SKN
-    3300024: WaistJ_CAGE_SKN
+    3300014: l_ClavicleJ_CAGE_SKN
+    3300016: l_ShoulderJ_CAGE_SKN
+    3300018: l_ElbowJ_CAGE_SKN
+    3300020: Spine03J_CAGE_SKN
+    3300022: RootJ_CAGE_SKN
+    3300024: NeckJ_CAGE_SKN
     4300000: HeadJ_CAGE_SKN
     4300002: NeckJ_CAGE_SKN
     4300004: Spine03J_CAGE_SKN
@@ -135,9 +129,8 @@ ModelImporter:
     materialName: 0
     materialSearch: 1
   animations:
-    generateAnimations: 4
+    legacyGenerateAnimations: 4
     bakeSimulation: 0
-    splitAnimations: 1
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -153,8 +146,7 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMesh: 0
-    keepQuads: 0
+    optimizeMeshForGPU: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -164,6 +156,8 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
   humanDescription:
     human: []
     skeleton: []
@@ -175,6 +169,8 @@ ModelImporter:
     armStretch: .0500000007
     legStretch: .0500000007
     feetSpacing: 0
+    rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  createAvatar: 0
+  additionalBone: 1
+  animationType: 1
   userData: 

@@ -1,61 +1,61 @@
 fileFormatVersion: 2
-guid: e147164020df1d5488367a464af484f4
+guid: e86c7464c43377545a6b7004194a0544
 ModelImporter:
-  serializedVersion: 14
+  serializedVersion: 15
   fileIDToRecycleName:
-    100000: r_WristJ
-    100002: r_ElbowJ
-    100004: r_ShoulderJ
-    100006: r_ClavicleJ
-    100008: l_ThumbTipJ
-    100010: l_Thumb2J
-    100012: l_Thumb1J
-    100014: l_MiddleTipJ
-    100016: r_MiddleTipJ
-    100018: r_Middle3J
-    100020: r_Middle2J
-    100022: r_Middle1J
-    100024: r_IndexTipJ
-    100026: r_Index3J
-    100028: r_Index2J
-    100030: r_Index1J
-    100032: l_Middle3J
-    100034: l_Middle2J
-    100036: l_Middle1J
-    100038: l_IndexTipJ
-    100040: l_Index3J
-    100042: l_Index2J
-    100044: l_Index1J
-    100046: l_WristJ
-    100048: //RootNode
-    100050: wheel2_CTRL
-    100052: wheel2_CTRL_N
-    100054: wheel1_CTRL
-    100056: l_BallJ
-    100058: l_AnkleJ
-    100060: l_KneeJ
-    100062: l_HipJ
-    100064: LowHipJ
-    100066: r_ThumbTipJ
-    100068: r_Thumb2J
-    100070: r_Thumb1J
-    100072: wheel1_CTRL_N
-    100074: pusherJEnd
-    100076: pusherJ
-    100078: wheel1J
-    100080: wheel2J
-    100082: backExtraJ
-    100084: r_ToeJ
-    100086: r_BallJ
-    100088: r_AnkleJ
-    100090: r_KneeJ
-    100092: r_HipJ
-    100094: l_ToeJ
-    100096: l_ElbowJ
-    100098: l_ShoulderJ
-    100100: l_ClavicleJ
+    100000: pusherJEnd
+    100002: wheel2_CTRL_N
+    100004: wheel2_CTRL
+    100006: wheel1_CTRL
+    100008: wheel1_CTRL_N
+    100010: pusherJ
+    100012: wheel1J
+    100014: wheel2J
+    100016: backExtraJ
+    100018: r_ToeJ
+    100020: r_BallJ
+    100022: r_AnkleJ
+    100024: r_KneeJ
+    100026: r_HipJ
+    100028: l_ToeJ
+    100030: l_BallJ
+    100032: l_AnkleJ
+    100034: l_KneeJ
+    100036: l_HipJ
+    100038: LowHipJ
+    100040: r_ThumbTipJ
+    100042: r_Thumb2J
+    100044: r_Thumb1J
+    100046: r_MiddleTipJ
+    100048: r_Middle3J
+    100050: r_Middle2J
+    100052: r_Middle1J
+    100054: r_IndexTipJ
+    100056: r_Index3J
+    100058: r_Index2J
+    100060: r_Index1J
+    100062: r_WristJ
+    100064: r_ElbowJ
+    100066: r_ShoulderJ
+    100068: r_ClavicleJ
+    100070: l_ThumbTipJ
+    100072: l_Thumb2J
+    100074: l_Thumb1J
+    100076: l_MiddleTipJ
+    100078: l_Middle3J
+    100080: l_Middle2J
+    100082: l_Middle1J
+    100084: l_IndexTipJ
+    100086: l_Index3J
+    100088: l_Index2J
+    100090: l_Index1J
+    100092: l_WristJ
+    100094: l_ElbowJ
+    100096: l_ShoulderJ
+    100098: l_ClavicleJ
+    100100: r_Ring3J
     100102: r_EyeJ
-    100104: jawJ
+    100104: r_Ring2J
     100106: l_EyeJ
     100108: HeadTipJ
     100110: HeadJ
@@ -65,72 +65,71 @@ ModelImporter:
     100118: Spine01J
     100120: WaistJ
     100122: RootJ
-    100124: HeadJFK2NeckJ_switchG
-    100126: l_arm_HOLDER
-    100128: l_foot_HOLDER
-    100130: l_Ring1J
-    100132: l_Ring2J
+    100124: l_foot_HOLDER
+    100126: r_arm_HOLDER
+    100128: //RootNode
+    100130: l_arm_HOLDER
+    100132: l_RingTipJ
     100134: l_Ring3J
-    100136: l_RingTipJ
-    100138: r_arm_HOLDER
-    100140: r_foot_HOLDER
-    100142: r_Ring1J
-    100144: r_Ring2J
-    100146: r_Ring3J
-    100148: r_RingTipJ
-    400000: r_WristJ
-    400002: r_ElbowJ
-    400004: r_ShoulderJ
-    400006: r_ClavicleJ
-    400008: l_ThumbTipJ
-    400010: l_Thumb2J
-    400012: l_Thumb1J
-    400014: l_MiddleTipJ
-    400016: r_MiddleTipJ
-    400018: r_Middle3J
-    400020: r_Middle2J
-    400022: r_Middle1J
-    400024: r_IndexTipJ
-    400026: r_Index3J
-    400028: r_Index2J
-    400030: r_Index1J
-    400032: l_Middle3J
-    400034: l_Middle2J
-    400036: l_Middle1J
-    400038: l_IndexTipJ
-    400040: l_Index3J
-    400042: l_Index2J
-    400044: l_Index1J
-    400046: l_WristJ
-    400048: //RootNode
-    400050: wheel2_CTRL
-    400052: wheel2_CTRL_N
-    400054: wheel1_CTRL
-    400056: l_BallJ
-    400058: l_AnkleJ
-    400060: l_KneeJ
-    400062: l_HipJ
-    400064: LowHipJ
-    400066: r_ThumbTipJ
-    400068: r_Thumb2J
-    400070: r_Thumb1J
-    400072: wheel1_CTRL_N
-    400074: pusherJEnd
-    400076: pusherJ
-    400078: wheel1J
-    400080: wheel2J
-    400082: backExtraJ
-    400084: r_ToeJ
-    400086: r_BallJ
-    400088: r_AnkleJ
-    400090: r_KneeJ
-    400092: r_HipJ
-    400094: l_ToeJ
-    400096: l_ElbowJ
-    400098: l_ShoulderJ
-    400100: l_ClavicleJ
+    100136: r_foot_HOLDER
+    100138: r_Ring1J
+    100140: HeadJFK2NeckJ_switchG
+    100142: l_Ring1J
+    100144: l_Ring2J
+    100146: r_RingTipJ
+    400000: pusherJEnd
+    400002: wheel2_CTRL_N
+    400004: wheel2_CTRL
+    400006: wheel1_CTRL
+    400008: wheel1_CTRL_N
+    400010: pusherJ
+    400012: wheel1J
+    400014: wheel2J
+    400016: backExtraJ
+    400018: r_ToeJ
+    400020: r_BallJ
+    400022: r_AnkleJ
+    400024: r_KneeJ
+    400026: r_HipJ
+    400028: l_ToeJ
+    400030: l_BallJ
+    400032: l_AnkleJ
+    400034: l_KneeJ
+    400036: l_HipJ
+    400038: LowHipJ
+    400040: r_ThumbTipJ
+    400042: r_Thumb2J
+    400044: r_Thumb1J
+    400046: r_MiddleTipJ
+    400048: r_Middle3J
+    400050: r_Middle2J
+    400052: r_Middle1J
+    400054: r_IndexTipJ
+    400056: r_Index3J
+    400058: r_Index2J
+    400060: r_Index1J
+    400062: r_WristJ
+    400064: r_ElbowJ
+    400066: r_ShoulderJ
+    400068: r_ClavicleJ
+    400070: l_ThumbTipJ
+    400072: l_Thumb2J
+    400074: l_Thumb1J
+    400076: l_MiddleTipJ
+    400078: l_Middle3J
+    400080: l_Middle2J
+    400082: l_Middle1J
+    400084: l_IndexTipJ
+    400086: l_Index3J
+    400088: l_Index2J
+    400090: l_Index1J
+    400092: l_WristJ
+    400094: l_ElbowJ
+    400096: l_ShoulderJ
+    400098: l_ClavicleJ
+    400100: r_Ring3J
     400102: r_EyeJ
-    400104: jawJ
+    400104: r_Ring2J
     400106: l_EyeJ
     400108: HeadTipJ
     400110: HeadJ
@@ -140,19 +139,18 @@ ModelImporter:
     400118: Spine01J
     400120: WaistJ
     400122: RootJ
-    400124: HeadJFK2NeckJ_switchG
-    400126: l_arm_HOLDER
-    400128: l_foot_HOLDER
-    400130: l_Ring1J
-    400132: l_Ring2J
+    400124: l_foot_HOLDER
+    400126: r_arm_HOLDER
+    400128: //RootNode
+    400130: l_arm_HOLDER
+    400132: l_RingTipJ
     400134: l_Ring3J
-    400136: l_RingTipJ
-    400138: r_arm_HOLDER
-    400140: r_foot_HOLDER
-    400142: r_Ring1J
-    400144: r_Ring2J
-    400146: r_Ring3J
-    400148: r_RingTipJ
+    400136: r_foot_HOLDER
+    400138: r_Ring1J
+    400140: HeadJFK2NeckJ_switchG
+    400142: l_Ring1J
+    400144: l_Ring2J
+    400146: r_RingTipJ
     7400000: Take 001
     11100000: //RootNode
   materials:
@@ -160,9 +158,8 @@ ModelImporter:
     materialName: 0
     materialSearch: 1
   animations:
-    generateAnimations: 4
+    legacyGenerateAnimations: 4
     bakeSimulation: 0
-    splitAnimations: 1
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -178,8 +175,7 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMesh: 0
-    keepQuads: 0
+    optimizeMeshForGPU: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -189,6 +185,8 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
   humanDescription:
     human: []
     skeleton: []
@@ -200,6 +198,8 @@ ModelImporter:
     armStretch: .0500000007
     legStretch: .0500000007
     feetSpacing: 0
+    rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  createAvatar: 0
+  additionalBone: 1
+  animationType: 1
   userData: 

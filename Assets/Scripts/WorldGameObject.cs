@@ -185,6 +185,121 @@ public class WorldGameObject : MonoBehaviour
 		
 	}	
 	
+	public bool isBlockDirectlyInFront(Transform globalCharacterTransform)
+	{
+		Ray ray = new Ray(globalCharacterTransform.position, globalCharacterTransform.forward);
+		RaycastHit hit = new RaycastHit();
+		
+		foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+		{
+	        if (c.Raycast (ray, out hit, 1)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public bool isBlockBelow(Transform globalCharacterTransform)
+	{
+		Ray ray = new Ray(globalCharacterTransform.position, Vector3.down);
+		RaycastHit hit = new RaycastHit();
+		
+		foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+		{
+	        if (c.Raycast (ray, out hit, 1)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public bool isBlockFarBelowFront(Transform globalCharacterTransform)
+	{
+		Ray ray = new Ray(globalCharacterTransform.position + globalCharacterTransform.forward, Vector3.down);
+		RaycastHit hit = new RaycastHit();
+		
+		foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+		{
+	        if (c.Raycast (ray, out hit, 3000)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public bool isBlockBelowFront(Transform globalCharacterTransform)
+	{
+		Ray ray = new Ray(globalCharacterTransform.position + globalCharacterTransform.forward, Vector3.down);
+		RaycastHit hit = new RaycastHit();
+		
+		foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+		{
+	        if (c.Raycast (ray, out hit, 1)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public bool isBlockAboveFront(Transform globalCharacterTransform)
+	{
+		Ray ray = new Ray(globalCharacterTransform.position + Vector3.up, globalCharacterTransform.forward);
+		RaycastHit hit = new RaycastHit();
+		
+		foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+		{
+	        if (c.Raycast (ray, out hit, 1)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public bool isBlockAbove(Transform globalCharacterTransform)
+	{
+		Ray ray = new Ray(globalCharacterTransform.position, Vector3.up);
+		RaycastHit hit = new RaycastHit();
+		
+		foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+		{
+	        if (c.Raycast (ray, out hit, 1)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public bool isSpaceToRun(Transform globalCharacterTransform)
+	{
+		RaycastHit hit = new RaycastHit();
+		
+		Ray ray1 = new Ray(globalCharacterTransform.position, globalCharacterTransform.forward);
+		Ray ray2 = new Ray(globalCharacterTransform.position + globalCharacterTransform.forward, Vector3.down);
+		Ray ray3 = new Ray(globalCharacterTransform.position + 2*globalCharacterTransform.forward, Vector3.down);
+		Ray ray4 = new Ray(globalCharacterTransform.position + 3*globalCharacterTransform.forward, Vector3.down);
+		
+		foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+		{
+			bool allClear = false;
+			
+			allClear = !c.Raycast (ray1, out hit, 3);
+			allClear = allClear && c.Raycast(ray2, out hit, 3000);
+			allClear = allClear && c.Raycast(ray3, out hit, 3000);
+			allClear = allClear && c.Raycast(ray4, out hit, 3000);
+			
+	        if(allClear)
+				return true;
+		}
+		
+		return false;
+	}
+	
 	#endregion
 	
 	//////////////////////////////////////////////////
