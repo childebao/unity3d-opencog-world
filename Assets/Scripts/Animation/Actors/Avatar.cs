@@ -299,6 +299,31 @@ public class Avatar: Interactor {
     public bool isRotating (){
         return rotating;
     }
+	
+	public void playWalk() 
+	{
+		UnityEngine.Animation animation = (UnityEngine.Animation)this.GetComponentInChildren( typeof(UnityEngine.Animation) );
+		//Debug.Log("In Play Walk...");
+		animation.CrossFade("walk", 0.0f);
+		//animation.Play("walk");
+	}
+	
+	public void playIdle() 
+	{
+		UnityEngine.Animation animation = (UnityEngine.Animation)this.GetComponentInChildren( typeof(UnityEngine.Animation) );
+		//if(m_lock && m_lockForIdle)
+		animation.CrossFade("idle", 0.2f);
+	}
+	
+	public void playJump() 
+	{
+		animation.CrossFade("jump", 0.1f);
+	}
+	
+	public void playClimb() 
+	{
+		animation.CrossFade("climb", 0.1f);
+	}
     
     // --- Actions
     
@@ -334,6 +359,7 @@ public class Avatar: Interactor {
                      "easetype" , "linear",
                      "axis", "y",
                      "onupdate", "_MoveToCollisionDetect", "onupdateparams", onupdateparams,
+					 "onstart", "playWalk",
                      "oncomplete" , "_ReachDestCoordinate", "oncompleteparams", callback)
                  );
 		}
@@ -346,6 +372,7 @@ public class Avatar: Interactor {
                     "easetype" , "linear",
                     "axis", "y",
                     "onupdate", "_MoveToCollisionDetect", "onupdateparams", onupdateparams,
+					"onstart", "playWalk",
                     "oncomplete" , "_ReachDestCoordinate")
                 );
 		}
@@ -485,6 +512,7 @@ public class Avatar: Interactor {
 	                    "speed" , 2.0f,
 	                    "easetype" , "linear",
 	                    "axis", "y",
+						"onstart", "playWalk",
 	                    "oncomplete" , "_ReachDestObject", "oncompleteparams",callback)
 	                );
 		}
@@ -502,6 +530,7 @@ public class Avatar: Interactor {
 	                    "speed" , Speed,
 	                    "easetype" , "linear",
 	                    "axis", "y",
+						"onstart", "playWalk",
 	                    "oncomplete" , "_ReachDestObject", "oncompleteparams",callback)
 	                );
 		}
@@ -649,6 +678,7 @@ public class Avatar: Interactor {
         iTween.MoveTo(gameObject, iTween.Hash("position", dest,
                     "speed", Speed,
                     "easetype", "linear",
+					"onstart", "playClimb",
                     "oncomplete", "_onJumpUpComplete", "oncompleteparams", h)
                 );
         
@@ -686,6 +716,7 @@ public class Avatar: Interactor {
         iTween.MoveTo(gameObject, iTween.Hash("position", Destination,
                     "speed", Speed,
                     "easetype", "linear",
+					"onstart", "playClimb",
                     "oncomplete", "_onJumpTowardComplete", "oncompleteparams", h)
                 );
     }
@@ -723,6 +754,7 @@ public class Avatar: Interactor {
         iTween.MoveTo(gameObject, iTween.Hash("position", dest,
                     "speed", Speed,
                     "easetype", "linear",
+					"onstart", "playJump",
                     "oncomplete", "_onJumpTowardComplete", "oncompleteparams", h)
                 );	
 	}
