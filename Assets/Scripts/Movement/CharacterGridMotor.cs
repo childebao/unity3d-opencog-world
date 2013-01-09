@@ -653,12 +653,12 @@ public class CharacterGridMotor : MonoBehaviour
 							
 		
 							
-							if(isBlockAboveFront)
+							if(!isBlockAboveFront)
 							{
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward + Vector3.up;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.y, (int)pos.z), BlockType.Stone);
+								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), BlockType.Stone);
 								//spawnTestFireAtBlockLocation(ground_above_front);
 							}
 							else
@@ -674,13 +674,13 @@ public class CharacterGridMotor : MonoBehaviour
 						//if (isInValidRange(sum)) {
 							iTween.MoveBy(this.gameObject, createBlockHT);
 						
-							if(isBlockDirectlyInFront)
+							if(!isBlockDirectlyInFront)
 							{
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.y, (int)pos.z), BlockType.Stone);
-								//spawnTestFireAtBlockLocation(ground_front);
+								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), BlockType.Stone);
+								//spawnTestFireAtBlockLocation(pos);
 							}
 							else
 							{
@@ -697,12 +697,12 @@ public class CharacterGridMotor : MonoBehaviour
 		
 								iTween.MoveBy(this.gameObject, createBlockHT);
 								
-							if(isBlockBelowFront)
+							if(!isBlockBelowFront)
 							{
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward + Vector3.down;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.y, (int)pos.z), BlockType.Stone);
+								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), BlockType.Stone);
 								//spawnTestFireAtBlockLocation(ground_below_front);
 							}
 							else
