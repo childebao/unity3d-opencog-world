@@ -351,6 +351,7 @@ public class OCConnector : NetworkElement
 	// but a single action that current the robot want to do
 	private void parseSingleActionElement(XmlElement element)
 	{
+		
 		Avatar oca = gameObject.GetComponent<Avatar>() as Avatar;
 		if (oca == null)
 			return;
@@ -374,7 +375,17 @@ public class OCConnector : NetworkElement
 	        }
 			IntVect blockBuildPoint = new IntVect(x, y, z);
 			
-			oca.BuildBlockAtPosition(blockBuildPoint);
+			ArrayList args = new ArrayList();
+		 	args.Add(blockBuildPoint);
+			
+	
+	        MetaAction newAction = new MetaAction("build_block_At_Position",args,100);
+			
+			lock (this.actionScheduler.actionList)
+			{
+				this.actionScheduler.actionList.AddLast(newAction);
+			}
+			
 		}
 		else if (actionName == "MoveToCoordinate")
 		{
@@ -393,7 +404,18 @@ public class OCConnector : NetworkElement
 				
 	        }
 			Vector3 vec = new Vector3(x,z,y);
-			oca.MoveToCoordinate(vec);
+			
+			ArrayList args = new ArrayList();
+		 	args.Add(vec);
+			
+	
+	        MetaAction newAction = new MetaAction("walk",args,100);
+			
+			lock (this.actionScheduler.actionList)
+			{
+				this.actionScheduler.actionList.AddLast(newAction);
+			}
+
 		}
  
 	}

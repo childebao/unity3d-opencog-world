@@ -793,6 +793,28 @@ public class CharacterGridMotor : MonoBehaviour
 							}
 						//}
 					}
+					
+					if (Input.GetKeyDown(KeyCode.V))
+					{ 
+						Vector3 blockPos = wgo.getTheBlockPositionDirectlyInFront(this.gameObject.transform);
+						
+						if (blockPos == Vector3.zero)
+							return;
+						
+						IntVect blockhitPoint = new IntVect((int)blockPos.x,(int)blockPos.z,(int)blockPos.y);
+			            //Vector3 hitPoint = hit.point + (ray.direction.normalized * 0.01f);
+			            
+			            Transform allAvatars = GameObject.Find("Avatars").transform;
+						foreach (Transform child in allAvatars)
+				        {
+				            if (child.gameObject.tag != "OCA") continue;
+				            OCConnector con = child.gameObject.GetComponent<OCConnector>() as OCConnector;
+							if (con != null)
+							{
+								con.sendBlockStructure(blockhitPoint,true);
+							}
+				        }
+					}
 	
 				}
 	

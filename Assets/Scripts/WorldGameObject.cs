@@ -200,6 +200,21 @@ public class WorldGameObject : MonoBehaviour
 		return false;
 	}
 	
+	public Vector3 getTheBlockPositionDirectlyInFront(Transform globalCharacterTransform)
+	{
+		Ray ray = new Ray(globalCharacterTransform.position, globalCharacterTransform.forward);
+		RaycastHit hit = new RaycastHit();
+		
+		foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+		{
+	        if (c.Raycast (ray, out hit, 5)) {
+				return hit.point  + (ray.direction.normalized * 0.5f);
+			}
+		}
+		
+		return Vector3.zero;
+	}
+	
 	public bool isBlockBelow(Transform globalCharacterTransform)
 	{
 		Ray ray = new Ray(globalCharacterTransform.position, Vector3.down);
@@ -776,27 +791,37 @@ public class WorldGameObject : MonoBehaviour
 //		}
         
         // Ask the robot to recognize a structure built by blocks
-		if (Input.GetKeyDown(KeyCode.I))
+/*		if (Input.GetKeyDown(KeyCode.I))
 		{
-			RaycastHit hit;
-            Ray ray = Camera.mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2.0f, Screen.height / 2.0f, 0));
-            if (Physics.Raycast(ray, out hit, 20.0f))
-            {
-                Vector3 hitPoint = hit.point + (ray.direction.normalized * 0.01f);
-                IntVect blockhitPoint = new IntVect((int)hitPoint.x, (int)hitPoint.z, (int)hitPoint.y);
-                Transform allAvatars = GameObject.Find("Avatars").transform;
-				foreach (Transform child in allAvatars)
-		        {
-		            if (child.gameObject.tag != "OCA") continue;
-		            OCConnector con = child.gameObject.GetComponent<OCConnector>() as OCConnector;
-					if (con != null)
-					{
-						con.sendBlockStructure(blockhitPoint,true);
-					}
-		        }
+			Ray ray = new Ray(globalCharacterTransform.position, globalCharacterTransform.forward);
+			RaycastHit hit = new RaycastHit();
+			IntVect blockhitPoint =null;
+			foreach (MeshCollider c in transform.GetComponentsInChildren<MeshCollider>()) 
+			{
+		        if (c.Raycast (ray, out hit, 3)) 
+				{
+				    blockhitPoint = new IntVect((int)hit.point.x, (int)hit.point.z, (int)hit.point.y);
+					break;
+				}
 			}
+			
+			if (blockhitPoint == null)
+				return;
+            //Vector3 hitPoint = hit.point + (ray.direction.normalized * 0.01f);
+            
+            Transform allAvatars = GameObject.Find("Avatars").transform;
+			foreach (Transform child in allAvatars)
+	        {
+	            if (child.gameObject.tag != "OCA") continue;
+	            OCConnector con = child.gameObject.GetComponent<OCConnector>() as OCConnector;
+				if (con != null)
+				{
+					con.sendBlockStructure(blockhitPoint,true);
+				}
+	        }
+			
 		}
-		
+		*/
 		// save current scene into the saveToFile mapfile
 		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.S))
 		{

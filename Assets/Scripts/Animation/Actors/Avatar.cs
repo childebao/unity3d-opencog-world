@@ -22,9 +22,7 @@ public class Avatar: Interactor {
     public GameObject _inventory = null;
     private int inventoryId = 0;
 	
-	public List<IntVect> blocksToBuild = new List<IntVect>();
-	private float lastTimeBuildBlock = 0.0f;
-    
+	
     public GameObject inventory
     {
         get {
@@ -66,6 +64,7 @@ public class Avatar: Interactor {
     private ActionSummary rotateRightAction;
 
     private ActionSummary buildBlockAction;
+	private ActionSummary buildBlockAtPositionAction;
     private ActionSummary destroyBlockAction;
     private ActionSummary trickyLearnAction;
     
@@ -99,6 +98,7 @@ public class Avatar: Interactor {
         AM = GetComponent<ActionManager>() as ActionManager;
 		
 		ActionManager.registerActionMap("walk", "MoveToCoordinate");
+		ActionManager.registerActionMap("go_to_object", "MoveToObject");
         ActionManager.registerActionMap("turn", "RotateTo");
         ActionManager.registerActionMap("jump_up", "JumpUp");
         ActionManager.registerActionMap("jump_toward", "JumpToward");
@@ -111,6 +111,7 @@ public class Avatar: Interactor {
         ActionManager.registerActionMap("rotate_right", "RotateRight");
         ActionManager.registerActionMap("rotate", "RotateToByITween");
         ActionManager.registerActionMap("build_block", "BuildBlockInFrontWithOffset");
+		ActionManager.registerActionMap("build_block_At_Position", "BuildBlockAtPosition");
         ActionManager.registerActionMap("destroy_block", "DestroyBlockInFront");
 
         ActionManager.registerActionMap("eat", "Consume", ActionSource.EXTERNAL);
@@ -167,6 +168,11 @@ public class Avatar: Interactor {
         buildBlockAction = new ActionSummary(this, "BuildBlockInFrontWithOffset", new AnimSummary("createBlock"),
                                                 new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
         buildBlockAction.usesCallback = false; 
+		
+		buildBlockAtPositionAction = new ActionSummary(this, "BuildBlockAtPosition", new AnimSummary("createBlock"),
+                                                new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
+        buildBlockAtPositionAction.usesCallback = false; 
+		
 		destroyBlockAction = new ActionSummary(this, "DestroyBlockInFront", new AnimSummary("destroyBlockM"),
 		                                        new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
 		destroyBlockAction.usesCallback = false;
@@ -183,6 +189,7 @@ public class Avatar: Interactor {
         AM.addAction(rotateLeftAction);
         AM.addAction(rotateRightAction);
         AM.addAction(buildBlockAction);
+		AM.addAction(buildBlockAtPositionAction);
 		AM.addAction(destroyBlockAction);
 		AM.addAction(jumpForwardAction);
         /*AM.addAction(this,"MoveToCoordinate");
@@ -245,7 +252,8 @@ public class Avatar: Interactor {
 			if (addedActions.Count > 0)
 			{
 				List<ActionSummary> addedList = new List<ActionSummary>(addedActions.Values);
-				connector.sendActionAvailability(addedList, true);
+				if (connector != null)
+					connector.sendActionAvailability(addedList, true);
 				addedActions.Clear();
 			}
 		}
@@ -255,28 +263,20 @@ public class Avatar: Interactor {
 			if (removedActions.Count > 0)
 			{
 				List<ActionSummary> removedList = new List<ActionSummary>(removedActions.Values);
-				connector.sendActionAvailability(removedList, false);
+				if (connector != null)
+					connector.sendActionAvailability(removedList, false);
 				removedActions.Clear();
 			}
 		}
 		
-		if (blocksToBuild.Count != 0)
-		{
-			if (Time.time - lastTimeBuildBlock > 2.0f)
-			{
-				//Build at a Dirt Block at the specified location...
-	        	worldGameObject.world.GenerateBlockAt((blocksToBuild[0]), BlockType.Dirt);
-				blocksToBuild.RemoveAt(0);
-				lastTimeBuildBlock = Time.time;
-			}
-			
-		}
+
     }
 
     // -------------------------------------
     // These two methods are used internally for non-iTween based movement
     // from frame to frame
     private void Move () {
+		
         transform.Translate(movement * Speed * Time.deltaTime);
     }
 
@@ -299,31 +299,6 @@ public class Avatar: Interactor {
     public bool isRotating (){
         return rotating;
     }
-	
-	public void playWalk() 
-	{
-		UnityEngine.Animation animation = (UnityEngine.Animation)this.GetComponentInChildren( typeof(UnityEngine.Animation) );
-		//Debug.Log("In Play Walk...");
-		animation.CrossFade("walk", 0.0f);
-		//animation.Play("walk");
-	}
-	
-	public void playIdle() 
-	{
-		UnityEngine.Animation animation = (UnityEngine.Animation)this.GetComponentInChildren( typeof(UnityEngine.Animation) );
-		//if(m_lock && m_lockForIdle)
-		animation.CrossFade("idle", 0.2f);
-	}
-	
-	public void playJump() 
-	{
-		animation.CrossFade("jump", 0.1f);
-	}
-	
-	public void playClimb() 
-	{
-		animation.CrossFade("climb", 0.1f);
-	}
     
     // --- Actions
     
@@ -343,9 +318,9 @@ public class Avatar: Interactor {
 		
         Animation anim = gameObject.GetComponentInChildren<Animation>();
         DisableNormalAnimation();
-//        Debug.LogWarning("playing move start");
-//        anim.Play("move_start");
-//        StartCoroutine(RestoreNormalAnimation(anim["move_start"].length));
+        Debug.LogWarning("playing move start");
+        anim.Play("walk");
+        StartCoroutine(RestoreNormalAnimation(anim["walk"].length));
 
         // Wrap parameters for collision detection while moving.
         Hashtable onupdateparams = new Hashtable();
@@ -359,7 +334,6 @@ public class Avatar: Interactor {
                      "easetype" , "linear",
                      "axis", "y",
                      "onupdate", "_MoveToCollisionDetect", "onupdateparams", onupdateparams,
-					 "onstart", "playWalk",
                      "oncomplete" , "_ReachDestCoordinate", "oncompleteparams", callback)
                  );
 		}
@@ -372,7 +346,6 @@ public class Avatar: Interactor {
                     "easetype" , "linear",
                     "axis", "y",
                     "onupdate", "_MoveToCollisionDetect", "onupdateparams", onupdateparams,
-					"onstart", "playWalk",
                     "oncomplete" , "_ReachDestCoordinate")
                 );
 		}
@@ -397,7 +370,7 @@ public class Avatar: Interactor {
 
         isDestInFront = (angle < 45.0f);
 
-        //Debug.LogError("Current position: " + transform.position + " Dest position: " + dest + " Target angle: " + angle);
+        Debug.LogError("Current position: " + transform.position + " Dest position: " + dest + " Target angle: " + angle);
 		// Get the block that the avatar is standing on.
         Vector3 front = gameObject.transform.position;
 
@@ -418,16 +391,26 @@ public class Avatar: Interactor {
             // If the avatar is heading towards the destination in forward direction and there's a
             // block in front, then stop moving.
 			if (isDestInFront && 
-                worldGameObject.WorldData.GetBlock(frontPoint.X, frontPoint.Y, frontPoint.Z).Type != BlockType.Air)
+                worldGameObject.WorldData.GetBlock((uint)frontPoint.X, (uint)frontPoint.Y, (uint)frontPoint.Z).Type != BlockType.Air)
 			{
-				Debug.LogError("Block is detected in front.");
-				iTween.Stop();
-				
-				// Send an action failure feedback.
-				ActionResult ar = new ActionResult(moveToCoordAction, ActionResult.Status.FAILURE, this , null, 
-				                                   "Failed to move to destination because of obstacle in front");
-                ActionCompleteHandler h = (ActionCompleteHandler)paramMap["callback"];
-                if (h != null) h(ar);
+				// if the block in front is only one block high, it can jump on it
+				if (worldGameObject.WorldData.GetBlock((uint)frontPoint.X, (uint)frontPoint.Y, (uint)frontPoint.Z + 1).Type == BlockType.Air)
+				{
+					// jump on it
+					
+					JumpToward(new Vector3(frontPoint.X,frontPoint.Z + 1.0f ,frontPoint.Y),null);
+				}
+				else
+				{
+					Debug.LogError("Block is detected in front.");
+					iTween.Stop();
+					
+					// Send an action failure feedback.
+					ActionResult ar = new ActionResult(moveToCoordAction, ActionResult.Status.FAILURE, this , null, 
+					                                   "Failed to move to destination because of obstacle in front");
+	                ActionCompleteHandler h = (ActionCompleteHandler)paramMap["callback"];
+	                if (h != null) h(ar);
+				}
 			}
 		}
 		*/
@@ -449,10 +432,10 @@ public class Avatar: Interactor {
     public void _ReachDestCoordinate(ActionCompleteHandler h) {
         moving = false;
         DisableNormalAnimation();
- //       Animation anim = gameObject.GetComponentInChildren<Animation>();
- //       anim.Play("move_end");
- //       StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
-		
+        Animation anim = gameObject.GetComponentInChildren<Animation>();
+        //anim.Play("move_end");
+        //StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
+
 		ArrayList pp = new ArrayList();
         pp.Add(gameObject.transform.position);
         ActionResult ar = new ActionResult(moveToCoordAction, ActionResult.Status.SUCCESS, this , pp, "I moved to (" + 
@@ -461,6 +444,7 @@ public class Avatar: Interactor {
 		                                   gameObject.transform.position.z + ")" );
 		                                   
         notifyListeners(ar,h);
+		
     }
 
     public void MoveToObject(ActionTarget targetToMoveTo, float LookTime = 1.0f, ActionCompleteHandler callback = null) 
@@ -468,7 +452,16 @@ public class Avatar: Interactor {
 		GameObject theObject = OCBehaviour.findObjectByInstanceId(targetToMoveTo.id);
 		if (theObject == null)
 		{
-			Debug.LogError("MoveToObject: The object is null!");
+			Debug.Log("MoveToObject: The object is null!");
+			
+			ArrayList pp = new ArrayList();
+        	pp.Add(targetToMoveTo);
+			pp.Add(1.0f);
+			ActionResult ar = new ActionResult(moveToObjectAction, ActionResult.Status.FAILURE, this, pp,
+			                                  "Tried to move to an unexisting object");
+			OCActionScheduler scheduler = gameObject.GetComponent<OCActionScheduler>() as OCActionScheduler;
+        	callback += scheduler.actionComplete;
+			notifyListeners(ar,callback);
 			return;
 		}
 		
@@ -500,19 +493,17 @@ public class Avatar: Interactor {
         
 		if (agentType == "player")
 		{
-			//Debug.Log("Moving to " + Target + " at " + Dest);
-	        //DisableNormalAnimation();
-	        /*Animation anim = gameObject.GetComponentInChildren<Animation>();
-	        Debug.LogWarning("playing move start");
-	        anim.Play("move_start");
-	        StartCoroutine(RestoreNormalAnimation(anim["move_start"].length));*/
-	        
+
+	        Animation anim = gameObject.GetComponentInChildren<Animation>();
+        	DisableNormalAnimation();
+        	Debug.LogWarning("playing player move start");
+        	anim.Play("walk");
+        	StartCoroutine(RestoreNormalAnimation(anim["walk"].length));
 	        iTween.MoveTo(gameObject, iTween.Hash("position", Dest,
 	                    "looktarget", Dest, 
 	                    "speed" , 2.0f,
 	                    "easetype" , "linear",
 	                    "axis", "y",
-						"onstart", "playWalk",
 	                    "oncomplete" , "_ReachDestObject", "oncompleteparams",callback)
 	                );
 		}
@@ -520,17 +511,17 @@ public class Avatar: Interactor {
 		{
 	        //Debug.Log("Moving to " + Target + " at " + Dest);
 	        DisableNormalAnimation();
-	//        Animation anim = gameObject.GetComponentInChildren<Animation>();
-	//        Debug.LogWarning("playing move start");
-	//        anim.Play("move_start");
-	//        StartCoroutine(RestoreNormalAnimation(anim["move_start"].length));
-	        
+	        Animation anim = gameObject.GetComponentInChildren<Animation>();
+	        Debug.LogWarning("playing robot move start");
+	        //anim.Play("move_start");
+	        //StartCoroutine(RestoreNormalAnimation(anim["move_start"].length));
+	        anim.Play("walk");
+			StartCoroutine(RestoreNormalAnimation(anim["walk"].length));
 	        iTween.MoveTo(gameObject, iTween.Hash("position", Dest,
 	                    "looktarget", Dest, 
 	                    "speed" , Speed,
 	                    "easetype" , "linear",
 	                    "axis", "y",
-						"onstart", "playWalk",
 	                    "oncomplete" , "_ReachDestObject", "oncompleteparams",callback)
 	                );
 		}
@@ -543,22 +534,23 @@ public class Avatar: Interactor {
 		if (agentType != "player")
 		{
 	        DisableNormalAnimation();
-	//        Animation anim = gameObject.GetComponentInChildren<Animation>();
-	//        anim.Play("move_end");
-	//        StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
+	       // Animation anim = gameObject.GetComponentInChildren<Animation>();
+	        //anim.Play("move_end");
+	       // StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
 		}
 		else
 		{
 			((Player)this).isAutoWalking = false;
 		}
-	
-		LookAt(LastTargetObj.transform.position, 1f);
+		
+		if (LastTargetObj != null)
+			LookAt(LastTargetObj.transform.position, 1f);
 
 		ArrayList pp = new ArrayList();
 		ActionTarget targetToMoveTo = new ActionTarget(LastTargetObj.GetInstanceID(), EmbodimentXMLTags.ORDINARY_OBJECT_TYPE);
         pp.Add(targetToMoveTo);
 		pp.Add(1.0f);
-        ActionResult ar = new ActionResult(moveToObjectAction, ActionResult.Status.SUCCESS, this , pp, "I moved to the " + LastTargetObj.name);
+        ActionResult ar = new ActionResult(moveToObjectAction, ActionResult.Status.SUCCESS, this , pp, "I moved to the " + targetToMoveTo.id);
         notifyListeners(ar,h);
 		
 	    LastTargetObj = null;
@@ -678,7 +670,6 @@ public class Avatar: Interactor {
         iTween.MoveTo(gameObject, iTween.Hash("position", dest,
                     "speed", Speed,
                     "easetype", "linear",
-					"onstart", "playClimb",
                     "oncomplete", "_onJumpUpComplete", "oncompleteparams", h)
                 );
         
@@ -688,22 +679,25 @@ public class Avatar: Interactor {
 	{
 		if (h == null)
 			return;
-
+		       
         ActionResult ar = new ActionResult(jumpUpAction, ActionResult.Status.SUCCESS, this , null, "I did a jump up!");
-        notifyListeners(ar,h);
 		
 	}
-		
+
+
     public void JumpToward(Vector3 Destination, ActionCompleteHandler h)
     {
         currentAction = jumpTowardAction;
-
+        Vector3 dest = Destination;
+        //dest.y = gameObject.transform.position.y + Destination.y;
+		
+		/* TODO: need a new calculate way
 		// Check if the destination is already occupied by a block.
-		//IntVect destPoint = new IntVect((int)dest.x, (int)dest.z, (int)dest.y);
-        /*
+		IntVect destPoint = new IntVect((int)dest.x, (int)dest.z, (int)dest.y);
+        
         if (worldGameObject)
 		{
-			if (worldGameObject.WorldData.GetBlock(destPoint.X, destPoint.Y, destPoint.Z).Type != BlockType.Air)
+			if (worldGameObject.WorldData.GetBlock((uint)destPoint.X, (uint)destPoint.Y, (uint)destPoint.Z).Type != BlockType.Air)
 			{
 				ActionResult ar = new ActionResult(jumpTowardAction, ActionResult.Status.FAILURE, this , null, "I can not jump towards destination!");
 				h(ar);
@@ -711,14 +705,13 @@ public class Avatar: Interactor {
 			}
 		}
 		*/
-        LookAt(Destination, 2.5f);
-        
-        iTween.MoveTo(gameObject, iTween.Hash("position", Destination,
-                    "speed", Speed,
-                    "easetype", "linear",
-					"onstart", "playClimb",
-                    "oncomplete", "_onJumpTowardComplete", "oncompleteparams", h)
-                );
+        LookAt(dest, 0.5f);
+        iTween.MoveTo(gameObject, iTween.Hash("position", dest,
+            "speed", Speed,
+            "easetype", "linear",
+            "oncomplete", "_onJumpTowardComplete", "oncompleteparams", h)
+        );
+	  
     }
     
 	public void JumpForward(float height, ActionCompleteHandler h)
@@ -741,7 +734,7 @@ public class Avatar: Interactor {
 		
         if (worldGameObject)
 		{
-			if (worldGameObject.WorldData.GetBlock(destPoint.X, destPoint.Y, destPoint.Z).Type != BlockType.Air)
+			if (worldGameObject.WorldData.GetBlock((int)destPoint.X, (int)destPoint.Y, (int)destPoint.Z).Type != BlockType.Air)
 			{
 				ActionResult ar = new ActionResult(jumpForwardAction, ActionResult.Status.FAILURE, this , null, "I can not jump forward!");
 				h(ar);
@@ -754,7 +747,6 @@ public class Avatar: Interactor {
         iTween.MoveTo(gameObject, iTween.Hash("position", dest,
                     "speed", Speed,
                     "easetype", "linear",
-					"onstart", "playJump",
                     "oncomplete", "_onJumpTowardComplete", "oncompleteparams", h)
                 );	
 	}
@@ -763,7 +755,7 @@ public class Avatar: Interactor {
 	{
 		if (h == null)
 			return;
-
+					
         ActionResult ar = new ActionResult(jumpTowardAction, ActionResult.Status.SUCCESS, this , null, "I did a jump toward!"); 
         notifyListeners(ar,h);
 		
@@ -808,25 +800,24 @@ public class Avatar: Interactor {
         go.rigidbody.isKinematic = true;
         go.collider.isTrigger = true;
 		
-        
-        if (this.RightHand != null) {
-            // if the right hand is not null, then place the object under the hand transform
-            Transform Hand = this.RightHand;	
-			go.transform.parent = Hand;	
+        if (agentType == "player") {
+            // place the object under the hand transform
+          	GameObject HandObject = GameObject.Find("l_WristJ");
+			go.transform.parent = HandObject.transform;	
             go.transform.localPosition = new Vector3(0.0f,0.0f,0.0f); 
         } else {
             // Hold the inventory above the avatar instead of its right hand.
             // If there is a spinner marking the avatar is selected, we should recalculate
             // the height of spinner.
-            //Transform spinner = transform.FindChild("SelectionSpinner");
-            float objectHeight = VerticalSizeCalculator.getHeight(gameObject.transform, null);
+            Transform spinner = transform.FindChild("SelectionSpinner");
+            float objectHeight = VerticalSizeCalculator.getHeight(gameObject.transform, spinner);
             go.transform.parent = gameObject.transform;
             Vector3 goSize = Vector3.up * go.collider.bounds.size.y;
             go.transform.position = gameObject.transform.position + goSize + (Vector3.up * 1.01f * objectHeight);
             go.transform.localRotation = Quaternion.identity;
             
             // Add the particle effect tractor beam
-            //setTractorBeamState(true);
+            setTractorBeamState(true);
         }
         // reset any actions...
         go.SendMessage("AddAction",this);
@@ -852,7 +843,7 @@ public class Avatar: Interactor {
             go.SendMessage("RemoveAction",this); 
             go.SendMessage("AddAction",this); 
         }
-        //setTractorBeamState(false);
+        setTractorBeamState(false);
 		
         PutOnAbleObject putOn = go.GetComponent<PutOnAbleObject>();
 		if (putOn != null)
@@ -912,8 +903,7 @@ public class Avatar: Interactor {
 
         // Translate the build point to integer coordinate.
         IntVect blockBuildPoint = new IntVect((int)buildPoint.x, (int)buildPoint.z, (int)buildPoint.y);
-		
-		//If we don't recognize the blockType, default to Stone
+
     	BlockType blockType = BlockType.Stone;
 		if (Block.StringToTypeMap.ContainsKey(blockTypeStr))
 		{
@@ -924,15 +914,26 @@ public class Avatar: Interactor {
     }
 	
 
-	public void BuildBlockAtPosition(IntVect blockBuildPoint, string blockTypeStr = "TopSoil", ActionCompleteHandler h = null)
+	public void BuildBlockAtPosition(IntVect blockBuildPoint, string blockType = "TopSoil", ActionCompleteHandler h = null)
     {
     	if (!worldGameObject) {
     		Debug.LogError("World game object is not available, can not build a block.");
 			return;
 		}
-	    if (currentAction == null) currentAction = buildBlockAction;
 		
-		blocksToBuild.Add(blockBuildPoint);
+		LookAt(new Vector3(blockBuildPoint.X,blockBuildPoint.Z,blockBuildPoint.Y));
+	    if (currentAction == null) currentAction = buildBlockAtPositionAction;
+		
+		IntVect blockBuildPointtest = new IntVect((int)blockBuildPoint.X, (int)blockBuildPoint.Z, (int)blockBuildPoint.Y);
+
+    	BlockType type = BlockType.Stone;
+		if (Block.StringToTypeMap.ContainsKey(blockType))
+		{
+			type = Block.StringToTypeMap[blockType];
+		}
+
+        worldGameObject.world.GenerateBlockAt(blockBuildPoint, BlockType.Lava);
+	
     }
 
 	
@@ -966,7 +967,7 @@ public class Avatar: Interactor {
         IntVect blockDestroyPoint = new IntVect((int)destroyPoint.x, (int)destroyPoint.z, (int)destroyPoint.y);
 		
 		// Set the block 
-        worldGameObject.WorldData.SetBlockLightWithRegeneration(blockDestroyPoint.X, blockDestroyPoint.Y, blockDestroyPoint.Z, 255);
+        worldGameObject.WorldData.SetBlockLightWithRegeneration((int)blockDestroyPoint.X, (int)blockDestroyPoint.Y, (int)blockDestroyPoint.Z, 255);
     }
 	
 	public void notifyActionAdded(ActionSummary action)

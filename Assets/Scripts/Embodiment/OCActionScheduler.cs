@@ -41,8 +41,10 @@ public class OCActionScheduler : MonoBehaviour
     private OCConnector connector;
 	private Avatar AV;
 
-    private LinkedList<MetaAction> actionList = new LinkedList<MetaAction>();
-    private MetaAction currentAction = null;
+    public LinkedList<MetaAction> actionList = new LinkedList<MetaAction>();
+    public MetaAction currentAction = null;
+	private static float TimeOutSeconds = 15.0f;
+	private float currentActionBeginTime;
 	
 	public void executeAction(MetaAction action)
 	{
@@ -85,20 +87,21 @@ public class OCActionScheduler : MonoBehaviour
             // Action is not registered, notify failure.
             actionComplete(new ActionResult(null, ActionResult.Status.FAILURE, AV, action.Parameters));
         }
+		
+		currentActionBeginTime = Time.time;
 	}
 
     public void actionComplete(ActionResult ar)
     {
         if (this.currentAction == null) return;
-        this.connector.handleActionResult(ar, this.currentAction);
+		if (this.connector != null)
+        	this.connector.handleActionResult(ar, this.currentAction);
         this.currentAction = null;
 		
     }
 
     public void receiveActionPlan(LinkedList<MetaAction> actionPlan)
     {
-		Debug.Log("///////////// In Receive Action Plan! ///////////////");
-		
         cancelCurrentActionPlan();
         lock (this.actionList)
         { this.actionList = actionPlan; }
@@ -154,11 +157,17 @@ public class OCActionScheduler : MonoBehaviour
 	void Update()
 	{
         // Check if there is an running action.
-        if (this.currentAction != null) return;
+        if (this.currentAction != null) 
+		{
+			if (Time.time - currentActionBeginTime > TimeOutSeconds)
+				cancelCurrentActionPlan();
+			
+			return;
+		}
         
         // If action plan hasn't been finished, pick up one from the head
         // and execute it.
-        if (this.actionList != null && this.actionList.Count > 0)
+        if (this.actionList != null&& this.actionList.Count > 0)
         {
             lock (this.actionList)
             {
