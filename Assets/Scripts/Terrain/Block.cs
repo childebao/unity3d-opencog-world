@@ -139,6 +139,8 @@ public enum BlockType : byte
 ,	DragonEgg
 ,   Light
 , 	Wheel
+
+,	NUMBER_OF_BLOCK_TYPES // This should be the last element of the enum
 }
 
 public enum BlockFace : byte

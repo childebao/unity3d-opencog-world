@@ -40,6 +40,7 @@ public class CharacterGridMotor : MonoBehaviour
 	private Hashtable turnL_HT;
 	private Hashtable turnR_HT;
 	private Hashtable createBlockHT;
+	private Hashtable girlCreateBlockHT;
 	
 	private Hashtable climb_HT;
 	private bool isClimbing = false;
@@ -59,6 +60,7 @@ public class CharacterGridMotor : MonoBehaviour
 	//private static Vector3 sum;
 	
 	private static string currChar = "Girl";
+	private int currBlockType = (int)BlockType.Stone;
 	
 	//////////////////////////////////////////////////
 	
@@ -196,7 +198,7 @@ public class CharacterGridMotor : MonoBehaviour
 			createBlockHT.Add("time",animation["createBlock"].length);
 			createBlockHT.Add("delay",0);
 			createBlockHT.Add("onstart","playCreateBlock");
-			createBlockHT.Add("oncomplete", "playComplete");
+			createBlockHT.Add("oncomplete", "playComplete");			
 		}
 	
 		if (this.gameObject.name == "Girl") {
@@ -208,6 +210,13 @@ public class CharacterGridMotor : MonoBehaviour
 			animation["magicIce"].wrapMode = WrapMode.Once;
 		 	animation["magicIce"].speed = 1.0f;
 		 	animation["magicIce"].layer = 2;
+			
+			girlCreateBlockHT = new Hashtable();
+			girlCreateBlockHT.Add("y",0);
+			girlCreateBlockHT.Add("time",animation["magicFire"].length);
+			girlCreateBlockHT.Add("delay",0);
+			girlCreateBlockHT.Add("onstart","playCreateBlock");
+			girlCreateBlockHT.Add("oncomplete", "playComplete");
 	
 		 }
 	
@@ -634,7 +643,7 @@ public class CharacterGridMotor : MonoBehaviour
 					iTween.RotateBy(this.gameObject, turnR_HT);
 				}
 			}
-			
+		
 //			IntVect blockFront = new IntVect((int)(sum.x), (int)(sum.z), (int)(sum.y+0.5f)); // in chunk coordinates
 //			IntVect blockFrontAbove = new IntVect(blockFront.X, blockFront.Y, blockFront.Z+1);
 //			IntVect blockFrontBelow = new IntVect(blockFront.X, blockFront.Y, blockFront.Z-1);
@@ -642,6 +651,14 @@ public class CharacterGridMotor : MonoBehaviour
 //			Vector3 ground_below_front = new Vector3(sum.x, sum.y-1, sum.z);
 			
 			if (world != null) {
+				
+				
+				if (Input.GetKeyDown("o")) {
+					currBlockType++;
+					if (currBlockType == (int)BlockType.NUMBER_OF_BLOCK_TYPES)
+						currBlockType = 0;
+				}
+					
 	
 				if(currChar == "Robot")
 				{
@@ -658,7 +675,7 @@ public class CharacterGridMotor : MonoBehaviour
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward + Vector3.up;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), BlockType.Stone);
+								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), (BlockType)currBlockType);
 								//spawnTestFireAtBlockLocation(ground_above_front);
 							}
 							else
@@ -679,7 +696,7 @@ public class CharacterGridMotor : MonoBehaviour
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), BlockType.Stone);
+								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), (BlockType)currBlockType);
 								//spawnTestFireAtBlockLocation(pos);
 							}
 							else
@@ -702,7 +719,7 @@ public class CharacterGridMotor : MonoBehaviour
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward + Vector3.down;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), BlockType.Stone);
+								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), (BlockType)currBlockType);
 								//spawnTestFireAtBlockLocation(ground_below_front);
 							}
 							else
@@ -794,6 +811,27 @@ public class CharacterGridMotor : MonoBehaviour
 						//}
 					}
 					
+					// Create block below at A
+					if (Input.GetKeyDown("g")) {
+		
+						//if (isInValidRange(sum)) {
+							iTween.MoveBy(this.gameObject, girlCreateBlockHT);
+						
+							if(!isBlockDirectlyInFront)
+							{
+								m_lock = true;
+								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
+								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward;
+								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), (BlockType)currBlockType);
+								//spawnTestFireAtBlockLocation(pos);
+							}
+							else
+							{
+								//Debug.Log("Block Does Not Exist, In CharacterGridMotor::Update: " + ground_front.ToString());
+							}
+						//}
+					}
+
 					if (Input.GetKeyDown(KeyCode.V))
 					{ 
 						Vector3 blockPos = wgo.getTheBlockPositionDirectlyInFront(this.gameObject.transform);
