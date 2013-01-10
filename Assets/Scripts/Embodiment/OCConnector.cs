@@ -24,7 +24,7 @@ using Embodiment;
 ///
 public class OCConnector : NetworkElement
 {
-    public String settingsFilename = "Assets/Configuration/embodiment.config";
+    public String settingsFilename = "Assets/embodiment.config";
 
     #region Private Variables
     private WorldGameObject world;
@@ -72,9 +72,9 @@ public class OCConnector : NetworkElement
 	private string mapName;
 	
     // The size of map.
-    private uint globalPositionOffsetX;
-	private uint globalPositionOffsetY;
-	private uint globalPositionOffsetZ;
+    private int globalPositionOffsetX;
+	private int globalPositionOffsetY;
+	private int globalPositionOffsetZ;
 	
     // Map global X beginning position.
     private int globalPositionX;
@@ -351,7 +351,6 @@ public class OCConnector : NetworkElement
 	// but a single action that current the robot want to do
 	private void parseSingleActionElement(XmlElement element)
 	{
-		
 		Avatar oca = gameObject.GetComponent<Avatar>() as Avatar;
 		if (oca == null)
 			return;
@@ -375,19 +374,16 @@ public class OCConnector : NetworkElement
 	        }
 			IntVect blockBuildPoint = new IntVect(x, y, z);
 			
-			ArrayList args = new ArrayList();
-		 	args.Add(blockBuildPoint);
-			
-	
-	        MetaAction newAction = new MetaAction("build_block_At_Position",args,100);
+			ArrayList args2 = new ArrayList();
+		 	args2.Add(blockBuildPoint);
+	        MetaAction newAction2 = new MetaAction("build_block_At_Position",args2,100);
 			
 			lock (this.actionScheduler.actionList)
 			{
-				this.actionScheduler.actionList.AddLast(newAction);
+				this.actionScheduler.actionList.AddLast(newAction2);
 			}
-			
 		}
-	/*	else if (actionName == "MoveToCoordinate")
+		/*else if (actionName == "MoveToCoordinate")
 		{
 			int x = 0,y = 0,z = 0;
 			XmlNodeList list = element.GetElementsByTagName(EmbodimentXMLTags.PARAMETER_ELEMENT);
@@ -404,20 +400,9 @@ public class OCConnector : NetworkElement
 				
 	        }
 			Vector3 vec = new Vector3(x,z,y);
-			
-			ArrayList args = new ArrayList();
-		 	args.Add(vec);
-			
-	
-	        MetaAction newAction = new MetaAction("walk",args,100);
-			
-			lock (this.actionScheduler.actionList)
-			{
-				this.actionScheduler.actionList.AddLast(newAction);
-			}
-
-		}*/
- 
+			oca.MoveToCoordinate(vec);
+		}
+ 		*/
 	}
 	
 
@@ -439,8 +424,6 @@ public class OCConnector : NetworkElement
      */
     private void parseActionPlanElement(XmlElement element)
     {
-		Debug.Log("/////////////// In Parse Action Plan Element! //////////////////");
-		
         // Get the action performer id.
         string avatarId = element.GetAttribute(EmbodimentXMLTags.ENTITY_ID_ATTRIBUTE);
         if (avatarId != this.myBrainId)
@@ -671,6 +654,17 @@ public class OCConnector : NetworkElement
 					vectorElement.SetAttribute(EmbodimentXMLTags.X_ATTRIBUTE, vec.x.ToString());
 					vectorElement.SetAttribute(EmbodimentXMLTags.Y_ATTRIBUTE, vec.y.ToString());
 					vectorElement.SetAttribute(EmbodimentXMLTags.Z_ATTRIBUTE, vec.z.ToString());
+					
+				}
+				else if ( paratype ==  "IntVect") // it's an vector
+				{   
+					IntVect vec = (IntVect)obj ;
+					param.SetAttribute("type", "vector");
+					param.SetAttribute("name", ar.action.pinfo[i+1].Name);
+					XmlElement vectorElement = (XmlElement)param.AppendChild(doc.CreateElement(EmbodimentXMLTags.VECTOR_ELEMENT));
+					vectorElement.SetAttribute(EmbodimentXMLTags.X_ATTRIBUTE, (vec.X + 0.5f).ToString());
+					vectorElement.SetAttribute(EmbodimentXMLTags.Y_ATTRIBUTE, (vec.Y + 0.5f).ToString());
+					vectorElement.SetAttribute(EmbodimentXMLTags.Z_ATTRIBUTE, (vec.Z + 0.5f).ToString());
 					
 				}
 				// todo: we don't have a rotation type
@@ -983,7 +977,7 @@ public class OCConnector : NetworkElement
 			paramNew.SetAttribute("type", "string");
 			paramNew.SetAttribute("value", newValue as string);
 		}
-		else if (valueType == "UnityEngine.GameObject") 
+		else if ((valueType == "UnityEngine.GameObject" ) || (valueType == "Avatar") )
 		{
 			paramOld.SetAttribute("type", "entity");
 			XmlElement oldEntityElement = (XmlElement)paramOld.AppendChild(doc.CreateElement(EmbodimentXMLTags.ENTITY_ELEMENT));
@@ -1495,8 +1489,8 @@ public class OCConnector : NetworkElement
 			if (OCPerceptionCollector.hasBoundaryChuncks)	
 			{
 				// Calculate the offset of the terrain.
-	            this.globalPositionOffsetX = (uint) WorldGameObject.chunkBlocksWidth * (uint)WorldGameObject.chunksWide - 2;
-				this.globalPositionOffsetY = (uint)WorldGameObject.chunkBlocksHeight * (uint)WorldGameObject.chunksHigh - 2;
+	            this.globalPositionOffsetX = WorldGameObject.chunkBlocksWidth * WorldGameObject.chunksWide - 2;
+				this.globalPositionOffsetY = WorldGameObject.chunkBlocksHeight * WorldGameObject.chunksHigh - 2;
 	 
 	            // There is an invisible chunk at the edge of the terrain, so we should take count of it.
 	            this.globalPositionX = (int)WorldGameObject.chunkBlocksWidth;
@@ -1505,14 +1499,14 @@ public class OCConnector : NetworkElement
 			else
 			{
 	            // Calculate the offset of the terrain.
-	            this.globalPositionOffsetX = (uint) WorldGameObject.chunkBlocksWidth * (uint)WorldGameObject.chunksWide;
-				this.globalPositionOffsetY = (uint) WorldGameObject.chunkBlocksHeight * (uint)WorldGameObject.chunksHigh;
+	            this.globalPositionOffsetX = WorldGameObject.chunkBlocksWidth * WorldGameObject.chunksWide;
+				this.globalPositionOffsetY = WorldGameObject.chunkBlocksHeight * WorldGameObject.chunksHigh;
 				
 	            // There is an invisible chunk at the edge of the terrain, so we should take count of it.
 	            this.globalPositionX = 0;
 	            this.globalPositionY = 0;
 			}
-			this.globalPositionOffsetZ = (uint) WorldGameObject.chunkBlocksDepth * (uint)WorldGameObject.chunksDeep ;
+			this.globalPositionOffsetZ = WorldGameObject.chunkBlocksDepth * WorldGameObject.chunksDeep ;
 			this.globalPositionZ = 0;
             // The floor height should be 1 unit larger than the block's z index.
             this.globalFloorHeight = world.WorldData.floor;

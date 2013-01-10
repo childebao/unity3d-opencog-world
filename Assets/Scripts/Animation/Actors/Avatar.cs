@@ -942,6 +942,7 @@ public class Avatar: Interactor {
 		}
 
         worldGameObject.world.GenerateBlockAt(blockBuildPoint, blockType);
+		OCPerceptionCollector.notifyBlockAdded(blockBuildPoint);
     }
 	
 
@@ -1017,6 +1018,7 @@ public class Avatar: Interactor {
 
         worldGameObject.world.GenerateBlockAt(blockBuildPoint, type);
 		this.buildBlockPostion = IntVect.ZERO;
+		OCPerceptionCollector.notifyBlockAdded(blockBuildPoint);
 		
     }
 
@@ -1052,6 +1054,7 @@ public class Avatar: Interactor {
 		
 		// Set the block 
         worldGameObject.WorldData.SetBlockLightWithRegeneration((int)blockDestroyPoint.X, (int)blockDestroyPoint.Y, (int)blockDestroyPoint.Z, 255);
+		OCPerceptionCollector.notifyBlockRemoved(blockDestroyPoint);
     }
 	
 	public void notifyActionAdded(ActionSummary action)

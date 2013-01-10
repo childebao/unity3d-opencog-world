@@ -249,15 +249,16 @@ public class OCPerceptionCollector : MonoBehaviour
     /// TODO: what part of terrain should we percept and send the map info? Let's just send 
     /// the information of chunks in flat area first.
     /// </summary>
+	bool havePerceptTerrainForFirstTime = false;
 	private void perceptTerrain()
 	{
+		if (havePerceptTerrainForFirstTime)
+			return;
 		// Get the world game object.
 		WorldGameObject world = GameObject.Find("World").GetComponent<WorldGameObject>() as WorldGameObject;
 
 		// Get the chunks data.
 		worldData = world.WorldData;
-		
-		// Set the Floor Height to the one determined by the world data
 		floorHeight = worldData.floor;
 		List<OCObjectMapInfo> terrainMapinfoList = new List<OCObjectMapInfo>();
 
@@ -313,12 +314,13 @@ public class OCPerceptionCollector : MonoBehaviour
 				
 		if (terrainMapinfoList.Count > 0)
 		{
-			connector.sendTerrainInfoMessage(terrainMapinfoList, true);
+			connector.sendTerrainInfoMessage(terrainMapinfoList, ! havePerceptTerrainForFirstTime);
 			terrainMapinfoList.Clear();
 		}
 		
+	
 		connector.sendFinishPerceptTerrian();
-
+		havePerceptTerrainForFirstTime = true;
 	}
 
 	/// <summary>
@@ -384,12 +386,27 @@ public class OCPerceptionCollector : MonoBehaviour
 			chunkStatusMap[chunkId] = true;
 		}
 	}
-
+	
+	
+	public static void notifyBlockRemoved(IntVect blockBuildPoint)
+	{
+		Transform allAvatars = GameObject.Find("Avatars").transform;
+		foreach (Transform child in allAvatars)
+        {
+            if (child.gameObject.tag != "OCA") continue;
+            OCPerceptionCollector con = child.gameObject.GetComponent<OCPerceptionCollector>() as OCPerceptionCollector;
+			if (con != null)
+			{
+				con._notifyBlockRemoved(blockBuildPoint);
+			}
+        }
+	}
+	
 	/// <summary>
     /// Notify OAC that certain block has been removed.
 	/// </summary>
 	/// <param name="hitPoint"></param>
-	public void notifyBlockRemoved(IntVect hitPoint)
+	public void _notifyBlockRemoved(IntVect hitPoint)
 	{
 		uint chunkX = (uint)hitPoint.X / (uint)worldData.ChunkBlockWidth;
 		uint chunkY = (uint)hitPoint.Y / (uint)worldData.ChunkBlockHeight;
@@ -411,7 +428,7 @@ public class OCPerceptionCollector : MonoBehaviour
 				break;
 		}
 		 */
-		OCObjectMapInfo mapinfo = OCObjectMapInfo.CreateTerrainMapInfo(currentChunk, blockX, blockY, blockZ, 1,currentChunk.GetBlock((int)blockX, (int)blockY, (int)blockZ).Type);
+		OCObjectMapInfo mapinfo = OCObjectMapInfo.CreateTerrainMapInfo(currentChunk, blockX, blockY, blockZ, 1,currentChunk.Blocks[blockX, blockY, blockZ].Type);
 		//mapinfo.Visibility = OCObjectMapInfo.VISIBLE_STATUS.UNKNOWN;
         mapinfo.RemoveProperty("visibility-status");
         mapinfo.AddProperty("remove", "true", PropertyType.BOOL);
@@ -422,18 +439,33 @@ public class OCPerceptionCollector : MonoBehaviour
 		connector.sendTerrainInfoMessage(removedBlockList);
 	
 	}
-
-	public void notifyBlockAdded(IntVect hitPoint)
+	
+	public static void notifyBlockAdded(IntVect blockBuildPoint)
 	{
-		uint chunkX = (uint)(hitPoint.X / worldData.ChunkBlockWidth);
-		uint chunkY = (uint)(hitPoint.Y / worldData.ChunkBlockHeight);
-		uint chunkZ = (uint)(hitPoint.Z / worldData.ChunkBlockDepth);
-		uint blockX = (uint)(hitPoint.X % worldData.ChunkBlockWidth);
-		uint blockY = (uint)(hitPoint.Y % worldData.ChunkBlockHeight);
-		uint blockZ = (uint)(hitPoint.Z % worldData.ChunkBlockDepth);
+		Transform allAvatars = GameObject.Find("Avatars").transform;
+		foreach (Transform child in allAvatars)
+        {
+            if (child.gameObject.tag != "OCA") continue;
+            OCPerceptionCollector con = child.gameObject.GetComponent<OCPerceptionCollector>() as OCPerceptionCollector;
+			if (con != null)
+			{
+				con._notifyBlockAdded(blockBuildPoint);
+			}
+        }
+	}
+	
+
+	public void _notifyBlockAdded(IntVect hitPoint)
+	{
+		uint chunkX = (uint)hitPoint.X / (uint)worldData.ChunkBlockWidth;
+		uint chunkY = (uint)hitPoint.Y / (uint)worldData.ChunkBlockHeight;
+		uint chunkZ = (uint)hitPoint.Z / (uint)worldData.ChunkBlockDepth;
+		uint blockX = (uint)hitPoint.X % (uint)worldData.ChunkBlockWidth;
+		uint blockY = (uint)hitPoint.Y % (uint)worldData.ChunkBlockHeight;
+		uint blockZ = (uint)hitPoint.Z % (uint)worldData.ChunkBlockDepth;
 
 		Chunk currentChunk = worldData.Chunks[chunkX, chunkY, chunkZ];
-		OCObjectMapInfo mapinfo = OCObjectMapInfo.CreateTerrainMapInfo(currentChunk, blockX, blockY, blockZ, 1,currentChunk.GetBlock((int)blockX, (int)blockY, (int)blockZ).Type);
+		OCObjectMapInfo mapinfo = OCObjectMapInfo.CreateTerrainMapInfo(currentChunk, blockX, blockY, blockZ, 1,currentChunk.Blocks[blockX, blockY, blockZ].Type);
 		
 		
 		List<OCObjectMapInfo> addedBlockList = new List<OCObjectMapInfo>();

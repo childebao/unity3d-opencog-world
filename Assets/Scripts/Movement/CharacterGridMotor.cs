@@ -62,7 +62,6 @@ public class CharacterGridMotor : MonoBehaviour
 	private static string currChar = "Girl";
 	private int currBlockType = (int)BlockType.Stone;
 	
-	Avatar avatar;
 	
 	//////////////////////////////////////////////////
 	
@@ -320,7 +319,6 @@ public class CharacterGridMotor : MonoBehaviour
 	
 		world = GameObject.FindGameObjectWithTag("world");		// Add tag "block" in the scene in Unity !
 		
-		avatar = GetComponent<Avatar>() as Avatar;
 	}
 	
 	// ---------------------------------------------------------------------------------------------
@@ -679,7 +677,9 @@ public class CharacterGridMotor : MonoBehaviour
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward + Vector3.up;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), (BlockType)currBlockType);
+								IntVect blockBuildPoint = new IntVect((int)pos.x, (int)pos.z, (int)pos.y);
+								wgo.world.GenerateBlockAt(blockBuildPoint, (BlockType)currBlockType);
+								OCPerceptionCollector.notifyBlockAdded(blockBuildPoint);
 								//spawnTestFireAtBlockLocation(ground_above_front);
 							}
 							else
@@ -700,7 +700,9 @@ public class CharacterGridMotor : MonoBehaviour
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), (BlockType)currBlockType);
+								IntVect blockBuildPoint = new IntVect((int)pos.x, (int)pos.z, (int)pos.y);
+								wgo.world.GenerateBlockAt(blockBuildPoint, (BlockType)currBlockType);
+								OCPerceptionCollector.notifyBlockAdded(blockBuildPoint);
 								//spawnTestFireAtBlockLocation(pos);
 							}
 							else
@@ -723,7 +725,9 @@ public class CharacterGridMotor : MonoBehaviour
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward + Vector3.down;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), (BlockType)currBlockType);
+								IntVect blockBuildPoint = new IntVect((int)pos.x, (int)pos.z, (int)pos.y);
+								wgo.world.GenerateBlockAt(blockBuildPoint, (BlockType)currBlockType);
+								OCPerceptionCollector.notifyBlockAdded(blockBuildPoint);
 								//spawnTestFireAtBlockLocation(ground_below_front);
 							}
 							else
@@ -826,7 +830,9 @@ public class CharacterGridMotor : MonoBehaviour
 								m_lock = true;
 								//wgo.createBlock(sum.x,sum.y+1,sum.z, 0.6);
 								Vector3 pos = this.gameObject.transform.position + this.gameObject.transform.forward;
-								wgo.world.GenerateBlockAt(new IntVect((int)pos.x, (int)pos.z, (int)pos.y), (BlockType)currBlockType);
+								IntVect blockBuildPoint = new IntVect((int)pos.x, (int)pos.z, (int)pos.y);
+								wgo.world.GenerateBlockAt(blockBuildPoint, (BlockType)currBlockType);
+								OCPerceptionCollector.notifyBlockAdded(blockBuildPoint);
 								//spawnTestFireAtBlockLocation(pos);
 							}
 							else
@@ -1001,27 +1007,6 @@ public class CharacterGridMotor : MonoBehaviour
 		// ------------------------------------
 		
 		if (transform.position.y < -2) transform.position = new Vector3(UnityEngine.Random.Range(0,7)+0.5f, 200.0f, UnityEngine.Random.Range(0,7)+0.5f);
-		
-		if (avatar != null)
-		{
-			if(avatar.isMoving())
-			{
-				if (isBlockDirectlyInFront && !isBlockAbove && !isBlockAboveFront) 
-						{
-							//Debug.Log("In Climb");
-							//if (C == 0) {	// CLIMB
-								m_lock = true;
-								m_lockForIdle = true;
-								isClimbing = true;
-								//spawnTestIceAtBlockLocation(ground_above_front);
-								iTween.MoveBy(this.gameObject, climb_HT);
-								//Debug.Log(climb_test.ToString() + ", " + ground_above_front.ToString() + ", " + ground_front.ToString() + ", " + ground_below.ToString());
-							//}
-							//else {
-							//}
-						}
-			}
-		}
 	
 	}
 	
