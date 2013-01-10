@@ -315,6 +315,59 @@ public class WorldGameObject : MonoBehaviour
 		return false;
 	}
 	
+	public IntVect getABlockAtNearest8Neighbour(IntVect targetPos,IntVect avatarPos)
+	{
+		double nearestDistance = 999999.9;
+		IntVect returnVect = IntVect.ZERO;
+		for (int i = -1; i <= 1; ++ i)
+			for (int j = -1; j <= 1; ++ j)
+		{
+			if ( (i == 0) &&(j == 0) )
+				continue;
+			
+			if (WorldData.GetBlock(targetPos.X + i,targetPos.Y + j, targetPos.Z - 1).Type != BlockType.Air)
+			{
+				IntVect tmpVect = new IntVect(targetPos.X + i,targetPos.Y + j, targetPos.Z);
+				double dis = IntVect.getDistance(avatarPos,tmpVect);
+				if (dis < nearestDistance)
+				{
+					returnVect = tmpVect;
+					nearestDistance = dis;
+				}
+			}
+		}
+		
+		return returnVect;
+	}
+	
+	public IntVect getABlockAtNearest4Neighbour(IntVect targetPos,IntVect avatarPos)
+	{
+		double nearestDistance = 999999.9;
+		IntVect returnVect = IntVect.ZERO;
+		for (int i = -1; i <= 1; ++ i)
+			for (int j = -1; j <= 1; ++ j)
+		{
+			if ( (i == 0) &&(j == 0) )
+				continue;
+			
+			if ((i !=0) && (j !=0))
+				continue;
+			
+			if (WorldData.GetBlock(targetPos.X + i,targetPos.Y + j, targetPos.Z - 1).Type != BlockType.Air)
+			{
+				IntVect tmpVect = new IntVect(targetPos.X + i,targetPos.Y + j, targetPos.Z);
+				double dis = IntVect.getDistance(avatarPos,tmpVect);
+				if (dis < nearestDistance)
+				{
+					returnVect = tmpVect;
+					nearestDistance = dis;
+				}
+			}
+		}
+		
+		return returnVect;
+	}
+	
 	#endregion
 	
 	//////////////////////////////////////////////////

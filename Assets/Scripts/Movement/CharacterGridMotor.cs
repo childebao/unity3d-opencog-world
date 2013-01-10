@@ -62,6 +62,8 @@ public class CharacterGridMotor : MonoBehaviour
 	private static string currChar = "Girl";
 	private int currBlockType = (int)BlockType.Stone;
 	
+	Avatar avatar;
+	
 	//////////////////////////////////////////////////
 	
 	#endregion
@@ -317,6 +319,8 @@ public class CharacterGridMotor : MonoBehaviour
 //		Debug.Log ("turnR_HT: " + turnR_HT.ToString() + ", time: " + (animation["turnR"].length / animation["turnR"].speed + 0.02).ToString());
 	
 		world = GameObject.FindGameObjectWithTag("world");		// Add tag "block" in the scene in Unity !
+		
+		avatar = GetComponent<Avatar>() as Avatar;
 	}
 	
 	// ---------------------------------------------------------------------------------------------
@@ -997,6 +1001,27 @@ public class CharacterGridMotor : MonoBehaviour
 		// ------------------------------------
 		
 		if (transform.position.y < -2) transform.position = new Vector3(UnityEngine.Random.Range(0,7)+0.5f, 200.0f, UnityEngine.Random.Range(0,7)+0.5f);
+		
+		if (avatar != null)
+		{
+			if(avatar.isMoving())
+			{
+				if (isBlockDirectlyInFront && !isBlockAbove && !isBlockAboveFront) 
+						{
+							//Debug.Log("In Climb");
+							//if (C == 0) {	// CLIMB
+								m_lock = true;
+								m_lockForIdle = true;
+								isClimbing = true;
+								//spawnTestIceAtBlockLocation(ground_above_front);
+								iTween.MoveBy(this.gameObject, climb_HT);
+								//Debug.Log(climb_test.ToString() + ", " + ground_above_front.ToString() + ", " + ground_front.ToString() + ", " + ground_below.ToString());
+							//}
+							//else {
+							//}
+						}
+			}
+		}
 	
 	}
 	

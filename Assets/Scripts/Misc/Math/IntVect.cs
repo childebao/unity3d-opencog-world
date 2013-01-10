@@ -26,7 +26,9 @@ public struct IntVect
     {
         get { return m_Z; }
     }
-
+	
+	public static IntVect ZERO = new IntVect(0,0,0);
+	
     public override bool Equals(object obj)
     {
         IntVect other = (IntVect)obj;
@@ -42,6 +44,40 @@ public struct IntVect
     {
         return !(one == other);
     }
+	
+	public static bool is8Neighbour(IntVect one, IntVect other)
+	{
+		if ( (one.Z == other.Z) &&
+			 ( ((one.X - other.X) >=-1) && ((one.X - other.X) <= 1)) &&
+			 ( ((one.Y - other.Y) >=-1) && ((one.Y - other.Y) <= 1))
+			)
+			return true;
+		else
+			return false;
+	}
+	
+	public static bool is4Neighbour(IntVect one, IntVect other)
+	{
+		if ( (one.Z == other.Z) &&
+			 ( ((one.X - other.X) >=-1) && ((one.X - other.X) <= 1)) &&
+			 ( ((one.Y - other.Y) >=-1) && ((one.Y - other.Y) <= 1))
+			)
+		{
+			if ((one.X == other.X) || (one.Y == other.Y))
+				return true;
+			else
+				return false;
+		}
+			
+		else
+			return false;
+	}
+	
+	public static double getDistance(IntVect one, IntVect other)
+	{
+		return Math.Sqrt((one.X - other.X)*(one.X - other.X) + (one.Y - other.Y)*(one.Y - other.Y)
+				+ (one.Z - other.Z)*(one.Z - other.Z));
+	}
 
     public override int GetHashCode()
     {

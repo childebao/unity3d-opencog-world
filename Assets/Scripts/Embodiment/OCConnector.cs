@@ -387,7 +387,7 @@ public class OCConnector : NetworkElement
 			}
 			
 		}
-		else if (actionName == "MoveToCoordinate")
+	/*	else if (actionName == "MoveToCoordinate")
 		{
 			int x = 0,y = 0,z = 0;
 			XmlNodeList list = element.GetElementsByTagName(EmbodimentXMLTags.PARAMETER_ELEMENT);
@@ -416,7 +416,7 @@ public class OCConnector : NetworkElement
 				this.actionScheduler.actionList.AddLast(newAction);
 			}
 
-		}
+		}*/
  
 	}
 	

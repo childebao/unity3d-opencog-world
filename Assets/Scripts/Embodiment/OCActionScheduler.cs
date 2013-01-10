@@ -44,7 +44,8 @@ public class OCActionScheduler : MonoBehaviour
     public LinkedList<MetaAction> actionList = new LinkedList<MetaAction>();
     public MetaAction currentAction = null;
 	private static float TimeOutSeconds = 15.0f;
-	private float currentActionBeginTime;
+	private static float ActionIntervalSeconds = 2.0f;
+	private float currentActionBeginTime = 0.0f;
 	
 	public void executeAction(MetaAction action)
 	{
@@ -156,15 +157,20 @@ public class OCActionScheduler : MonoBehaviour
 	
 	void Update()
 	{
-        // Check if there is an running action.
+        // Check if there is an running actvion.
         if (this.currentAction != null) 
 		{
-			if (Time.time - currentActionBeginTime > TimeOutSeconds)
-				cancelCurrentActionPlan();
+		//	if (Time.time - currentActionBeginTime > TimeOutSeconds)
+		//		cancelCurrentActionPlan();
 			
 			return;
 		}
-        
+		
+		// we don't want the agent execute actions too quickly,
+		// especaill when build two blocks successively, will get minecrafe bugs
+		if (Time.time - currentActionBeginTime < ActionIntervalSeconds)
+			return;
+		
         // If action plan hasn't been finished, pick up one from the head
         // and execute it.
         if (this.actionList != null&& this.actionList.Count > 0)

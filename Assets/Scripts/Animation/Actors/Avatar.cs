@@ -14,7 +14,7 @@ public class Avatar: Interactor {
         Right = 3
     }
     
-
+	public int buildtimes = 1;
     public float Speed = 0;
     public float RotateSpeed = 0;
     public GameObject TempTarget;
@@ -49,6 +49,8 @@ public class Avatar: Interactor {
 
     private GameObject LastTargetObj;
     //private Vector3 LastDestPos = Vector3.zero;
+	
+	private OCActionScheduler actionScheduler;
 
     private ActionSummary moveToObjectAction;
     private ActionSummary moveToCoordAction;
@@ -65,10 +67,14 @@ public class Avatar: Interactor {
 
     private ActionSummary buildBlockAction;
 	private ActionSummary buildBlockAtPositionAction;
+	private ActionSummary _buildBlockAtPositionAction;
     private ActionSummary destroyBlockAction;
     private ActionSummary trickyLearnAction;
     
     private ActionSummary currentAction = null;
+	
+	private IntVect buildBlockPostion = IntVect.ZERO;
+	private string blockTypeTobuild;
     
 	private OCConnector connector;
 	// World game object will be used in building/destroying blocks,
@@ -94,6 +100,7 @@ public class Avatar: Interactor {
     
     void  Start (){
     	connector = GetComponent<OCConnector>() as OCConnector;
+		actionScheduler = gameObject.GetComponent<OCActionScheduler>() as OCActionScheduler;
     	worldGameObject = GameObject.Find("World").GetComponent<WorldGameObject>() as WorldGameObject;
         AM = GetComponent<ActionManager>() as ActionManager;
 		
@@ -112,6 +119,7 @@ public class Avatar: Interactor {
         ActionManager.registerActionMap("rotate", "RotateToByITween");
         ActionManager.registerActionMap("build_block", "BuildBlockInFrontWithOffset");
 		ActionManager.registerActionMap("build_block_At_Position", "BuildBlockAtPosition");
+		ActionManager.registerActionMap("_build_block_At_Position", "_BuildBlockAtPosition");
         ActionManager.registerActionMap("destroy_block", "DestroyBlockInFront");
 
         ActionManager.registerActionMap("eat", "Consume", ActionSource.EXTERNAL);
@@ -169,9 +177,13 @@ public class Avatar: Interactor {
                                                 new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
         buildBlockAction.usesCallback = false; 
 		
-		buildBlockAtPositionAction = new ActionSummary(this, "BuildBlockAtPosition", new AnimSummary("createBlock"),
+		buildBlockAtPositionAction = new ActionSummary(this, "BuildBlockAtPosition", new AnimSummary(),
                                                 new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
         buildBlockAtPositionAction.usesCallback = false; 
+		
+		_buildBlockAtPositionAction = new ActionSummary(this, "_BuildBlockAtPosition", new AnimSummary("createBlock"),
+                                                new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
+        _buildBlockAtPositionAction.usesCallback = false;
 		
 		destroyBlockAction = new ActionSummary(this, "DestroyBlockInFront", new AnimSummary("destroyBlockM"),
 		                                        new PhysiologicalEffect(PhysiologicalEffect.CostLevel.HIGH), false);
@@ -190,6 +202,7 @@ public class Avatar: Interactor {
         AM.addAction(rotateRightAction);
         AM.addAction(buildBlockAction);
 		AM.addAction(buildBlockAtPositionAction);
+		AM.addAction(_buildBlockAtPositionAction);
 		AM.addAction(destroyBlockAction);
 		AM.addAction(jumpForwardAction);
         /*AM.addAction(this,"MoveToCoordinate");
@@ -277,7 +290,7 @@ public class Avatar: Interactor {
     // from frame to frame
     private void Move () {
 		
-        transform.Translate(movement * Speed * Time.deltaTime);
+      //  transform.Translate(movement * Speed * Time.deltaTime);
     }
 
     private void Rotate (float turnAngle, ActionCompleteHandler h = null) {
@@ -306,6 +319,8 @@ public class Avatar: Interactor {
          
         if (currentAction == null) currentAction = moveToCoordAction;
         
+		Destination += new Vector3(0.5f,1.3f,0.5f);
+		
         //LastDestPos = Destination;
         //Debug.LogWarning("Destination is " + Destination);
         // Pass null as we don't want to report the completion of this
@@ -314,7 +329,7 @@ public class Avatar: Interactor {
 
         Vector3 Dest = Destination;
         // Overwrite the y position (height)
-        Dest.y = transform.position.y;
+        //Dest.y = transform.position.y;
 		
         Animation anim = gameObject.GetComponentInChildren<Animation>();
         DisableNormalAnimation();
@@ -357,7 +372,19 @@ public class Avatar: Interactor {
 	/// an iTween MoveTo action.
 	/// </summary>
 	private void _MoveToCollisionDetect(object paramVals)
-	{/*
+	{
+		bool isBlockDirectlyInFront = worldGameObject.isBlockDirectlyInFront(this.gameObject.transform);
+		if (isBlockDirectlyInFront)
+		{
+			//climb up it
+			Animation anim = gameObject.GetComponentInChildren<Animation>();
+	        DisableNormalAnimation();
+	        Debug.LogWarning("playing move start");
+	        anim.Play("climb");
+	        StartCoroutine(RestoreNormalAnimation(anim["climb"].length));
+		}
+			
+		/*
         bool isDestInFront = false;
         Hashtable paramMap = (Hashtable)paramVals;
         // Calculate the angle from current position to destination.
@@ -432,10 +459,13 @@ public class Avatar: Interactor {
     public void _ReachDestCoordinate(ActionCompleteHandler h) {
         moving = false;
         DisableNormalAnimation();
-        Animation anim = gameObject.GetComponentInChildren<Animation>();
+        //Animation anim = gameObject.GetComponentInChildren<Animation>();
         //anim.Play("move_end");
         //StartCoroutine(RestoreNormalAnimation(anim["move_end"].length));
-
+		
+		if (this.buildBlockPostion != IntVect.ZERO)
+			LookAt(new Vector3((float)this.buildBlockPostion.X,(float)this.buildBlockPostion.Z,(float)this.buildBlockPostion.Y));
+		
 		ArrayList pp = new ArrayList();
         pp.Add(gameObject.transform.position);
         ActionResult ar = new ActionResult(moveToCoordAction, ActionResult.Status.SUCCESS, this , pp, "I moved to (" + 
@@ -443,7 +473,8 @@ public class Avatar: Interactor {
 		                                   gameObject.transform.position.y + ", " + 
 		                                   gameObject.transform.position.z + ")" );
 		                                   
-        notifyListeners(ar,h);
+        
+		notifyListeners(ar,h);
 		
     }
 
@@ -919,12 +950,64 @@ public class Avatar: Interactor {
     	if (!worldGameObject) {
     		Debug.LogError("World game object is not available, can not build a block.");
 			return;
+
 		}
 		
-		LookAt(new Vector3(blockBuildPoint.X,blockBuildPoint.Z,blockBuildPoint.Y));
-	    if (currentAction == null) currentAction = buildBlockAtPositionAction;
+		Debug.LogError("TEST begin build block: " + buildtimes);
 		
-		IntVect blockBuildPointtest = new IntVect((int)blockBuildPoint.X, (int)blockBuildPoint.Z, (int)blockBuildPoint.Y);
+		buildtimes ++;
+		// Get the block that the avatar is standing on.
+        Vector3 myPosition = gameObject.transform.position;
+        IntVect standingBlock = new IntVect((int)myPosition.x, (int)myPosition.z, (int)myPosition.y - 1);
+		
+		// if just stand by the position where want to build a block, then just build it, or move to nearby first
+		if (! IntVect.is4Neighbour(standingBlock,blockBuildPoint))
+		{
+			IntVect moveToVect = worldGameObject.getABlockAtNearest4Neighbour(blockBuildPoint, standingBlock);
+			if (moveToVect == IntVect.ZERO)
+				return;
+			Vector3 dest = new Vector3(moveToVect.X,moveToVect.Z,moveToVect.Y);
+						
+			ArrayList args2 = new ArrayList();
+		 	args2.Add(blockBuildPoint);
+			args2.Add(blockType);
+	        MetaAction newAction2 = new MetaAction("_build_block_At_Position",args2,100);
+			
+			lock (this.actionScheduler.actionList)
+			{
+				this.actionScheduler.actionList.AddFirst(newAction2);
+			
+			
+				ArrayList args = new ArrayList();
+			 	args.Add(dest);
+				
+		        MetaAction newAction = new MetaAction("walk",args,100);
+			
+				this.actionScheduler.actionList.AddFirst(newAction);
+			}
+			
+		}
+		else
+		{
+			ArrayList args2 = new ArrayList();
+		 	args2.Add(blockBuildPoint);
+			args2.Add(blockType);
+	        MetaAction newAction2 = new MetaAction("_build_block_At_Position",args2,100);
+			
+			lock (this.actionScheduler.actionList)
+			{
+				this.actionScheduler.actionList.AddFirst(newAction2);
+			}
+		}
+		
+		this.buildBlockPostion = blockBuildPoint;
+
+    }
+		
+	public void _BuildBlockAtPosition(IntVect blockBuildPoint, string blockType , ActionCompleteHandler h = null)
+    {
+		
+	    if (currentAction == null) currentAction = _buildBlockAtPositionAction;
 
     	BlockType type = BlockType.Stone;
 		if (Block.StringToTypeMap.ContainsKey(blockType))
@@ -932,8 +1015,9 @@ public class Avatar: Interactor {
 			type = Block.StringToTypeMap[blockType];
 		}
 
-        worldGameObject.world.GenerateBlockAt(blockBuildPoint, BlockType.Lava);
-	
+        worldGameObject.world.GenerateBlockAt(blockBuildPoint, type);
+		this.buildBlockPostion = IntVect.ZERO;
+		
     }
 
 	
