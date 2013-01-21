@@ -37,13 +37,21 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Action\OCAction.cs" />
+     <Compile Include="Assets\Scripts\Action\OCActionController.cs" />
+     <Compile Include="Assets\Scripts\Action\OCActionFactory.cs" />
+     <Compile Include="Assets\Scripts\Action\OCAnimation.cs" />
+     <Compile Include="Assets\Scripts\Action\OCCameraController.cs" />
+     <Compile Include="Assets\Scripts\Action\OCCameraControllerr.cs" />
+     <Compile Include="Assets\Scripts\Action\OCCharacterMotor.cs" />
+     <Compile Include="Assets\Scripts\Action\OCInputController.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Avatar.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Player.cs" />
      <Compile Include="Assets\Scripts\Animation\Animator.cs" />
