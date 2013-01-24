@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class OCCameraControllerr : MonoBehaviour
+public class OCSoundEffect : MonoBehaviour
 {
 
 	// Use this for initialization
