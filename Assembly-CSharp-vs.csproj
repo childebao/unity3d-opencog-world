@@ -50,8 +50,12 @@
      <Compile Include="Assets\Scripts\Action\OCAnimation.cs" />
      <Compile Include="Assets\Scripts\Action\OCCameraController.cs" />
      <Compile Include="Assets\Scripts\Action\OCCharacterMotor.cs" />
+     <Compile Include="Assets\Scripts\Action\OCEvent.cs" />
+     <Compile Include="Assets\Scripts\Action\OCEventController.cs" />
+     <Compile Include="Assets\Scripts\Action\OCEventDispatcher.cs" />
      <Compile Include="Assets\Scripts\Action\OCInputController.cs" />
      <Compile Include="Assets\Scripts\Action\OCSoundEffect.cs" />
+     <Compile Include="Assets\Scripts\Action\Test.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Avatar.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Player.cs" />
      <Compile Include="Assets\Scripts\Animation\Animator.cs" />
@@ -132,6 +136,7 @@
      <Compile Include="Assets\Scripts\Misc\Console\TalkCommand.cs" />
      <Compile Include="Assets\Scripts\Misc\Console\UnloadCommand.cs" />
      <Compile Include="Assets\Scripts\Misc\DetectLeaks.cs" />
+     <Compile Include="Assets\Scripts\Misc\DevelopmentExtensions\ExposePropertyAttribute.cs" />
      <Compile Include="Assets\Scripts\Misc\DialogInstance.cs" />
      <Compile Include="Assets\Scripts\Misc\DrawMeshNormals.cs" />
      <Compile Include="Assets\Scripts\Misc\EventManager.cs" />

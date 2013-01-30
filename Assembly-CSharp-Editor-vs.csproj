@@ -45,6 +45,12 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\AutomationManager\AutomationManager.cs" />
+     <Compile Include="Assets\Editor\DevelopmentExtensions\BaseEditor.cs" />
+     <Compile Include="Assets\Editor\DevelopmentExtensions\ExposeProperties.cs" />
+     <Compile Include="Assets\Editor\DevelopmentExtensions\GenerateCustomEditors.cs" />
+     <Compile Include="Assets\Editor\DevelopmentExtensions\TestEditor.cs" />
+     <Compile Include="Assets\Editor\unitygems.com\whydoidoit.com\FindAndFixBrokenScripts.cs" />
+     <Compile Include="Assets\Editor\unitygems.com\whydoidoit.com\FixMissingScripts.cs" />
      <Compile Include="Assets\Third Party\EZ GUI\Editor\AnBSoft\Editors\UICtlEditor.cs" />
      <Compile Include="Assets\Third Party\EZ GUI\Editor\AnBSoft\Editors\UIPanelEditor.cs" />
      <Compile Include="Assets\Third Party\EZ GUI\Editor\AnBSoft\Inspectors\UIActionBtnInspector.cs" />

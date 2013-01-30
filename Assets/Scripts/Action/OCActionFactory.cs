@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Xml;
 
 /// <summary>
 /// OpenCog Action Factory.  Creates OCActions according to an xml or protobuf protocol.
@@ -34,14 +35,14 @@ public class OCActionFactory : MonoBehaviour
 	/// <param name='adjustCoordinate'>
 	/// Adjust coordinate.
 	/// </param>
-	public OCAction CreateAction(ProtoBuf.Serializer serializer, bool adjustCoordinate = false)
-	{
-		OCAction action = new OCAction();
-		
-		
-		
-		return action;
-	}
+//	public OCAction CreateAction(ProtoBuf.Serializer serializer, bool adjustCoordinate = false)
+//	{
+//		OCAction action = new OCAction();
+//
+//
+//
+//		return action;
+//	}
 	
 	/// <summary>
 	/// Creates the action from an xml schema.  For backwards compatibility.

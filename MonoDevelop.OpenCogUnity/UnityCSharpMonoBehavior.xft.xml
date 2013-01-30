@@ -1,0 +1,202 @@
+﻿<?xml version="1.0"?>
+<Template Originator="Lake Watkins" Language="C#" Created="1/30/2013" LastModified="1/30/2013">
+	
+    <TemplateConfiguration>
+        <_Name>GO Script</_Name>
+        <Icon>md-text-file-icon</Icon>
+        <_Category>OC\Unity\C#</_Category>
+        <LanguageName>C#</LanguageName>
+        <_Description>Creates MonoBehaviour script for Unity. Attach to GameObject.</_Description>
+    </TemplateConfiguration>
+
+    <TemplateFiles>
+        <File DefaultExtension=".cs" DefaultName="OCGOScript" AddStandardHeader="True"><![CDATA[
+using UnityEngine;
+using System.Collections;
+
+namespace OpenCog
+{			
+
+/// <summary>
+/// The ${Name}.
+/// </summary>			
+[ProtoContract]			
+public class ${Name} : MonoBehaviour
+{
+	//////////////////////////////////////////////////
+	
+	#region Public Member Data
+	
+	//////////////////////////////////////////////////
+			
+	#endregion
+	
+	//////////////////////////////////////////////////
+	
+	#region Private Member Data
+	
+	//////////////////////////////////////////////////		
+	
+	#endregion		
+			
+	//////////////////////////////////////////////////
+			
+	#region Accessors and Mutators		
+			
+	//////////////////////////////////////////////////
+			
+	#endregion
+	
+	//////////////////////////////////////////////////
+	
+	#region Public Member Functions...
+	
+	//////////////////////////////////////////////////
+			
+	void Awake() // Called when the script instance is being loaded.
+	{
+		
+	}
+	
+	void Start() // Use this for initialization
+	{
+		
+	}
+	
+	void FixedUpdate() // Called every fixed framerate frame, used mostly for physics
+	{
+		
+	}
+	
+	void Update() // Update is called once per frame
+	{
+		
+	}
+	
+	void LateUpdate() // Called once per frame after all Update calls
+	{
+		
+	}
+	
+	void OnJointBreak(float breakForce) //Called when a joint attached to the same game object broke.
+	{	Debug.Log("Joint Broke!, force: " + breakForce);	}
+	
+	void OnLevelWasLoaded(int level) //called after a new level was loaded.
+	{	Debug.Log("Level " + level + " was loaded.");	}
+
+	
+	void OnGUI() //OnGUI is called for rendering and handling GUI events.
+	{
+		if (GUI.Button(new Rect(10, 10, 150, 100), "I am a button"))
+			Debug.Log("You clicked the button!");
+	}
+	
+	
+	void OnControllerColliderHit(ControllerColliderHit hit)
+	{}
+	
+	void OnCollisionEnter(Collision collision)
+	{}
+	void OnCollisionStay(Collision collision)
+	{}
+	void OnCollisionExit(Collision collision)
+	{}
+	
+	void OnTriggerEnter(Collider collider)
+	{}
+	void OnTriggerStay(Collider collider)
+	{}
+	void OnTriggerExit(Collider collider)
+	{}	
+	
+	void OnMouseDown()
+	{}
+	void OnMouseUp()
+	{}
+	void OnMouseEnter()
+	{}
+	void OnMouseOver()
+	{}
+	void OnMouseExit()
+	{}
+	void OnMouseDrag()
+	{}
+	
+	
+	void OnBecameVisible()
+	{}
+	void OnBecameInvisible()
+	{}
+	void OnWillRenderObject() //Called once for each camera if the object is visible
+	{}
+	void OnRenderObject() //Called on object after camera has rendered the scene
+	{}
+	
+	
+	void OnApplicationPause(bool pause)
+	{}
+	void OnApplicationFocus(bool focus)
+	{}
+	void OnApplicationQuit()
+	{}
+	
+		
+	void OnServerInitialized() //Called on the server whenever a Network.InitializeServer was invoked and has completed.
+	{	Debug.Log("Server initialized and ready");	}
+	void OnPlayerConnected(NetworkPlayer player) //Called on the server whenever a new player has successfully connected.
+	{	Debug.Log("Player  connected from " + player.ipAddress + ":" + player.port);	}
+	void OnPlayerDisconnected(NetworkPlayer player) //Called on the server whenever a player disconnected from the server.
+	{
+		Debug.Log("Clean up after player " + player);
+		Network.RemoveRPCs(player);
+		Network.DestroyPlayerObjects(player);
+	}
+	
+	void OnConnectedToServer() //Called on the client when you have successfully connected to a server
+	{	Debug.Log("Connected to server");	}
+	void OnFailedToConnect(NetworkConnectionError error) //Called on the client when a connection attempt fails for some reason.
+	{	Debug.Log("Could not connect to server: " + error);	}
+	void OnDisconnectedFromServer(NetworkDisconnection info) //Called on the client when the connection was lost or you disconnected from the server.
+	{	Debug.Log("Disconnected from server: " + info);	}
+	
+	void OnFailedToConnectToMasterServer(NetworkConnectionError info) //Called on clients or servers when there is a problem connecting to the MasterServer.
+	{	Debug.Log("Could not connect to master server: " + info);	}
+	void OnMasterServerEvent(MasterServerEvent msEvent) //Called on clients or servers when reporting events from the MasterServer.
+	{	Debug.Log("MasterServer event: " + msEvent);	}
+	
+	void OnNetworkInstantiate(NetworkMessageInfo info) //Called on objects which have been network instantiated with Network.Instantiate
+	{	Debug.Log("New object instantiated by " + info.sender);	}
+	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) //Used to customize synchronization of variables in a script watched by a network view.
+	{}
+		
+	
+	void OnEnable() //Called when MonoBehaviour is loaded
+	{	Debug.Log(string.Format("MonoBehaviour[{0}].OnEnable", gameObject.name + "\\" + GetType().Name ));	}
+	
+	void OnDisable() //Called when MonoBehaviour goes out of scope
+	{	Debug.Log(string.Format("MonoBehaviour[{0}].OnDisable", gameObject.name + "\\" + GetType().Name ));	}
+
+	void OnDestroy() //Called when MonoBehaviour is about to be destroyed.
+	{	Debug.Log(string.Format("MonoBehaviour[{0}].OnDestroy", gameObject.name + "\\" + GetType().Name ));	}
+			
+			
+	#endregion
+	
+	//////////////////////////////////////////////////
+	
+	#region Private Member Functions
+	
+	//////////////////////////////////////////////////	
+	
+	#endregion
+
+	//////////////////////////////////////////////////		
+}
+
+
+]]>
+        </File>
+    </TemplateFiles>
+
+    <FileOptions/>
+</Template>
