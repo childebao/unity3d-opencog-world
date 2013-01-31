@@ -46,6 +46,7 @@
   <ItemGroup>
      <Compile Include="Assets\Editor\AutomationManager\AutomationManager.cs" />
      <Compile Include="Assets\Editor\DevelopmentExtensions\BaseEditor.cs" />
+     <Compile Include="Assets\Editor\DevelopmentExtensions\DefaultEditor.cs" />
      <Compile Include="Assets\Editor\DevelopmentExtensions\ExposeProperties.cs" />
      <Compile Include="Assets\Editor\DevelopmentExtensions\GenerateCustomEditors.cs" />
      <Compile Include="Assets\Editor\DevelopmentExtensions\TestEditor.cs" />

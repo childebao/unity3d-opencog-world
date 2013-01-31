@@ -4,8 +4,8 @@ using System.Collections;
 using OpenCog;
 
 [ExecuteInEditMode]
-[CustomEditor(typeof(Test))]
-public class TestEditor : OCEditor<Test>
+[CustomEditor(typeof(MonoBehaviour))]
+public class DefaultEditor : OCEditor<MonoBehaviour>
 {
 }
 

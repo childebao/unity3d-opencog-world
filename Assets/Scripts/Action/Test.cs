@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using System.Collections;
 using ProtoBuf;
@@ -6,10 +5,10 @@ using ProtoBuf;
 namespace OpenCog
 {
 
-[ProtoContract]
 /// <summary>
 /// The Test.
 /// </summary>
+[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 public class Test : MonoBehaviour
 {
 
@@ -34,7 +33,6 @@ public class Test : MonoBehaviour
   /////////////////////////////////////////////////////////
 
   [ExposeProperty]
-  [ProtoMember(1)]
   public int ExamplePublicVar
   {
     get
@@ -95,7 +93,12 @@ public class Test : MonoBehaviour
   {
     Debug.Log
     (
-      string.Format("MonoBehaviour[{0}].OnEnable", gameObject.name + "\\" + GetType().Name));
+      string.Format
+      (
+        "MonoBehaviour[{0}].OnEnable"
+      , gameObject.name + "\\" + GetType().Name
+      )
+    );
   }
 
   /// <summary>
