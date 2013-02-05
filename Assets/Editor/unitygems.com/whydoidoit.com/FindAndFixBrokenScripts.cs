@@ -68,7 +68,7 @@ public class FindAndFixBrokenScripts : EditorWindow
 			GUILayout.Space(10);
 			if(GUILayout.Button("Fix Now", GUILayout.Width(80)))
 			{
-				TestEditor.tried = false;
+				OCDefaultEditor.HaveTried = false;
 				EditorPrefs.SetBool("Fix", true);
 				processList.AddRange(
 					Resources.FindObjectsOfTypeAll(typeof(GameObject)).Cast<GameObject>().Where(c=>c.GetComponents<Component>().Any(o=>o==null))
@@ -117,9 +117,9 @@ public class FindAndFixBrokenScripts : EditorWindow
 		{
 			if(processList.Count > 0)
 			{
-				TestEditor.tried = false;
+				OCDefaultEditor.HaveTried = false;
 				var first = processList[0];
-				TestEditor.tryThisObject = first;
+				OCDefaultEditor.TryThisObject = first;
 				processList.RemoveAt(0);
 				Selection.activeObject = first;
 				if(processList.Count==0)
@@ -131,7 +131,7 @@ public class FindAndFixBrokenScripts : EditorWindow
 				
 			}
 		}
-		if(trying && TestEditor.tried)
+		if(trying && OCDefaultEditor.HaveTried)
 			trying = false;
 			
 	}

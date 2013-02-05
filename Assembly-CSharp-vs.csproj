@@ -37,10 +37,10 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -136,7 +136,13 @@
      <Compile Include="Assets\Scripts\Misc\Console\TalkCommand.cs" />
      <Compile Include="Assets\Scripts\Misc\Console\UnloadCommand.cs" />
      <Compile Include="Assets\Scripts\Misc\DetectLeaks.cs" />
+     <Compile Include="Assets\Scripts\Misc\DevelopmentExtensions\CustomDrawMethod.cs" />
      <Compile Include="Assets\Scripts\Misc\DevelopmentExtensions\ExposePropertyAttribute.cs" />
+     <Compile Include="Assets\Scripts\Misc\DevelopmentExtensions\FloatSliderInInspector.cs" />
+     <Compile Include="Assets\Scripts\Misc\DevelopmentExtensions\InspectorTooltip.cs" />
+     <Compile Include="Assets\Scripts\Misc\DevelopmentExtensions\IntSliderInInspector.cs" />
+     <Compile Include="Assets\Scripts\Misc\DevelopmentExtensions\ShowInInspectorIfBool.cs" />
+     <Compile Include="Assets\Scripts\Misc\DevelopmentExtensions\ShowInInspectorIfEnum.cs" />
      <Compile Include="Assets\Scripts\Misc\DialogInstance.cs" />
      <Compile Include="Assets\Scripts\Misc\DrawMeshNormals.cs" />
      <Compile Include="Assets\Scripts\Misc\EventManager.cs" />
