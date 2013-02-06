@@ -21,6 +21,10 @@ using ProtoBuf;
 namespace OpenCog
 {
 
+public class Foo
+  {
+  }
+
 /// <summary>
 /// The Test.
 /// </summary>
@@ -48,6 +52,9 @@ public class Test : MonoBehaviour
 	#region Accessors and Mutators
 
 	/////////////////////////////////////////////////////////////////////////////
+
+//  [InspectorTooltip("Hi!  I'm your float!")]
+//  public float MyFloat = 3.14f;
 
 	[ExposeProperty]
 	public int ExamplePublicVar
@@ -101,13 +108,13 @@ public class Test : MonoBehaviour
 	void OnEnable()
 	{
 		Debug.Log
-	(
-		string.Format
-		(
-			"MonoBehaviour[{0}].OnEnable"
-		, gameObject.name + "\\" + GetType().Name
-		)
-	);
+  	(
+  		string.Format
+  		(
+  			"MonoBehaviour[{0}].OnEnable"
+  		, gameObject.name + "\\" + GetType().Name
+  		)
+  	);
 	}
 
 	/// <summary>

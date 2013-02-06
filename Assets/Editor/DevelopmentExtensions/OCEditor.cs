@@ -127,23 +127,298 @@ public class OCEditor< OCType > : Editor
   {
     // Update the serializedProperty - always do this in the beginning of OnInspectorGUI.
     serializedObject.Update ();
-    
+
     var serializedProperties = serializedObject.GetIterator ();
-    
-    //Tests if there is any visible fields
-    if (serializedProperties.NextVisible (true)) {
-     DrawSerializedProperties (serializedProperties);
+
+    Debug.Log("In OnInspectorGUI");
+    ExposeProperties.Expose(m_Fields);
+
+    // Tests if there is a missing script
+    if(AreAnyScriptsMissing())
+    {
+      FindMissingScripts();
     }
+
+    // Tests if there is any visible fields
+    if (serializedProperties.NextVisible (true))
+    {
+      DrawSerializedProperties (serializedProperties);
+    }
+
+
+
     // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
     serializedObject.ApplyModifiedProperties ();
+   }
 
-
-    if(target.GetType() == typeof(OCType) && target.GetType() != typeof(MonoBehaviour))
+  public void DrawSerializedProperties (SerializedProperty s_properties)
+  {
+    //Loops through all visible fields
+    do
     {
-     DisplayInspectorGUI();
-     return;
+      //Finds the bool Condition, enum Condition and tooltip if they exists (They are null otherwise).
+      ShowInInspectorIfBool boolCondition = getAttribute<ShowInInspectorIfBool> (s_properties);
+      ShowInInspectorIfEnum enumCondition = getAttribute<ShowInInspectorIfEnum> (s_properties);
+      CustomDrawMethod drawMethod = getAttribute<CustomDrawMethod> (s_properties);
+      InspectorTooltip tooltip = getAttribute<InspectorTooltip> (s_properties);
+      FloatSliderInInspector floatSlider = getAttribute<FloatSliderInInspector> (s_properties);
+      IntSliderInInspector intSlider = getAttribute<IntSliderInInspector> (s_properties);
+
+      //Evaluates the enum and bool conditions
+      bool allowedVisibleForBoolCondition = AllowedVisibleForBoolCondition (s_properties, boolCondition);
+      bool allowedVisibleForEnumCondition = AllowedVisibleForEnumCondition (s_properties, enumCondition);
+
+      //Tests is the field is visible
+      if (allowedVisibleForBoolCondition && allowedVisibleForEnumCondition && drawMethod == null)
+      {
+        GUIContent g_content = new GUIContent();
+        g_content.text=CreateReadableName (s_properties.name);
+
+        //Sets the tooltip if avaiable
+        if (tooltip != null)
+        {
+          g_content.tooltip = tooltip.Tooltip;
+        }
+
+        DrawFieldInInspector(s_properties,g_content,floatSlider,intSlider);
+
+      }
+      else
+      if(drawMethod != null)
+      {
+        // If the user wants to draw the field himself.
+        MethodInfo drawMethodInfo = this.GetType().GetMethod(drawMethod.DrawMethod);
+        if(drawMethodInfo == null)
+        {
+          Debug.LogError("The '[CustomDrawMethod("+ drawMethod.DrawMethod + ""+drawMethod.ParametersToString()+")]' failed. Could not find the method '"+drawMethod.DrawMethod+"' in the "+this.ToString()+". The attribute is attached to the field '"+s_properties.name+"' in '"+s_properties.serializedObject.targetObject+"'.");
+          continue;
+        }
+        ParameterInfo[] parametersInfo = drawMethodInfo.GetParameters();
+        if(parametersInfo.Length != (drawMethod.Parameters as object[]).Length)
+        {
+          Debug.LogError("The '[CustomDrawMethod("+ drawMethod.DrawMethod + ""+drawMethod.ParametersToString()+")]' failed. The number of parameters in the attribute, did not match the number of parameters in the actual method. The attribute is attached to the field '"+s_properties.name+"' in '"+s_properties.serializedObject.targetObject+"'.");
+          continue;
+        }
+
+        bool _error = false;
+        for(int i = 0; i < parametersInfo.Length; i++)
+        {
+          //Makes sure the parameter of the actual method is equal to the
+          if(!Type.Equals(parametersInfo[i].ParameterType, drawMethod.Parameters[i].GetType()))
+          {
+            _error = true;
+            Debug.LogError("The '[CustomDrawMethod("+ drawMethod.DrawMethod + ""+drawMethod.ParametersToString()+")]' failed. The parameter type ('"+drawMethod.Parameters[i].GetType()+"') in the attribute, did not match the the parameter type ('"+parametersInfo[i].ParameterType+"') of the actual method, parameter index: '"+i+"'. The attribute is attached to the field '"+s_properties.name+"' in '"+s_properties.serializedObject.targetObject+"'.");
+            continue;
+          }
+        }
+        if(_error) continue;
+
+        // VVVVV Calls the users own method  VVVVV
+        drawMethodInfo.Invoke(this,drawMethod.Parameters);
+        // ^^^^^ Calls the users own method ^^^^^
+      }
+
     }
-    
+    while(s_properties.NextVisible (false));
+  }
+
+   public void DrawFieldInInspector(SerializedProperty s_property, GUIContent g_content, FloatSliderInInspector floatSlider, IntSliderInInspector intSlider)
+   {
+     if(floatSlider!=null)
+     {
+       var currentTarget = s_property.serializedObject.targetObject;
+       FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
+       //Tests if the field is not a float, if so it will display an error
+       if(fieldInfo.FieldType != typeof(float))
+       {
+         Debug.LogError("The '[FloatSliderInInspector("+ floatSlider.MinValue + " ,"+floatSlider.MaxValue+")]' failed. FloatSliderInInspector does not work with the type '"+fieldInfo.FieldType+"', it only works with float. The attribute is attached to the field '"+s_property.name+"' in '"+s_property.serializedObject.targetObject+"'.");
+         return;
+       }
+       EditorGUILayout.Slider(s_property, floatSlider.MinValue, floatSlider.MaxValue , g_content);
+  
+     }
+     else if(intSlider!=null)
+     {
+       var currentTarget = s_property.serializedObject.targetObject;
+       FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
+       //Tests if the field is not a int, if so it will display an error
+       if(fieldInfo.FieldType != typeof(int))
+       {
+         Debug.LogError("The '[IntSliderInInspector("+ intSlider.MinValue + " ,"+intSlider.MaxValue+")]' failed. IntSliderInInspector does not work with the type '"+fieldInfo.FieldType+"', it only works with int. The attribute is attached to the field '"+s_property.name+"' in '"+s_property.serializedObject.targetObject+"'.");
+         return;
+       }
+       EditorGUILayout.IntSlider(s_property, intSlider.MinValue, intSlider.MaxValue, g_content);
+     }
+     else
+     {
+       // VVVV DRAWS THE STANDARD FIELD  VVVV
+       EditorGUILayout.PropertyField (s_property, g_content, true);
+       // ^^^^^  DRAWS THE STANDARD FIELD  ^^^^^
+     }   
+   }
+  
+   /// <summary>
+   /// Gets the attribute of type T attached to the SerializedProperty.
+   /// </summary>
+   /// <returns>
+   /// The attribute of type T.
+   /// </returns>
+   /// <param name='s_property'>
+   /// The Serialized Property.
+   /// </param>
+   /// <typeparam name='T'>
+   /// The type of attribute to find.
+   /// </typeparam>
+   public T getAttribute<T> (SerializedProperty s_property)
+   {
+     var currentTarget = s_property.serializedObject.targetObject;
+
+     if(s_property == null || currentTarget == null)
+        return default(T);
+  
+     //Retires the fieldInfo for the current field
+     FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
+     
+     //If there is no field, Unity might find non-fields it wants to display(like script name).
+     if (fieldInfo == null)
+       return default(T);
+     
+     //Findes all attributes of type T attached to the field
+     T[] attributes = fieldInfo.GetCustomAttributes (typeof(T), true) as T[];
+     
+     if (attributes == null) 
+       return default(T);
+     
+     if (attributes.Length == 0)
+       return default(T);
+  
+     //returns the tooltip
+     return attributes [0];
+   }
+  
+   public bool AllowedVisibleForEnumCondition (SerializedProperty s_property, ShowInInspectorIfEnum enumCondition)
+   {
+     // If there is no enumCondition, it is allowed to be visible, there is nothing to hide it.
+     if (enumCondition == null)
+       return true;
+     
+     var currentTarget = s_property.serializedObject.targetObject;
+  
+     //Retires the fieldInfo for the enum field
+     FieldInfo enumFieldInfo = currentTarget.GetType ().GetField (enumCondition.EnumField);
+     
+     if (enumFieldInfo == null) {
+       //If the field in boolCondition.BooleanField doesn't exist.
+       Debug.LogError ("The '[ShowInInspectorIfEnum(" + enumCondition.EnumField + ", " + enumCondition.EnumValue + ")]' failed. The field '" + enumCondition.EnumField + "' does not exisit in '" + currentTarget + "'.");
+       return true;
+     }
+  
+     if (!enumFieldInfo.FieldType.IsEnum) {
+       //If the wanted field is not a enum
+       Debug.LogError ("The '[ShowInInspectorIfEnum(" + enumCondition.EnumField + ", " + enumCondition.EnumValue + ")]' failed. The field '" + enumCondition.EnumField + "' is not a enum in '" + currentTarget + "'.");
+       return true;
+     }
+     
+     if (!enumCondition.EnumValue.GetType ().IsEnum) {
+       //If the wanted value is not a enum
+       Debug.LogError ("The '[ShowInInspectorIfEnum(" + enumCondition.EnumField + ", " + enumCondition.EnumValue + ")]' failed. The '" + enumCondition.EnumValue + "' is not a enum value in '" + currentTarget + "'.");
+       return true;
+     }
+  
+     //Tests if the fields current value is equal to the value it should be to be shown
+     if (Enum.Equals (enumFieldInfo.GetValue (currentTarget), enumCondition.EnumValue)) {
+       return true;
+     } else {
+       return false;
+     }
+   }
+  
+   public bool AllowedVisibleForBoolCondition (SerializedProperty s_property, ShowInInspectorIfBool boolCondition)
+   {
+     // If there is no boolCondition, it is allowed to be visible, there is nothing to hide it.
+     if (boolCondition == null)
+       return true;
+     
+     var currentTarget = s_property.serializedObject.targetObject;
+  
+     //Retires the fieldInfo for the boolean field
+     FieldInfo boolInfo = currentTarget.GetType ().GetField (boolCondition.BooleanField);
+     
+     if (boolInfo == null) {
+       //If the field in boolCondition.BooleanField doesn't exist.
+       Debug.LogError ("The '[ShowInInspectorIfBool(" + boolCondition.BooleanField + ", " + boolCondition.EqualsValue + ")]' failed. The field '" + boolCondition.BooleanField + "' does not exisit in '" + currentTarget + "'.");
+       return true;
+     }
+     
+     if (boolInfo.FieldType != typeof(bool) && boolInfo.FieldType != typeof(Boolean)) {
+       //If the wanted field is not a bool
+       Debug.LogError ("The '[ShowInInspectorIfBool(" + boolCondition.BooleanField + ", " + boolCondition.EqualsValue + ")]' failed. The field '" + boolCondition.BooleanField + "' is not a type of bool in '" + currentTarget + "'.");
+       return true;
+     }
+     
+     //Finds the current value
+     bool currentValue = (bool)boolInfo.GetValue (currentTarget);
+     
+     //Tests if the current Value is equal to the value it should be to be shown
+     if (currentValue == boolCondition.EqualsValue) {
+       return true;
+     } else {
+       return false;
+     }
+   }
+   
+   public String CreateReadableName (string baseName)
+   {
+     string readableName = "";
+     readableName += char.ToUpper (baseName [0]);
+     
+     for (int i = 1; i < baseName.Length; i++) {
+       //Adds a space if (The current letter is uppercase OR number) AND the previous added letter was lowercase
+       if ((char.IsUpper (baseName [i]) || char.IsNumber(baseName [i])) && char.IsLower(readableName [readableName.Length-1]))
+       {
+         readableName += " ";
+       }
+       readableName += baseName [i]; 
+     }
+     
+     return readableName;
+   }
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  #endregion
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  #region Private Member Classes
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  //Holds a scanned script
+ class ScannedScript
+ {
+    //All of the serialized properties
+   public Dictionary<string, PropertyInfo> properties;
+
+    //The instance id
+   public int id;
+
+    //The script itself
+   public MonoScript script;
+ }
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  #endregion
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  #region Private Member Functions
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  private void FindMissingScripts()
+  {
     EditorPrefs.SetBool("Fix", GUILayout.Toggle(EditorPrefs.GetBool("Fix", true), "Fix broken scripts"));
     if(!EditorPrefs.GetBool("Fix", true))
     {
@@ -216,73 +491,46 @@ public class OCEditor< OCType > : Editor
        break;
      }
     }
-    DisplayInspectorGUI();
-  
+
+    //serializedObject.
   }
 
-  /////////////////////////////////////////////////////////////////////////////
-
-  #endregion
-
-  /////////////////////////////////////////////////////////////////////////////
-
-  #region Private Member Classes
-
-  /////////////////////////////////////////////////////////////////////////////
-
-  //Holds a scanned script
- class ScannedScript
- {
-    //All of the serialized properties
-   public Dictionary<string, PropertyInfo> properties;
-
-    //The instance id
-   public int id;
-
-    //The script itself
-   public MonoScript script;
- }
-
-  /////////////////////////////////////////////////////////////////////////////
-
-  #endregion
-
-  /////////////////////////////////////////////////////////////////////////////
-
-  #region Private Member Functions
-
-  /////////////////////////////////////////////////////////////////////////////
+  private bool AreAnyScriptsMissing()
+  {
+    //@TODO: fix this test
+    return target.GetType() != typeof(OCType) || target.GetType() == typeof(MonoBehaviour);
+  }
 
   void DisplayInspectorGUI()
- {
-   base.OnInspectorGUI();
+  {
+    base.OnInspectorGUI();
 
-   ExposeProperties.Expose(m_Fields);
- }
+    ExposeProperties.Expose(m_Fields);
+  }
 
- void SerializeAndHidePrivateDataMembers(System.Object obj)
- {
-   if(obj == null)
-   {
-     return;
-   }
+  void SerializeAndHidePrivateDataMembers(System.Object obj)
+  {
+    if(obj == null)
+    {
+      return;
+    }
  
-   List< FieldInfo > fields = new List<FieldInfo>();
+    List< FieldInfo > fields = new List<FieldInfo>();
  
-   Type objType = obj.GetType();
+    Type objType = obj.GetType();
 
-   FieldInfo[] infos = objType.GetFields
-   (
-     BindingFlags.NonPublic
-   | BindingFlags.Instance
-   );
+    FieldInfo[] infos = objType.GetFields
+    (
+      BindingFlags.NonPublic
+    | BindingFlags.Instance
+    );
 
-   foreach( FieldInfo info in infos )
-   {
+    foreach( FieldInfo info in infos )
+    {
 
-     object[] attributes = info.GetCustomAttributes(true);
+      object[] attributes = info.GetCustomAttributes(true);
 
-   }
+    }
 
 
 
@@ -333,6 +581,8 @@ public class OCEditor< OCType > : Editor
       .ToList();
  }
 
+
+
   /////////////////////////////////////////////////////////////////////////////
 
   #endregion
@@ -340,241 +590,5 @@ public class OCEditor< OCType > : Editor
   /////////////////////////////////////////////////////////////////////////////
 
 }// class OCEditor
-
-
-public class ExpandedEditor : Editor
-{
-   
- public override void OnInspectorGUI ()
- {
-
- }
- 
- public void DrawSerializedProperties (SerializedProperty s_properties)
- {   
-   //Loops through all visible fields
-   do {
-     
-     //Finds the bool Condition, enum Condition and tooltip if they exists (They are null otherwise).
-     ShowInInspectorIfBool boolCondition = getAttribute<ShowInInspectorIfBool> (s_properties);
-     ShowInInspectorIfEnum enumCondition = getAttribute<ShowInInspectorIfEnum> (s_properties);
-     CustomDrawMethod drawMethod = getAttribute<CustomDrawMethod> (s_properties);
-     InspectorTooltip tooltip = getAttribute<InspectorTooltip> (s_properties);
-     FloatSliderInInspector floatSlider = getAttribute<FloatSliderInInspector> (s_properties);
-     IntSliderInInspector intSlider = getAttribute<IntSliderInInspector> (s_properties);
-     
-     //Evaluates the enum and bool conditions
-     bool allowedVisibleForBoolCondition = AllowedVisibleForBoolCondition (s_properties, boolCondition);
-     bool allowedVisibleForEnumCondition = AllowedVisibleForEnumCondition (s_properties, enumCondition);
-     
-     //Tests is the field is visible
-     if (allowedVisibleForBoolCondition && allowedVisibleForEnumCondition && drawMethod == null) {
-     
-       GUIContent g_content = new GUIContent();
-       g_content.text=CreateReadableName (s_properties.name);
-       
-       //Sets the tooltip if avaiable
-       if (tooltip != null)
-         g_content.tooltip = tooltip.Tooltip;
-       
-       DrawFieldInInspector(s_properties,g_content,floatSlider,intSlider);
-       
-       
-     }else if(drawMethod != null)
-     {
-       // If the user wants to draw the field himself. 
-       MethodInfo drawMethodInfo = this.GetType().GetMethod(drawMethod.DrawMethod);
-       if(drawMethodInfo == null)
-       {
-         Debug.LogError("The '[CustomDrawMethod("+ drawMethod.DrawMethod + ""+drawMethod.ParametersToString()+")]' failed. Could not find the method '"+drawMethod.DrawMethod+"' in the "+this.ToString()+". The attribute is attached to the field '"+s_properties.name+"' in '"+s_properties.serializedObject.targetObject+"'.");
-         continue;
-       } 
-       ParameterInfo[] parametersInfo = drawMethodInfo.GetParameters();
-       if(parametersInfo.Length != (drawMethod.Parameters as object[]).Length)
-       {
-         Debug.LogError("The '[CustomDrawMethod("+ drawMethod.DrawMethod + ""+drawMethod.ParametersToString()+")]' failed. The number of parameters in the attribute, did not match the number of parameters in the actual method. The attribute is attached to the field '"+s_properties.name+"' in '"+s_properties.serializedObject.targetObject+"'.");
-         continue;
-       }
-       
-       bool _error = false;
-       for(int i = 0; i < parametersInfo.Length; i++)
-       {
-         //Makes sure the parameter of the actual method is equal to the 
-         if(!Type.Equals(parametersInfo[i].ParameterType, drawMethod.Parameters[i].GetType()))
-         {
-           _error = true;
-           Debug.LogError("The '[CustomDrawMethod("+ drawMethod.DrawMethod + ""+drawMethod.ParametersToString()+")]' failed. The parameter type ('"+drawMethod.Parameters[i].GetType()+"') in the attribute, did not match the the parameter type ('"+parametersInfo[i].ParameterType+"') of the actual method, parameter index: '"+i+"'. The attribute is attached to the field '"+s_properties.name+"' in '"+s_properties.serializedObject.targetObject+"'.");
-           continue; 
-         }
-       }
-       if(_error) continue;
-       
-       // VVVVV Calls the users own method  VVVVV
-       drawMethodInfo.Invoke(this,drawMethod.Parameters);
-       // ^^^^^ Calls the users own method ^^^^^ 
-     } 
-     
-   } while(s_properties.NextVisible (false));
- }
- 
- public void DrawFieldInInspector(SerializedProperty s_property, GUIContent g_content, FloatSliderInInspector floatSlider, IntSliderInInspector intSlider)
- {
-   if(floatSlider!=null)
-   {
-     var currentTarget = s_property.serializedObject.targetObject;
-     FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
-     //Tests if the field is not a float, if so it will display an error
-     if(fieldInfo.FieldType != typeof(float))
-     {
-       Debug.LogError("The '[FloatSliderInInspector("+ floatSlider.MinValue + " ,"+floatSlider.MaxValue+")]' failed. FloatSliderInInspector does not work with the type '"+fieldInfo.FieldType+"', it only works with float. The attribute is attached to the field '"+s_property.name+"' in '"+s_property.serializedObject.targetObject+"'.");
-       return;
-     }
-     EditorGUILayout.Slider(s_property, floatSlider.MinValue, floatSlider.MaxValue , g_content);
-     
-   }
-   else if(intSlider!=null)
-   {
-     var currentTarget = s_property.serializedObject.targetObject;
-     FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
-     //Tests if the field is not a int, if so it will display an error
-     if(fieldInfo.FieldType != typeof(int))
-     {
-       Debug.LogError("The '[IntSliderInInspector("+ intSlider.MinValue + " ,"+intSlider.MaxValue+")]' failed. IntSliderInInspector does not work with the type '"+fieldInfo.FieldType+"', it only works with int. The attribute is attached to the field '"+s_property.name+"' in '"+s_property.serializedObject.targetObject+"'.");
-       return;
-     }
-     EditorGUILayout.IntSlider(s_property, intSlider.MinValue, intSlider.MaxValue, g_content);
-   }
-   else
-   {
-     // VVVV DRAWS THE STANDARD FIELD  VVVV
-     EditorGUILayout.PropertyField (s_property, g_content, true);
-     // ^^^^^  DRAWS THE STANDARD FIELD  ^^^^^
-   }   
- }
- 
- /// <summary>
- /// Gets the attribute of type T attached to the SerializedProperty.
- /// </summary>
- /// <returns>
- /// The attribute of type T.
- /// </returns>
- /// <param name='s_property'>
- /// The Serialized Property.
- /// </param>
- /// <typeparam name='T'>
- /// The type of attribute to find.
- /// </typeparam>
- public T getAttribute<T> (SerializedProperty s_property)
- {
-   var currentTarget = s_property.serializedObject.targetObject;
-   
-   //Retires the fieldInfo for the current field
-   FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
-   
-   //If there is no field, Unity might find non-fields it wants to display(like script name).
-   if (fieldInfo == null)
-     return default(T);
-   
-   //Findes all attributes of type T attached to the field
-   T[] attributes = fieldInfo.GetCustomAttributes (typeof(T), true) as T[];
-   
-   if (attributes == null) 
-     return default(T);
-   
-   if (attributes.Length == 0)
-     return default(T);
-   
-   //returns the tooltip
-   return attributes [0];
- }
- 
- public bool AllowedVisibleForEnumCondition (SerializedProperty s_property, ShowInInspectorIfEnum enumCondition)
- {
-   // If there is no enumCondition, it is allowed to be visible, there is nothing to hide it.
-   if (enumCondition == null)
-     return true;
-   
-   var currentTarget = s_property.serializedObject.targetObject;
-   
-   //Retires the fieldInfo for the enum field
-   FieldInfo enumFieldInfo = currentTarget.GetType ().GetField (enumCondition.EnumField);
-   
-   if (enumFieldInfo == null) {
-     //If the field in boolCondition.BooleanField doesn't exist.
-     Debug.LogError ("The '[ShowInInspectorIfEnum(" + enumCondition.EnumField + ", " + enumCondition.EnumValue + ")]' failed. The field '" + enumCondition.EnumField + "' does not exisit in '" + currentTarget + "'.");
-     return true;
-   }
-
-   if (!enumFieldInfo.FieldType.IsEnum) {
-     //If the wanted field is not a enum
-     Debug.LogError ("The '[ShowInInspectorIfEnum(" + enumCondition.EnumField + ", " + enumCondition.EnumValue + ")]' failed. The field '" + enumCondition.EnumField + "' is not a enum in '" + currentTarget + "'.");
-     return true;
-   }
-   
-   if (!enumCondition.EnumValue.GetType ().IsEnum) {
-     //If the wanted value is not a enum
-     Debug.LogError ("The '[ShowInInspectorIfEnum(" + enumCondition.EnumField + ", " + enumCondition.EnumValue + ")]' failed. The '" + enumCondition.EnumValue + "' is not a enum value in '" + currentTarget + "'.");
-     return true;
-   }
-   
-   //Tests if the fields current value is equal to the value it should be to be shown
-   if (Enum.Equals (enumFieldInfo.GetValue (currentTarget), enumCondition.EnumValue)) {
-     return true;
-   } else {
-     return false;
-   }
- }
- 
- public bool AllowedVisibleForBoolCondition (SerializedProperty s_property, ShowInInspectorIfBool boolCondition)
- {
-   // If there is no boolCondition, it is allowed to be visible, there is nothing to hide it.
-   if (boolCondition == null)
-     return true;
-   
-   var currentTarget = s_property.serializedObject.targetObject;
-   
-   //Retires the fieldInfo for the boolean field
-   FieldInfo boolInfo = currentTarget.GetType ().GetField (boolCondition.BooleanField);
-   
-   if (boolInfo == null) {
-     //If the field in boolCondition.BooleanField doesn't exist.
-     Debug.LogError ("The '[ShowInInspectorIfBool(" + boolCondition.BooleanField + ", " + boolCondition.EqualsValue + ")]' failed. The field '" + boolCondition.BooleanField + "' does not exisit in '" + currentTarget + "'.");
-     return true;
-   }
-   
-   if (boolInfo.FieldType != typeof(bool) && boolInfo.FieldType != typeof(Boolean)) {
-     //If the wanted field is not a bool
-     Debug.LogError ("The '[ShowInInspectorIfBool(" + boolCondition.BooleanField + ", " + boolCondition.EqualsValue + ")]' failed. The field '" + boolCondition.BooleanField + "' is not a type of bool in '" + currentTarget + "'.");
-     return true;
-   }
-   
-   //Finds the current value
-   bool currentValue = (bool)boolInfo.GetValue (currentTarget);
-   
-   //Tests if the current Value is equal to the value it should be to be shown
-   if (currentValue == boolCondition.EqualsValue) {
-     return true;
-   } else {
-     return false;
-   }
- }
- 
- public String CreateReadableName (string baseName)
- {
-   string readableName = "";
-   readableName += char.ToUpper (baseName [0]);
-   
-   for (int i = 1; i < baseName.Length; i++) { 
-     //Adds a space if (The current letter is uppercase OR number) AND the previous added letter was lowercase
-     if ((char.IsUpper (baseName [i]) || char.IsNumber(baseName [i])) && char.IsLower(readableName [readableName.Length-1]))
-     {
-       readableName += " ";
-     }
-     readableName += baseName [i]; 
-   }
-   
-   return readableName;
- }
-}
 
 }// namespace OpenCog
