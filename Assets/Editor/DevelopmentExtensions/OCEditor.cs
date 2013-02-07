@@ -130,8 +130,8 @@ public class OCEditor< OCType > : Editor
 
     var serializedProperties = serializedObject.GetIterator ();
 
-    Debug.Log("In OnInspectorGUI");
-    ExposeProperties.Expose(m_Fields);
+//    Debug.Log("In OnInspectorGUI");
+//    ExposeProperties.Expose(m_Fields);
 
     // Tests if there is a missing script
     if(AreAnyScriptsMissing())
@@ -145,17 +145,23 @@ public class OCEditor< OCType > : Editor
       DrawSerializedProperties (serializedProperties);
     }
 
-
-
     // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
     serializedObject.ApplyModifiedProperties ();
+		serializedObject.UpdateIfDirtyOrScript();
    }
 
   public void DrawSerializedProperties (SerializedProperty s_properties)
   {
+		GUIContent g_content = new GUIContent();
+		GUILayoutOption[] emptyOptions = new GUILayoutOption[0];
+
+   	EditorGUILayout.BeginVertical( emptyOptions );
+
     //Loops through all visible fields
     do
     {
+			EditorGUILayout.BeginHorizontal( emptyOptions );
+
       //Finds the bool Condition, enum Condition and tooltip if they exists (They are null otherwise).
       ShowInInspectorIfBool boolCondition = getAttribute<ShowInInspectorIfBool> (s_properties);
       ShowInInspectorIfEnum enumCondition = getAttribute<ShowInInspectorIfEnum> (s_properties);
@@ -163,6 +169,7 @@ public class OCEditor< OCType > : Editor
       InspectorTooltip tooltip = getAttribute<InspectorTooltip> (s_properties);
       FloatSliderInInspector floatSlider = getAttribute<FloatSliderInInspector> (s_properties);
       IntSliderInInspector intSlider = getAttribute<IntSliderInInspector> (s_properties);
+			ExposePropertyAttribute exposeProperty = getAttribute<ExposePropertyAttribute> (s_properties);
 
       //Evaluates the enum and bool conditions
       bool allowedVisibleForBoolCondition = AllowedVisibleForBoolCondition (s_properties, boolCondition);
@@ -171,8 +178,8 @@ public class OCEditor< OCType > : Editor
       //Tests is the field is visible
       if (allowedVisibleForBoolCondition && allowedVisibleForEnumCondition && drawMethod == null)
       {
-        GUIContent g_content = new GUIContent();
-        g_content.text=CreateReadableName (s_properties.name);
+
+				g_content.text=CreateReadableName (s_properties.name);
 
         //Sets the tooltip if avaiable
         if (tooltip != null)
@@ -180,7 +187,7 @@ public class OCEditor< OCType > : Editor
           g_content.tooltip = tooltip.Tooltip;
         }
 
-        DrawFieldInInspector(s_properties,g_content,floatSlider,intSlider);
+        DrawFieldInInspector(s_properties,g_content,emptyOptions,floatSlider,intSlider,exposeProperty);
 
       }
       else
@@ -218,44 +225,86 @@ public class OCEditor< OCType > : Editor
         // ^^^^^ Calls the users own method ^^^^^
       }
 
+		EditorGUILayout.EndHorizontal();
+
     }
     while(s_properties.NextVisible (false));
+
+   EditorGUILayout.EndVertical();
   }
 
-   public void DrawFieldInInspector(SerializedProperty s_property, GUIContent g_content, FloatSliderInInspector floatSlider, IntSliderInInspector intSlider)
+	public void DrawFieldInInspector(SerializedProperty s_property, GUIContent g_content, GUILayoutOption[] emptyOptions, FloatSliderInInspector floatSlider, IntSliderInInspector intSlider, ExposePropertyAttribute exposeProperty)
    {
-     if(floatSlider!=null)
-     {
-       var currentTarget = s_property.serializedObject.targetObject;
-       FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
-       //Tests if the field is not a float, if so it will display an error
-       if(fieldInfo.FieldType != typeof(float))
-       {
-         Debug.LogError("The '[FloatSliderInInspector("+ floatSlider.MinValue + " ,"+floatSlider.MaxValue+")]' failed. FloatSliderInInspector does not work with the type '"+fieldInfo.FieldType+"', it only works with float. The attribute is attached to the field '"+s_property.name+"' in '"+s_property.serializedObject.targetObject+"'.");
-         return;
-       }
-       EditorGUILayout.Slider(s_property, floatSlider.MinValue, floatSlider.MaxValue , g_content);
-  
-     }
-     else if(intSlider!=null)
-     {
-       var currentTarget = s_property.serializedObject.targetObject;
-       FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
-       //Tests if the field is not a int, if so it will display an error
-       if(fieldInfo.FieldType != typeof(int))
-       {
-         Debug.LogError("The '[IntSliderInInspector("+ intSlider.MinValue + " ,"+intSlider.MaxValue+")]' failed. IntSliderInInspector does not work with the type '"+fieldInfo.FieldType+"', it only works with int. The attribute is attached to the field '"+s_property.name+"' in '"+s_property.serializedObject.targetObject+"'.");
-         return;
-       }
-       EditorGUILayout.IntSlider(s_property, intSlider.MinValue, intSlider.MaxValue, g_content);
-     }
-     else
-     {
-       // VVVV DRAWS THE STANDARD FIELD  VVVV
-       EditorGUILayout.PropertyField (s_property, g_content, true);
-       // ^^^^^  DRAWS THE STANDARD FIELD  ^^^^^
-     }   
-   }
+	   if(floatSlider!=null)
+	   {
+	     var currentTarget = s_property.serializedObject.targetObject;
+	     FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
+	     //Tests if the field is not a float, if so it will display an error
+	     if(fieldInfo.FieldType != typeof(float))
+	     {
+	       Debug.LogError("The '[FloatSliderInInspector("+ floatSlider.MinValue + " ,"+floatSlider.MaxValue+")]' failed. FloatSliderInInspector does not work with the type '"+fieldInfo.FieldType+"', it only works with float. The attribute is attached to the field '"+s_property.name+"' in '"+s_property.serializedObject.targetObject+"'.");
+	       return;
+	     }
+	     EditorGUILayout.Slider(s_property, floatSlider.MinValue, floatSlider.MaxValue , g_content);
+	
+	   }
+	   else if(intSlider!=null)
+	   {
+	     var currentTarget = s_property.serializedObject.targetObject;
+	     FieldInfo fieldInfo = currentTarget.GetType ().GetField (s_property.name);
+	     //Tests if the field is not a int, if so it will display an error
+	     if(fieldInfo.FieldType != typeof(int))
+	     {
+	       Debug.LogError("The '[IntSliderInInspector("+ intSlider.MinValue + " ,"+intSlider.MaxValue+")]' failed. IntSliderInInspector does not work with the type '"+fieldInfo.FieldType+"', it only works with int. The attribute is attached to the field '"+s_property.name+"' in '"+s_property.serializedObject.targetObject+"'.");
+	       return;
+	     }
+	     EditorGUILayout.IntSlider(s_property, intSlider.MinValue, intSlider.MaxValue, g_content);
+	   }
+		 else if(exposeProperty!=null)
+		 {
+		   switch ( s_property.propertyType )
+		   {
+		   case SerializedPropertyType.Integer:
+		      	s_property.intValue = EditorGUILayout.IntField( s_property.name, (int)s_property.intValue, emptyOptions );
+		     break;
+
+		   case SerializedPropertyType.Float:
+		       	s_property.floatValue = EditorGUILayout.FloatField( s_property.name, (float)s_property.floatValue, emptyOptions );
+		     break;
+
+		   case SerializedPropertyType.Boolean:
+		       s_property.boolValue = EditorGUILayout.Toggle( s_property.name, (bool)s_property.boolValue, emptyOptions );
+		     break;
+		
+		   case SerializedPropertyType.String:
+		       s_property.stringValue = EditorGUILayout.TextField( s_property.name, (String)s_property.stringValue, emptyOptions );
+		     break;
+		
+		   case SerializedPropertyType.Vector2:
+		       s_property.vector2Value = EditorGUILayout.Vector2Field( s_property.name, (Vector2)s_property.vector2Value, emptyOptions );
+		     break;
+		
+		   case SerializedPropertyType.Vector3:
+		       s_property.vector3Value = EditorGUILayout.Vector3Field( s_property.name, (Vector3)s_property.vector3Value, emptyOptions );
+		     break;
+
+		   case SerializedPropertyType.Enum:
+		       s_property.enumValueIndex = (int)(object)EditorGUILayout.EnumPopup(s_property.name, (Enum)(object)s_property.enumValueIndex, emptyOptions);
+		     break;
+
+		   default:
+		
+		     break;
+		
+		   }
+		 }
+	   else
+	   {
+	     // VVVV DRAWS THE STANDARD FIELD  VVVV
+	     EditorGUILayout.PropertyField (s_property, g_content, true);
+	     // ^^^^^  DRAWS THE STANDARD FIELD  ^^^^^
+	   }   
+	}
   
    /// <summary>
    /// Gets the attribute of type T attached to the SerializedProperty.

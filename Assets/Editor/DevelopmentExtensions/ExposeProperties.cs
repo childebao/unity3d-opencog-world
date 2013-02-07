@@ -65,6 +65,60 @@ public static class ExposeProperties
    EditorGUILayout.EndVertical();
  
  }
+
+public static void Expose( PropertyField field )
+ {
+ 
+   GUILayoutOption[] emptyOptions = new GUILayoutOption[0];
+ 
+   EditorGUILayout.BeginVertical( emptyOptions );
+
+   EditorGUILayout.BeginHorizontal( emptyOptions );
+
+   switch ( field.Type )
+   {
+   case SerializedPropertyType.Integer:
+       field.SetValue( EditorGUILayout.IntField( field.Name, (int)field.GetValue(), emptyOptions ) );
+     break;
+
+   case SerializedPropertyType.Float:
+       field.SetValue( EditorGUILayout.FloatField( field.Name, (float)field.GetValue(), emptyOptions ) );
+     break;
+
+   case SerializedPropertyType.Boolean:
+       field.SetValue( EditorGUILayout.Toggle( field.Name, (bool)field.GetValue(), emptyOptions ) );
+     break;
+
+   case SerializedPropertyType.String:
+       field.SetValue( EditorGUILayout.TextField( field.Name, (String)field.GetValue(), emptyOptions ) );
+     break;
+
+   case SerializedPropertyType.Vector2:
+       field.SetValue( EditorGUILayout.Vector2Field( field.Name, (Vector2)field.GetValue(), emptyOptions ) );
+     break;
+
+   case SerializedPropertyType.Vector3:
+       field.SetValue( EditorGUILayout.Vector3Field( field.Name, (Vector3)field.GetValue(), emptyOptions ) );
+     break;
+
+
+
+   case SerializedPropertyType.Enum:
+                 field.SetValue(EditorGUILayout.EnumPopup(field.Name, (Enum)field.GetValue(), emptyOptions));
+     break;
+
+   default:
+
+     break;
+
+   }
+
+   EditorGUILayout.EndHorizontal();
+
+
+   EditorGUILayout.EndVertical();
+ 
+ }
  
  public static PropertyField[] GetProperties( System.Object obj )
  {
