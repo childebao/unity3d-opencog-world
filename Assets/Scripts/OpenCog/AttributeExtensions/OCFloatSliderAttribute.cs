@@ -1,3 +1,4 @@
+
 /// Unity3D OpenCog World Embodiment Program
 /// Copyright (C) 2013  Novamente
 ///
@@ -14,20 +15,27 @@
 /// You should have received a copy of the GNU Affero General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using UnityEngine;
+using System;
 using System.Collections;
 using ProtoBuf;
 
 namespace OpenCog
 {
 
+namespace AttributeExtensions
+{
+
 /// <summary>
-/// The Test.
+/// The OpenCog Float Slider Attribute.  Attributed float properties and fields
+/// will display in the custom inspector editor as a slider.  Min and max
+/// values are capped.
 /// </summary>
 #region Class Attributes
+
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-[ExposeProperties]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 #endregion
-public class Test : MonoBehaviour
+public class OCFloatSliderAttribute : Attribute
 {
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -36,133 +44,95 @@ public class Test : MonoBehaviour
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	private int m_ExamplePrivateVar = 0;
+	/// <summary>
+	/// The minimum value cap.
+	/// </summary>
+	private float m_MinValue;
+
+	/// <summary>
+	/// The maximum value cap.
+	/// </summary>
+	private float m_MaxValue;
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	#endregion
+  #endregion
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	#region Accessors and Mutators
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	public int ExamplePublicVar
-	{
-		get
-		{
-			return m_ExamplePrivateVar;
-		}
-
-		set
-		{
-			m_ExamplePrivateVar = value;
-		}
-	}
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	#endregion
-
-	/////////////////////////////////////////////////////////////////////////////
-
-	#region Public Member Functions
+  #region Accessors and Mutators
 
 	/////////////////////////////////////////////////////////////////////////////
 
 	/// <summary>
-	/// Called when the script instance is being loaded.
+	/// Gets or sets the minimum value.
 	/// </summary>
-	void Awake()
+	/// <value>
+	/// The minimum value.
+	/// </value>
+	public float MinValue
 	{
+		get { return m_MinValue; }
+		set { m_MinValue = value; }
 	}
 
 	/// <summary>
-	/// Use this for initialization
+	/// Gets or sets the maximum value.
 	/// </summary>
-	void Start()
+	/// <value>
+	/// The maximum value.
+	/// </value>
+	public float MaxValue
 	{
-	}
-
-	/// <summary>
-	/// Update is called once per frame.
-	/// </summary>
-	void Update()
-	{
-	}
-
-	/// <summary>
-	/// Called once per frame after all Update calls
-	/// </summary>
-	void LateUpdate()
-	{
-	}
-
-	/// <summary>
-	/// Raises the enable event when {Name} is loaded.
-	/// </summary>
-	void OnEnable()
-	{
-		Debug.Log
-  	(
-  		string.Format
-  		(
-  			"MonoBehaviour[{0}].OnEnable"
-  		, gameObject.name + "\\" + GetType().Name
-  		)
-  	);
-	}
-
-	/// <summary>
-	/// Raises the disable event when {Name} goes out of
-	/// scope.
-	/// </summary>
-	void OnDisable()
-	{
-		Debug.Log
-		(
-			string.Format
-			(
-				"MonoBehaviour[{0}].OnDisable"
-			, gameObject.name + "\\" + GetType().Name
-			)
-		);
-	}
-
-	/// <summary>
-	/// Raises the destroy event when {Name} is about to be
-	/// destroyed.
-	/// </summary>
-	void OnDestroy()
-	{
-		Debug.Log
-		(
-			string.Format
-			(
-				"MonoBehaviour[{0}].OnDestroy"
-			, gameObject.name + "\\" + GetType().Name
-			)
-		);
+		get { return m_MaxValue; }
+		set { m_MaxValue = value; }
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	#endregion
+  #endregion
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	#region Private Member Functions
+  #region Public Member Functions
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	/// <summary>
+	/// Initializes a new instance of the
+	/// <see cref="OpenCog.AttributeExtensions.OCFloatSliderAttribute"/> class.
+	/// </summary>
+	/// <param name='minValue'>
+	/// Minimum value.
+	/// </param>
+	/// <param name='maxValue'>
+	/// Max value.
+	/// </param>
+	public OCFloatSliderAttribute( float minValue, float maxValue )
+	{
+		this.MinValue = minValue;
+		this.MaxValue = maxValue;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
+  #endregion
+
+	/////////////////////////////////////////////////////////////////////////////
+
+  #region Private Member Functions
 
 	/////////////////////////////////////////////////////////////////////////////
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	#endregion
+  #endregion
 
 	/////////////////////////////////////////////////////////////////////////////
 
-}// class {Name}
+}// class OCFloatSliderAttribute
+
+}// namespace AttributeExtensions
 
 }// namespace OpenCog
 

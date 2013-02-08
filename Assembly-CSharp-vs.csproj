@@ -175,6 +175,7 @@
      <Compile Include="Assets\Scripts\Noise\PerlinNoise.cs" />
      <Compile Include="Assets\Scripts\Noise\SimplexNoise.cs" />
      <Compile Include="Assets\Scripts\Noise\SimplexNoiseGenerator.cs" />
+     <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCExposeProperties.cs" />
      <Compile Include="Assets\Scripts\Terrain\Block.cs" />
      <Compile Include="Assets\Scripts\Terrain\Chunk.cs" />
      <Compile Include="Assets\Scripts\Terrain\ChunkBatch.cs" />

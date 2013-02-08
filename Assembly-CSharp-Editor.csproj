@@ -46,10 +46,14 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\AutomationManager\AutomationManager.cs" />
     <Compile Include="Assets\Editor\DevelopmentExtensions\ExposeProperties.cs" />
-    <Compile Include="Assets\Editor\DevelopmentExtensions\GenerateCustomEditors.cs" />
-    <Compile Include="Assets\Editor\DevelopmentExtensions\OCDefaultEditor.cs" />
-    <Compile Include="Assets\Editor\DevelopmentExtensions\OCEditor.cs" />
-    <Compile Include="Assets\Editor\DevelopmentExtensions\OCTestEditor.cs" />
+    <Compile Include="Assets\Editor\DevelopmentExtensions\OCEditorAutomatedFactory.cs" />
+    <Compile Include="Assets\Editor\OpenCog\AutomationExtensions\OCAutomatedEditorBuilder.cs" />
+    <Compile Include="Assets\Editor\OpenCog\AutomationExtensions\OCAutomatedPlayerBuilder.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCDefaultEditor.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCEditor.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCScriptFixer.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCScriptScanner.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCTestEditor.cs" />
     <Compile Include="Assets\Editor\unitygems.com\whydoidoit.com\FindAndFixBrokenScripts.cs" />
     <Compile Include="Assets\Editor\unitygems.com\whydoidoit.com\FixMissingScripts.cs" />
     <Compile Include="Assets\Third Party\EZ GUI\Editor\AnBSoft\Editors\UICtlEditor.cs" />
@@ -183,6 +187,14 @@
     </Reference>
     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend %28Queue +100%29.shader" />
     <None Include="Assets\Standard Assets\Water %28Basic%29\Sources\Shaders\FX-Water Simple.shader" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCBoolPropertyToggleInterface.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCDrawMethodInterface.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCEnumPropertyToggleInterface.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCExposePropertiesInterface.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCFloatSliderInterface.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCIntSliderInterface.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCTooltipInterface.cs" />
+    <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCFixMissingScriptsInterface.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
