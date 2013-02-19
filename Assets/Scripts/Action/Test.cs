@@ -16,6 +16,7 @@
 using UnityEngine;
 using System.Collections;
 using ProtoBuf;
+using OpenCog.AttributeExtensions;
 
 namespace OpenCog
 {
@@ -25,7 +26,7 @@ namespace OpenCog
 /// </summary>
 #region Class Attributes
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-[ExposeProperties]
+[OCExposeProperties]
 #endregion
 public class Test : MonoBehaviour
 {

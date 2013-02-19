@@ -27,7 +27,6 @@ namespace OpenCog
 #region Class Attributes
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-[ExposeProperties]
 #endregion
 public class OCAutomatedPlayerBuilder : MonoBehaviour
 {

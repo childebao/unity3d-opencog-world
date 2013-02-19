@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using System.Collections;
+using ProtoBuf;
 
 namespace OpenCog
 {      
@@ -25,15 +26,7 @@ public class OCScriptFixer : MonoBehaviour
   
   //////////////////////////////////////////////////    
 
-	/// <summary>
-  /// Have we tried to find a suitable script for a missing connection?
-  /// </summary>
-  private static bool m_HaveTried;
 
-  /// <summary>
-  /// The next object to try to find a suitable script for.
-  /// </summary>
-  private static GameObject m_TryThisObject;
 
 	//////////////////////////////////////////////////
 
@@ -44,6 +37,9 @@ public class OCScriptFixer : MonoBehaviour
   #region Accessors and Mutators    
       
   //////////////////////////////////////////////////
+
+
+	//////////////////////////////////////////////////
       
   #endregion
   
@@ -64,6 +60,8 @@ public class OCScriptFixer : MonoBehaviour
   #endregion
 
   //////////////////////////////////////////////////    
+}
+
 }
 
 

@@ -1,6 +1,12 @@
 using UnityEngine;
+using System;
+using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using OpenCog;
+using OpenCog.AttributeExtensions;
 
 /// <summary>
 /// The OpenCog Script Scanner.  Scans the project's non-editor scripts for use
@@ -9,6 +15,18 @@ using System.Collections.Generic;
 [ExecuteInEditMode]
 public class OCScriptScanner : MonoBehaviour
 {
+	//Holds a scanned script
+	public class ScannedScript
+	{
+		//All of the serialized properties
+		public Dictionary<string, PropertyInfo> properties;
+
+		//The instance id
+		public int id;
+
+		//The script itself
+		public MonoScript script;
+	}
 
 	//All of the candidate scripts
 	private static List<ScannedScript> m_scripts;
@@ -17,7 +35,7 @@ public class OCScriptScanner : MonoBehaviour
 	private static bool m_initialized = false;
 
 	//Are we setup to repaint on changes to the project window?
-	private bool m_willRepaint;
+	private static bool m_willRepaint;
 
 	public static List<ScannedScript> Scripts
 	{
@@ -25,12 +43,13 @@ public class OCScriptScanner : MonoBehaviour
 	}
 
 	//Initialize the scanned scripts
-	public void Start()
+	public static void Start()
 	{
 		if( !m_willRepaint )
 		{
 			EditorApplication.projectWindowChanged += () => {
-				Repaint();
+				//@TODO: Repaint only in the Editor?
+				//Repaint();
 			};
 			m_willRepaint = true;
 		}
@@ -43,7 +62,7 @@ public class OCScriptScanner : MonoBehaviour
 	}
 
 	//Scan all of the scripts in resources (not editor scripts)
-	void ScanAll()
+	public static void ScanAll()
 	{
 		//Get all of the scripts
 		m_scripts = Resources.FindObjectsOfTypeAll( typeof( MonoScript ) )
@@ -61,7 +80,7 @@ public class OCScriptScanner : MonoBehaviour
 				//and all private with [SerializeField] set
         properties = c.GetClass()
            .GetProperties( BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic )
-          .Where( p => p.CanWrite || ( !p.CanWrite && p.IsDefined( typeof( ExposePropertyAttribute ), false ) ) )
+          .Where( p => p.CanWrite || ( !p.CanWrite && p.IsDefined( typeof( OCExposePropertiesAttribute ), false ) ) )
           .ToDictionary( p => p.Name )
       } )
       .ToList();

@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
- 
+using OpenCog.AttributeExtensions;
  
 public static class ExposeProperties
 {
@@ -142,7 +142,7 @@ public static void Expose( PropertyField field )
  
      foreach( object o in attributes )
      {
-       if ( o.GetType() == typeof( ExposePropertyAttribute ) )
+       if ( o.GetType() == typeof( OCExposePropertiesAttribute ) )
        {
          isExposed = true;
          break;

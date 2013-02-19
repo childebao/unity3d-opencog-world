@@ -168,6 +168,13 @@
     <Compile Include="Assets\Scripts\Noise\PerlinNoise.cs" />
     <Compile Include="Assets\Scripts\Noise\SimplexNoise.cs" />
     <Compile Include="Assets\Scripts\Noise\SimplexNoiseGenerator.cs" />
+    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCBoolPropertyToggleAttribute.cs" />
+    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCDrawMethodAttribute.cs" />
+    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCEnumPropertyToggleAttribute.cs" />
+    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCExposePropertiesAttribute.cs" />
+    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCFloatSliderAttribute.cs" />
+    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCIntSliderAttribute.cs" />
+    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCTooltipAttribute.cs" />
     <Compile Include="Assets\Scripts\Terrain\Block.cs" />
     <Compile Include="Assets\Scripts\Terrain\Chunk.cs" />
     <Compile Include="Assets\Scripts\Terrain\ChunkBatch.cs" />
@@ -371,13 +378,6 @@
     </Reference>
     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend %28Queue +100%29.shader" />
     <None Include="Assets\Standard Assets\Water %28Basic%29\Sources\Shaders\FX-Water Simple.shader" />
-    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCExposePropertiesAttribute.cs" />
-    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCFloatSliderAttribute.cs" />
-    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCTooltipAttribute.cs" />
-    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCDrawMethodAttribute.cs" />
-    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCIntSliderAttribute.cs" />
-    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCBoolPropertyToggleAttribute.cs" />
-    <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCEnumPropertyToggleAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">

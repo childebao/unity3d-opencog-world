@@ -29,7 +29,6 @@ namespace OpenCog
 #region Class Attributes
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-[ExposeProperties]
 [ExecuteInEditMode]
 #endregion
 public class OCAutomatedEditorBuilder : MonoBehaviour
@@ -41,8 +40,6 @@ public class OCAutomatedEditorBuilder : MonoBehaviour
 
   /////////////////////////////////////////////////////////////////////////////
 
-  private int m_ExamplePrivateVar = 0;
-
   /////////////////////////////////////////////////////////////////////////////
 
   #endregion
@@ -52,19 +49,6 @@ public class OCAutomatedEditorBuilder : MonoBehaviour
   #region Accessors and Mutators
 
   /////////////////////////////////////////////////////////////////////////////
-
-  public int ExamplePublicVar
-  {
-    get
-    {
-      return m_ExamplePrivateVar;
-    }
-
-    set
-    {
-      m_ExamplePrivateVar = value;
-    }
-  }
 
   /////////////////////////////////////////////////////////////////////////////
 

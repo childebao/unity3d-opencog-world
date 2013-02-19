@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using OpenCog;
+using OpenCog.AttributeExtensions;
 
 //[ExecuteInEditMode]
 //[CustomEditor(typeof(MonoBehaviour))]
@@ -13,10 +14,10 @@ using OpenCog;
 //{
 //	public static bool tried;
 //	public static GameObject tryThisObject;
-//	
+//
 //	public override void OnInspectorGUI ()
 //	{
-//		
+//
 //		if(target.GetType()!=typeof(MonoBehaviour) && target.GetType() != typeof(UnityEngine.Object))
 //		{
 //			base.OnInspectorGUI();
@@ -96,9 +97,9 @@ using OpenCog;
 //		if(_initialized)
 //			return;
 //		_initialized = true;
-//		
-//		ScanAll(); 
-//		
+//
+//		ScanAll();
+//
 //	}
 //	
 //	void ScanAll()
@@ -112,10 +113,10 @@ using OpenCog;
 //				properties = c.GetClass()
 //          .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
 //          //.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-//					.Where(p=>p.CanWrite || (!p.CanWrite && p.IsDefined(typeof(ExposePropertyAttribute), false)))
+//					.Where(p=>p.CanWrite || (!p.CanWrite && p.IsDefined(typeof(OCExposePropertiesAttribute), false)))
 //					.ToDictionary(p=>p.Name)
 //			})
 //			.ToList();
 //	}
-//	
+//
 //}
