@@ -23,6 +23,8 @@ using System.Linq;
 using System;
 using ProtoBuf;
 using OpenCog.AttributeExtensions;
+using OpenCog.AutomationExtensions;
+using OpenCog.SerializationExtensions;
 
 namespace OpenCog
 {
@@ -70,9 +72,14 @@ where OCType : MonoBehaviour
 	private OCType m_Instance;
 
 	/// <summary>
-	/// The public properties of the instance.
+	/// The mutable public properties of the instance.
 	/// </summary>
-	private PropertyField[] m_Fields;
+	private OCProperty[] m_ReadAndWriteFields;
+
+	/// <summary>
+	/// The constant public properties of the instance.
+	/// </summary>
+	private OCProperty[] m_ReadOnlyFields;
 
 	/// <summary>
   /// Have we tried to find a suitable script for a missing connection?
@@ -133,14 +140,17 @@ where OCType : MonoBehaviour
 	public void OnEnable()
 	{
 		m_Instance = target as OCType;
-		m_Fields = ExposeProperties.GetProperties(m_Instance);
+		bool success = OCExposePropertiesAttribute.GetProperties(m_Instance, out m_ReadOnlyFields, out m_ReadAndWriteFields);
+		OCAutomatedScriptScanner.Initialize();
 	}
  
 	public override void OnInspectorGUI()
 	{
-		// Update the serializedProperty - always do this in the beginning of
-		//	OnInspectorGUI.
+		// Update the serializedObject - always do this in the beginning of
+		// OnInspectorGUI.
 		serializedObject.Update();
+
+		//DrawDefaultInspector();
 
 		var serializedProperties = serializedObject.GetIterator();
 
@@ -156,10 +166,11 @@ where OCType : MonoBehaviour
 			DrawSerializedProperties(serializedProperties);
 		}
 
-		ExposeProperties.Expose(m_Fields);
+		OCExposePropertiesAttribute.Expose(m_ReadOnlyFields);
+		OCExposePropertiesAttribute.Expose(m_ReadAndWriteFields);
 
-		// Apply changes to the serializedProperty - always do this in the end
-		//	of OnInspectorGUI.
+		// Apply changes to the serializedProperty - always do this in the end of
+		// OnInspectorGUI.
 		serializedObject.ApplyModifiedProperties();
 		serializedObject.UpdateIfDirtyOrScript();
 	}
@@ -183,7 +194,6 @@ where OCType : MonoBehaviour
 			OCTooltipAttribute tooltip = getAttribute<OCTooltipAttribute>(s_properties);
 			OCFloatSliderAttribute floatSlider = getAttribute<OCFloatSliderAttribute>(s_properties);
 			OCIntSliderAttribute intSlider = getAttribute<OCIntSliderAttribute>(s_properties);
-			OCExposePropertiesAttribute exposeProperty = getAttribute<OCExposePropertiesAttribute>(s_properties);
 
 			//Evaluates the enum and bool conditions
 			bool allowedVisibleForBoolCondition = AllowedVisibleForBoolCondition(s_properties, boolCondition);
@@ -193,7 +203,7 @@ where OCType : MonoBehaviour
 			if(allowedVisibleForBoolCondition && allowedVisibleForEnumCondition && drawMethod == null)
 			{
 
-				g_content.text = CreateReadableName(s_properties.name);
+				g_content.text = ObjectNames.NicifyVariableName(s_properties.name);
 
 				//Sets the tooltip if avaiable
 				if(tooltip != null)
@@ -201,10 +211,7 @@ where OCType : MonoBehaviour
 					g_content.tooltip = tooltip.Tooltip;
 				}
 
-				DrawFieldInInspector(s_properties, g_content, emptyOptions, floatSlider, intSlider, exposeProperty);
-
-//				if(exposeProperty != null)
-//					ExposeProperties.Expose(m_Fields);
+				DrawFieldInInspector(s_properties, g_content, emptyOptions, floatSlider, intSlider);
 
 			}
 			else
@@ -253,7 +260,7 @@ where OCType : MonoBehaviour
 		EditorGUILayout.EndVertical();
 	}
 
-	public void DrawFieldInInspector(SerializedProperty s_property, GUIContent g_content, GUILayoutOption[] emptyOptions, OCFloatSliderAttribute floatSlider, OCIntSliderAttribute intSlider, OCExposePropertiesAttribute exposeProperties)
+	public void DrawFieldInInspector(SerializedProperty s_property, GUIContent g_content, GUILayoutOption[] emptyOptions, OCFloatSliderAttribute floatSlider, OCIntSliderAttribute intSlider)
 	{
 		if(floatSlider != null)
 		{
@@ -280,45 +287,6 @@ where OCType : MonoBehaviour
 				return;
 			}
 			EditorGUILayout.IntSlider(s_property, intSlider.MinValue, intSlider.MaxValue, g_content);
-		}
-		else
-		if(exposeProperties != null)
-		{
-			switch(s_property.propertyType)
-			{
-			case SerializedPropertyType.Integer:
-				s_property.intValue = EditorGUILayout.IntField(s_property.name, (int)s_property.intValue, emptyOptions);
-				break;
-
-			case SerializedPropertyType.Float:
-				s_property.floatValue = EditorGUILayout.FloatField(s_property.name, (float)s_property.floatValue, emptyOptions);
-				break;
-
-			case SerializedPropertyType.Boolean:
-				s_property.boolValue = EditorGUILayout.Toggle(s_property.name, (bool)s_property.boolValue, emptyOptions);
-				break;
-		
-			case SerializedPropertyType.String:
-				s_property.stringValue = EditorGUILayout.TextField(s_property.name, (String)s_property.stringValue, emptyOptions);
-				break;
-		
-			case SerializedPropertyType.Vector2:
-				s_property.vector2Value = EditorGUILayout.Vector2Field(s_property.name, (Vector2)s_property.vector2Value, emptyOptions);
-				break;
-		
-			case SerializedPropertyType.Vector3:
-				s_property.vector3Value = EditorGUILayout.Vector3Field(s_property.name, (Vector3)s_property.vector3Value, emptyOptions);
-				break;
-
-			case SerializedPropertyType.Enum:
-				s_property.enumValueIndex = (int)(object)EditorGUILayout.EnumPopup(s_property.name, (Enum)(object)s_property.enumValueIndex, emptyOptions);
-				break;
-
-			default:
-		
-				break;
-		
-			}
 		}
 		else
 		{
@@ -461,23 +429,23 @@ where OCType : MonoBehaviour
 		}
 	}
    
-	public String CreateReadableName(string baseName)
-	{
-		string readableName = "";
-		readableName += char.ToUpper(baseName[0]);
-     
-		for(int i = 1; i < baseName.Length; i++)
-		{
-			//Adds a space if (The current letter is uppercase OR number) AND the previous added letter was lowercase
-			if((char.IsUpper(baseName[i]) || char.IsNumber(baseName[i])) && char.IsLower(readableName[readableName.Length - 1]))
-			{
-				readableName += " ";
-			}
-			readableName += baseName[i]; 
-		}
-     
-		return readableName;
-	}
+//	public String CreateReadableName(string baseName)
+//	{
+//		string readableName = "";
+//		readableName += char.ToUpper(baseName[0]);
+//     
+//		for(int i = 1; i < baseName.Length; i++)
+//		{
+//			//Adds a space if (The current letter is uppercase OR number) AND the previous added letter was lowercase
+//			if((char.IsUpper(baseName[i]) || char.IsNumber(baseName[i])) && char.IsLower(readableName[readableName.Length - 1]))
+//			{
+//				readableName += " ";
+//			}
+//			readableName += baseName[i]; 
+//		}
+//     
+//		return readableName;
+//	}
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -527,7 +495,7 @@ where OCType : MonoBehaviour
 				var script = iterator.Copy();
 
 				//Get a copy of all of the scripts
-				var candidates = OCScriptScanner.Scripts.ToList();
+				var candidates = OCAutomatedScriptScanner.Scripts.ToList();
 
 				//Step through the remaining properties
 				//while we have anything that might match
@@ -535,14 +503,14 @@ where OCType : MonoBehaviour
 				{
 					//Set candidates to the subset that contain
 					//the current property
-					candidates = candidates.Where(c => c.properties.ContainsKey(iterator.name)).ToList();
+					candidates = candidates.Where(c => c.Properties.ContainsKey(iterator.name)).ToList();
 				}
 				//If we have only 1 candidate remaining
 				//then use it
 				if(candidates.Count == 1)
 				{
 					//Set the script reference
-					script.objectReferenceValue = candidates[0].script;
+					script.objectReferenceValue = candidates[0].Script;
     
 					//Update the data stream
 					serializedObject.ApplyModifiedProperties();
@@ -556,10 +524,10 @@ where OCType : MonoBehaviour
 				{
 					foreach(var candidate in candidates)
 					{
-						if(candidate != null && candidate.script != null && GUILayout.Button("Use " + candidate.script.name))
+						if(candidate != null && candidate.Script != null && GUILayout.Button("Use " + candidate.Script.name))
 						{
 							//Configure the script
-							script.objectReferenceValue = candidate.script;
+							script.objectReferenceValue = candidate.Script;
 
 							serializedObject.ApplyModifiedProperties();
 							serializedObject.UpdateIfDirtyOrScript();
@@ -587,9 +555,10 @@ where OCType : MonoBehaviour
 
 	void DisplayInspectorGUI()
 	{
-		base.OnInspectorGUI();
+		//base.OnInspectorGUI();
+		DrawDefaultInspector();
 
-		ExposeProperties.Expose(m_Fields);
+		OCExposePropertiesAttribute.Expose(m_ReadAndWriteFields);
 	}
 
 	void SerializeAndHidePrivateDataMembers(System.Object obj)

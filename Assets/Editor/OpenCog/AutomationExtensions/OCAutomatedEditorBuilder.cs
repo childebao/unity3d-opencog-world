@@ -21,10 +21,13 @@ using ProtoBuf;
 namespace OpenCog
 {
 
+namespace AutomationExtensions
+{
+
 /// <summary>
-/// The OpenCog Editor Automated Factory.  Creates OCEditor subclass files
-/// for each scanned script in the project.  Won't overwrite existing
-/// custom inspectors / OCEditor subclasses.
+/// The OpenCog Editor Automated Builder.  Auto-generates Editor subclass files
+/// for each scanned script in the project.  Won't overwrite existing custom
+/// inspectors (Editor subclasses).
 /// </summary>
 #region Class Attributes
 
@@ -150,6 +153,8 @@ public class OCAutomatedEditorBuilder : MonoBehaviour
   /////////////////////////////////////////////////////////////////////////////
 
 }// class OCAutomatedEditorBuilder
+
+}// namespace AutomationExtensions
 
 }// namespace OpenCog
 

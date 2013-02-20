@@ -37,7 +37,14 @@ public class Test : MonoBehaviour
 
 	/////////////////////////////////////////////////////////////////////////////
 
+//	[OCTooltip("Hey, don't touch that!")]
+//	[OCIntSlider(0,100)]
+//	[SerializeField]
 	private int m_ExamplePrivateVar = 0;
+
+//	[OCTooltip("an A")]
+//	[OCIntSlider(0,100)]
+//	public int a = 0;
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -49,6 +56,7 @@ public class Test : MonoBehaviour
 
 	/////////////////////////////////////////////////////////////////////////////
 
+	[OCTooltip("Hiya!")]
 	public int ExamplePublicVar
 	{
 		get
@@ -163,7 +171,7 @@ public class Test : MonoBehaviour
 
 	/////////////////////////////////////////////////////////////////////////////
 
-}// class {Name}
+}// class Test
 
 }// namespace OpenCog
 

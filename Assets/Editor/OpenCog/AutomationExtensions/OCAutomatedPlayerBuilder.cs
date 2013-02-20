@@ -21,12 +21,16 @@ using ProtoBuf;
 namespace OpenCog
 {
 
+namespace AutomationExtensions
+{
+
 /// <summary>
 /// The OpenCog OCAutomatedPlayerBuilder.
 /// </summary>
 #region Class Attributes
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
+[ExecuteInEditMode]
 #endregion
 public class OCAutomatedPlayerBuilder : MonoBehaviour
 {
@@ -162,6 +166,8 @@ public class OCAutomatedPlayerBuilder : MonoBehaviour
   /////////////////////////////////////////////////////////////////////////////
 
 }// class OCAutomatedPlayerBuilder
+
+}// namespace AutomationExtensions
 
 }// namespace OpenCog
 

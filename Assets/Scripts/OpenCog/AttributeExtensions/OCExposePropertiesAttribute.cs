@@ -14,10 +14,15 @@
 ///
 /// You should have received a copy of the GNU Affero General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Reflection;
 using ProtoBuf;
+using UnityEditor;
+using System.Collections.Generic;
+using OpenCog.SerializationExtensions;
 
 namespace OpenCog
 {
@@ -37,47 +42,192 @@ namespace AttributeExtensions
 public class OCExposePropertiesAttribute : Attribute
 {
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
   #region Private Member Data
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////////////////////////////
+	private static string[] excludedPropertyNames =
+	{
+		"Use GUILayout"
+	,	"Enabled"
+	,	"Active"
+	, "Tag"
+	,	"Name"
+	,	"Hide Flags"
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
 
   #endregion
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
   #region Accessors and Mutators
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
   #endregion
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
   #region Public Member Functions
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////////////////////////////
+	public static void Expose(OCProperty[] properties)
+	{
+		if(properties == null)
+		{
+			return;
+		}
+ 
+		GUILayoutOption[] emptyOptions = new GUILayoutOption[0];
+ 
+		EditorGUILayout.BeginVertical(emptyOptions);
+
+		foreach(OCProperty field in properties)//
+		{
+ 
+			EditorGUILayout.BeginHorizontal(emptyOptions);
+ 
+			switch(field.Type)
+			{
+			case SerializedPropertyType.Integer:
+				field.SetValue(EditorGUILayout.IntField(field.Name, (int)field.GetValue(), emptyOptions)); 
+				break;
+ 
+			case SerializedPropertyType.Float:
+				field.SetValue(EditorGUILayout.FloatField(field.Name, (float)field.GetValue(), emptyOptions));
+				break;
+ 
+			case SerializedPropertyType.Boolean:
+				field.SetValue(EditorGUILayout.Toggle(field.Name, (bool)field.GetValue(), emptyOptions));
+				break;
+ 
+			case SerializedPropertyType.String:
+				field.SetValue(EditorGUILayout.TextField(field.Name, (String)field.GetValue(), emptyOptions));
+				break;
+ 
+			case SerializedPropertyType.Vector2:
+				field.SetValue(EditorGUILayout.Vector2Field(field.Name, (Vector2)field.GetValue(), emptyOptions));
+				break;
+ 
+			case SerializedPropertyType.Vector3:
+				field.SetValue(EditorGUILayout.Vector3Field(field.Name, (Vector3)field.GetValue(), emptyOptions));
+				break;
+ 
+ 
+ 
+			case SerializedPropertyType.Enum:
+				field.SetValue(EditorGUILayout.EnumPopup(field.Name, (Enum)field.GetValue(), emptyOptions));
+				break;
+ 
+			default:
+ 
+				break;
+ 
+			}
+ 
+			EditorGUILayout.EndHorizontal();
+ 
+		}
+ 
+		EditorGUILayout.EndVertical();
+
+	}
+
+	public static bool GetProperties(System.Object obj, out OCProperty[] readOnlyFields, out OCProperty[] readAndWriteFields)
+	{
+		List< OCProperty > readOnlyFieldsList = new List<OCProperty>();
+		List< OCProperty > readAndWriteFieldsList = new List<OCProperty>();
+
+		if(obj == null)
+		{
+			readOnlyFields = readOnlyFieldsList.ToArray();
+			readAndWriteFields = readAndWriteFieldsList.ToArray();
+			return false;
+		}
+
+		System.Type exposePropertiesAttributeType = typeof(OpenCog.AttributeExtensions.OCExposePropertiesAttribute);
+
+		object[] attributes = exposePropertiesAttributeType != null ? obj.GetType().GetCustomAttributes(exposePropertiesAttributeType, true) : null;
+
+		if(attributes == null || attributes.Length == 0)
+		{
+			readOnlyFields = readOnlyFieldsList.ToArray();
+			readAndWriteFields = readAndWriteFieldsList.ToArray();
+			return false;
+		}
+
+		PropertyInfo[] infos = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic );
+
+		foreach(PropertyInfo info in infos)
+		{
+			string nicifiedName = ObjectNames.NicifyVariableName(info.Name);
+			bool isExcluded = false;
+
+			foreach(string excludedName in excludedPropertyNames)
+			{
+				if(nicifiedName == excludedName)
+				{
+					isExcluded = true;
+					break;
+				}
+			}
+
+			if(isExcluded)
+			{
+				continue;
+			}
+
+			if(info.CanRead && !info.CanWrite)
+			{
+				SerializedPropertyType type = new SerializedPropertyType();
+		
+				if(OCProperty.GetPropertyType(info, out type))
+				{
+					OCProperty field = new OCProperty(obj, info, type);
+					readOnlyFieldsList.Add(field);
+				}
+			}
+	
+			if(info.CanRead && info.CanWrite)
+			{
+				SerializedPropertyType type = new SerializedPropertyType();
+
+				if(OCProperty.GetPropertyType(info, out type))
+				{
+					OCProperty field = new OCProperty(obj, info, type);
+					readAndWriteFieldsList.Add(field);
+				}
+			}
+		}
+
+		readOnlyFields = readOnlyFieldsList.ToArray();
+		readAndWriteFields = readAndWriteFieldsList.ToArray();
+		return true;
+
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
 
   #endregion
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
   #region Private Member Functions
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
   #endregion
 
-  /////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
 }// class OCExposeProperties
 

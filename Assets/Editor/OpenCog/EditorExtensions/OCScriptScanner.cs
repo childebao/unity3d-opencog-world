@@ -10,7 +10,9 @@ using OpenCog.AttributeExtensions;
 
 /// <summary>
 /// The OpenCog Script Scanner.  Scans the project's non-editor scripts for use
-/// with the Editor Automated Factory and the auto-generated Editors.
+/// with the Automated Editor Factory and the resulting auto-generated Editors.
+/// Allows for the cross-referencing of missing scripts by public property or
+/// field.
 /// </summary>
 [ExecuteInEditMode]
 public class OCScriptScanner : MonoBehaviour
@@ -80,7 +82,7 @@ public class OCScriptScanner : MonoBehaviour
 				//and all private with [SerializeField] set
         properties = c.GetClass()
            .GetProperties( BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic )
-          .Where( p => p.CanWrite || ( !p.CanWrite && p.IsDefined( typeof( OCExposePropertiesAttribute ), false ) ) )
+          .Where( p => p.CanWrite || ( !p.CanWrite && p.IsDefined( typeof( SerializeField ), false ) ) )
           .ToDictionary( p => p.Name )
       } )
       .ToList();
