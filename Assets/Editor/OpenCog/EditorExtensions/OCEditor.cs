@@ -443,24 +443,6 @@ where OCType : MonoBehaviour
 		}
 	}
    
-//	public String CreateReadableName(string baseName)
-//	{
-//		string readableName = "";
-//		readableName += char.ToUpper(baseName[0]);
-//     
-//		for(int i = 1; i < baseName.Length; i++)
-//		{
-//			//Adds a space if (The current letter is uppercase OR number) AND the previous added letter was lowercase
-//			if((char.IsUpper(baseName[i]) || char.IsNumber(baseName[i])) && char.IsLower(readableName[readableName.Length - 1]))
-//			{
-//				readableName += " ";
-//			}
-//			readableName += baseName[i]; 
-//		}
-//     
-//		return readableName;
-//	}
-
 	/////////////////////////////////////////////////////////////////////////////
 
   #endregion

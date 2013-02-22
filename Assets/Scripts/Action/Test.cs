@@ -113,7 +113,7 @@ public class Test : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Raises the enable event when {Name} is loaded.
+	/// Raises the enable event when Test is loaded.
 	/// </summary>
 	void OnEnable()
 	{
@@ -128,7 +128,7 @@ public class Test : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Raises the disable event when {Name} goes out of
+	/// Raises the disable event when Test goes out of
 	/// scope.
 	/// </summary>
 	void OnDisable()
@@ -144,7 +144,7 @@ public class Test : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Raises the destroy event when {Name} is about to be
+	/// Raises the destroy event when Test is about to be
 	/// destroyed.
 	/// </summary>
 	void OnDestroy()
