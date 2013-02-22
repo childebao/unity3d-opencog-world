@@ -154,27 +154,31 @@ public class OCAutomatedScriptScanner : MonoBehaviour
 	/// <param name='obj'>
 	/// Object.
 	/// </param>
-	public static Dictionary<string, OCProperty>
+	public static Dictionary<string, OCPropertyField>
 		GetNameToPropertyDictionary(System.Object obj)
 	{
-		OCProperty[] readOnlyProperties;
-		OCProperty[] readAndWriteProperties;
+		OCPropertyField[] readOnlyProperties;
+		OCPropertyField[] readAndWriteProperties;
+		OCPropertyField[] privateProperties;
 		bool success
 			= OCExposePropertiesAttribute
 			. GetProperties
 			( obj
 			, out readOnlyProperties
 			, out readAndWriteProperties
+			, out privateProperties
 			);
 
-		OCProperty[] allProperties
-			= new OCProperty
+		OCPropertyField[] allProperties
+			= new OCPropertyField
 			[ readOnlyProperties.Length
 			+ readAndWriteProperties.Length
+			+ privateProperties.Length
 			];
 
 		readOnlyProperties.CopyTo(allProperties, 0);
 		readAndWriteProperties.CopyTo(allProperties, readOnlyProperties.Length);
+		privateProperties.CopyTo(allProperties, readAndWriteProperties.Length + readOnlyProperties.Length);
 
 		return allProperties.ToDictionary( p => p.Name );
 	}

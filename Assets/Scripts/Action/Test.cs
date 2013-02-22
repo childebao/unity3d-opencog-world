@@ -17,6 +17,7 @@ using UnityEngine;
 using System.Collections;
 using ProtoBuf;
 using OpenCog.AttributeExtensions;
+using System;
 
 namespace OpenCog
 {
@@ -27,6 +28,7 @@ namespace OpenCog
 #region Class Attributes
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 [OCExposeProperties]
+[Serializable]
 #endregion
 public class Test : MonoBehaviour
 {
@@ -39,7 +41,9 @@ public class Test : MonoBehaviour
 
 //	[OCTooltip("Hey, don't touch that!")]
 //	[OCIntSlider(0,100)]
-//	[SerializeField]
+
+//	[HideInInspector]
+	[SerializeField]
 	private int m_ExamplePrivateVar = 0;
 
 //	[OCTooltip("an A")]

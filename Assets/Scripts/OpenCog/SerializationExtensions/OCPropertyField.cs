@@ -37,7 +37,7 @@ namespace SerializationExtensions
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 #endregion
-public class OCProperty
+public class OCPropertyField
 {
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -47,14 +47,24 @@ public class OCProperty
 	/////////////////////////////////////////////////////////////////////////////
 
 	/// <summary>
+	/// Are we wrapping a property or a field?
+	/// </summary>
+	private bool m_IsProperty;
+
+	/// <summary>
 	/// The property field instance.
 	/// </summary>
 	private System.Object m_Instance;
 
 	/// <summary>
-	/// The property field's info.
+	/// The property info (when we're wrapping a property).
 	/// </summary>
-	private PropertyInfo m_Info;
+	private PropertyInfo m_PropertyInfo;
+
+	/// <summary>
+	/// The field info (when we're wrapping a field).
+	/// </summary>
+	private FieldInfo m_FieldInfo;
 
 	/// <summary>
 	/// The property field's serialized type.
@@ -70,6 +80,11 @@ public class OCProperty
 	/// The property field's mutator info.
 	/// </summary>
 	private MethodInfo m_Setter;
+
+	/// <summary>
+	/// The unity serialized property reference.
+	/// </summary>
+	private SerializedProperty m_SerializedPropertyReference = null;
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +120,24 @@ public class OCProperty
 	{
 		get
 		{
-			return ObjectNames.NicifyVariableName(m_Info.Name);
+			if(m_IsProperty)
+				return ObjectNames.NicifyVariableName(m_PropertyInfo.Name);
+			else
+				return ObjectNames.NicifyVariableName(m_FieldInfo.Name);
+		}
+	}
+
+	/// <summary>
+	/// Gets the serialized property reference.
+	/// </summary>
+	/// <value>
+	/// The serialized property reference.
+	/// </value>
+	public SerializedProperty SerializedPropertyReference
+	{
+		get
+		{
+			return m_SerializedPropertyReference;
 		}
 	}
 
@@ -119,33 +151,85 @@ public class OCProperty
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	public OCProperty(System.Object instance, PropertyInfo info, SerializedPropertyType type)
+	public OCPropertyField(System.Object instance, PropertyInfo info, SerializedPropertyType type)
 	{ 
- 
+		m_IsProperty = true;
 		m_Instance = instance;
-		m_Info = info;
+		m_PropertyInfo = info;
 		m_Type = type;
  
-		m_Getter = m_Info.GetGetMethod();
-		m_Setter = m_Info.GetSetMethod();
+		m_Getter = m_PropertyInfo.GetGetMethod();
+		m_Setter = m_PropertyInfo.GetSetMethod();
+	}
+
+	public OCPropertyField(OCPropertyField propertyField)
+	{
+		m_IsProperty = propertyField.m_IsProperty;
+		m_Instance = propertyField.m_Instance;
+		m_PropertyInfo = propertyField.m_PropertyInfo;
+		m_Type = propertyField.m_Type;
+
+		if(m_PropertyInfo)
+		{
+			m_Getter = m_PropertyInfo.GetGetMethod();
+			m_Setter = m_PropertyInfo.GetSetMethod();
+		}
+		else
+		{
+			m_Getter = null;
+			m_Setter = null;
+		}
+	}
+
+	public OCPropertyField(SerializedProperty serializedProperty)
+	{
+		m_Instance = serializedProperty.serializedObject.targetObject;
+
+		m_PropertyInfo = m_Instance.GetType().GetProperty(serializedProperty.name);
+
+		m_FieldInfo = m_Instance.GetType().GetField(serializedProperty.name);
+
+		m_Type = serializedProperty.propertyType;
+
+		m_SerializedPropertyReference = serializedProperty;
+
+		if(m_PropertyInfo)
+		{
+			m_Getter = m_PropertyInfo.GetGetMethod();
+			m_Setter = m_PropertyInfo.GetSetMethod();
+		}
+		else
+		{
+			m_Getter = null;
+			m_Setter = null;
+		}
 	}
  
 	public System.Object GetValue()
 	{
-		return m_Getter.Invoke(m_Instance, null);
+		if(m_Getter != null)
+			return m_Getter.Invoke(m_Instance, null);
+		else return m_SerializedPropertyReference.objectReferenceValue;
 	}
  
 	public void SetValue(System.Object value)
 	{
-		m_Setter.Invoke(m_Instance, new System.Object[] { value });
+		if(m_Setter)
+			m_Setter.Invoke(m_Instance, new System.Object[] { value });
+		else m_SerializedPropertyReference.objectReferenceValue = value;
+	}
+
+	public bool IsNull()
+	{
+		return m_Instance == null;
 	}
  
-	public static bool GetPropertyType(PropertyInfo info, out SerializedPropertyType propertyType)
+	public static bool GetPropertyType(MemberInfo info, out SerializedPropertyType propertyType)
 	{
  
 		propertyType = SerializedPropertyType.Generic;
  
-		Type type = info.PropertyType;
+		Type type = info.DeclaringType;
  
 		if(type == typeof(int))
 		{

@@ -56,6 +56,7 @@
      <Compile Include="Assets\Scripts\Action\OCInputController.cs" />
      <Compile Include="Assets\Scripts\Action\OCSoundEffect.cs" />
      <Compile Include="Assets\Scripts\Action\Test.cs" />
+     <Compile Include="Assets\Scripts\Action\Test2.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Avatar.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Player.cs" />
      <Compile Include="Assets\Scripts\Animation\Animator.cs" />

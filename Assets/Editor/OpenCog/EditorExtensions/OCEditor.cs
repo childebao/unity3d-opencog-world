@@ -74,22 +74,27 @@ where OCType : MonoBehaviour
 	/// <summary>
 	/// The mutable public properties of the instance.
 	/// </summary>
-	private OCProperty[] m_ReadAndWriteFields;
+	private OCPropertyField[] m_ReadAndWriteProperties;
 
 	/// <summary>
 	/// The constant public properties of the instance.
 	/// </summary>
-	private OCProperty[] m_ReadOnlyFields;
+	private OCPropertyField[] m_ReadOnlyProperties;
 
 	/// <summary>
-  /// Have we tried to find a suitable script for a missing connection?
-  /// </summary>
-  private static bool m_HaveTried;
+	/// The private properties of the instance.
+	/// </summary>
+	private OCPropertyField[] m_PrivateFields;
 
-  /// <summary>
-  /// The next object to try to find a suitable script for.
-  /// </summary>
-  private static GameObject m_TryThisObject;
+	/// <summary>
+	/// Have we tried to find a suitable script for a missing connection?
+	/// </summary>
+	private static bool m_HaveTried;
+
+	/// <summary>
+	/// The next object to try to find a suitable script for.
+	/// </summary>
+	private static GameObject m_TryThisObject;
 
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -140,7 +145,7 @@ where OCType : MonoBehaviour
 	public void OnEnable()
 	{
 		m_Instance = target as OCType;
-		bool success = OCExposePropertiesAttribute.GetProperties(m_Instance, out m_ReadOnlyFields, out m_ReadAndWriteFields);
+		bool success = OCExposePropertiesAttribute.GetProperties(m_Instance, out m_ReadOnlyProperties, out m_ReadAndWriteProperties);
 		OCAutomatedScriptScanner.Initialize();
 	}
  
@@ -150,24 +155,29 @@ where OCType : MonoBehaviour
 		// OnInspectorGUI.
 		serializedObject.Update();
 
-		//DrawDefaultInspector();
+		SerializedProperty serializedPropertyIterator = serializedObject.GetIterator();
 
-		var serializedProperties = serializedObject.GetIterator();
+		List< OCPropertyField > allProperties = new List<OCPropertyField>();
+
+		allProperties.AddRange(m_ReadOnlyProperties);
+		allProperties.AddRange(m_ReadAndWriteProperties);
+
+		while(serializedPropertyIterator.NextVisible(true))
+		{
+			OCPropertyField property = new OCPropertyField(serializedPropertyIterator.Copy());
+			if(allProperties.Find(p => p.Name == property.Name) == null)
+				allProperties.Add(property);
+		}
 
 		// Tests if there is a missing script
 		if(AreAnyScriptsMissing())
 		{
-			FindMissingScripts();
+			FindMissingScripts(allProperties);
 		}
 
-		// Tests if there is any visible fields
-		if(serializedProperties.NextVisible(true))
-		{
-			DrawSerializedProperties(serializedProperties);
-		}
+		DrawSerializedProperties(allProperties);
 
-		OCExposePropertiesAttribute.Expose(m_ReadOnlyFields);
-		OCExposePropertiesAttribute.Expose(m_ReadAndWriteFields);
+		OCExposePropertiesAttribute.Expose(allProperties);
 
 		// Apply changes to the serializedProperty - always do this in the end of
 		// OnInspectorGUI.
@@ -175,7 +185,7 @@ where OCType : MonoBehaviour
 		serializedObject.UpdateIfDirtyOrScript();
 	}
 
-	public void DrawSerializedProperties(SerializedProperty s_properties)
+	public void DrawSerializedProperties(List< OCPropertyField > allProperties)
 	{
 		GUIContent g_content = new GUIContent();
 		GUILayoutOption[] emptyOptions = new GUILayoutOption[0];
@@ -183,27 +193,27 @@ where OCType : MonoBehaviour
 		EditorGUILayout.BeginVertical(emptyOptions);
 
 		//Loops through all visible fields
-		do
+		foreach(OCPropertyField property in allProperties)
 		{
 			EditorGUILayout.BeginHorizontal(emptyOptions);
 
 			//Finds the bool Condition, enum Condition and tooltip if they exists (They are null otherwise).
-			OCBoolPropertyToggleAttribute boolCondition = getAttribute<OCBoolPropertyToggleAttribute>(s_properties);
-			OCEnumPropertyToggleAttribute enumCondition = getAttribute<OCEnumPropertyToggleAttribute>(s_properties);
-			OCDrawMethodAttribute drawMethod = getAttribute<OCDrawMethodAttribute>(s_properties);
-			OCTooltipAttribute tooltip = getAttribute<OCTooltipAttribute>(s_properties);
-			OCFloatSliderAttribute floatSlider = getAttribute<OCFloatSliderAttribute>(s_properties);
-			OCIntSliderAttribute intSlider = getAttribute<OCIntSliderAttribute>(s_properties);
+			OCBoolPropertyToggleAttribute boolCondition = getAttribute<OCBoolPropertyToggleAttribute>(property);
+			OCEnumPropertyToggleAttribute enumCondition = getAttribute<OCEnumPropertyToggleAttribute>(property);
+			OCDrawMethodAttribute drawMethod = getAttribute<OCDrawMethodAttribute>(property);
+			OCTooltipAttribute tooltip = getAttribute<OCTooltipAttribute>(property);
+			OCFloatSliderAttribute floatSlider = getAttribute<OCFloatSliderAttribute>(property);
+			OCIntSliderAttribute intSlider = getAttribute<OCIntSliderAttribute>(property);
 
 			//Evaluates the enum and bool conditions
-			bool allowedVisibleForBoolCondition = AllowedVisibleForBoolCondition(s_properties, boolCondition);
-			bool allowedVisibleForEnumCondition = AllowedVisibleForEnumCondition(s_properties, enumCondition);
+			bool allowedVisibleForBoolCondition = AllowedVisibleForBoolCondition(property, boolCondition);
+			bool allowedVisibleForEnumCondition = AllowedVisibleForEnumCondition(property, enumCondition);
 
 			//Tests is the field is visible
 			if(allowedVisibleForBoolCondition && allowedVisibleForEnumCondition && drawMethod == null)
 			{
 
-				g_content.text = ObjectNames.NicifyVariableName(s_properties.name);
+				g_content.text = ObjectNames.NicifyVariableName(property.name);
 
 				//Sets the tooltip if avaiable
 				if(tooltip != null)
@@ -211,7 +221,7 @@ where OCType : MonoBehaviour
 					g_content.tooltip = tooltip.Tooltip;
 				}
 
-				DrawFieldInInspector(s_properties, g_content, emptyOptions, floatSlider, intSlider);
+				DrawFieldInInspector(property, g_content, emptyOptions, floatSlider, intSlider);
 
 			}
 			else
@@ -221,13 +231,13 @@ where OCType : MonoBehaviour
 				MethodInfo drawMethodInfo = this.GetType().GetMethod(drawMethod.DrawMethod);
 				if(drawMethodInfo == null)
 				{
-					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. Could not find the method '" + drawMethod.DrawMethod + "' in the " + this.ToString() + ". The attribute is attached to the field '" + s_properties.name + "' in '" + s_properties.serializedObject.targetObject + "'.");
+					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. Could not find the method '" + drawMethod.DrawMethod + "' in the " + this.ToString() + ". The attribute is attached to the field '" + property.name + "' in '" + property.serializedObject.targetObject + "'.");
 					continue;
 				}
 				ParameterInfo[] parametersInfo = drawMethodInfo.GetParameters();
 				if(parametersInfo.Length != (drawMethod.Parameters as object[]).Length)
 				{
-					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The number of parameters in the attribute, did not match the number of parameters in the actual method. The attribute is attached to the field '" + s_properties.name + "' in '" + s_properties.serializedObject.targetObject + "'.");
+					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The number of parameters in the attribute, did not match the number of parameters in the actual method. The attribute is attached to the field '" + property.name + "' in '" + property.serializedObject.targetObject + "'.");
 					continue;
 				}
 
@@ -238,7 +248,7 @@ where OCType : MonoBehaviour
 					if(!Type.Equals(parametersInfo[i].ParameterType, drawMethod.Parameters[i].GetType()))
 					{
 						_error = true;
-						Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The parameter type ('" + drawMethod.Parameters[i].GetType() + "') in the attribute, did not match the the parameter type ('" + parametersInfo[i].ParameterType + "') of the actual method, parameter index: '" + i + "'. The attribute is attached to the field '" + s_properties.name + "' in '" + s_properties.serializedObject.targetObject + "'.");
+						Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The parameter type ('" + drawMethod.Parameters[i].GetType() + "') in the attribute, did not match the the parameter type ('" + parametersInfo[i].ParameterType + "') of the actual method, parameter index: '" + i + "'. The attribute is attached to the field '" + property.name + "' in '" + property.serializedObject.targetObject + "'.");
 						continue;
 					}
 				}
@@ -255,7 +265,6 @@ where OCType : MonoBehaviour
 			EditorGUILayout.EndHorizontal();
 
 		}
-		while(s_properties.NextVisible(false));
 
 		EditorGUILayout.EndVertical();
 	}
@@ -302,23 +311,28 @@ where OCType : MonoBehaviour
 	/// <returns>
 	/// The attribute of type T.
 	/// </returns>
-	/// <param name='s_property'>
+	/// <param name='property'>
 	/// The Serialized Property.
 	/// </param>
 	/// <typeparam name='T'>
 	/// The type of attribute to find.
 	/// </typeparam>
-	public T getAttribute<T>(SerializedProperty s_property)
+	public T getAttribute<T>(OCPropertyField property)
 	{
-		var currentTarget = s_property.serializedObject.targetObject;
-
-		if(s_property == null || currentTarget == null)
+		if(property == null)
 		{
 			return default(T);
 		}
-  
+
+		var currentTarget = property.SerializedPropertyReference.serializedObject.targetObject;
+
+		if(currentTarget == null)
+		{
+			return default(T);
+		}
+
 		//Retires the fieldInfo for the current field
-		FieldInfo fieldInfo = currentTarget.GetType().GetField(s_property.name);
+		FieldInfo fieldInfo = currentTarget.GetType().GetField(property.SerializedPropertyReference.name);
      
 		//If there is no field, Unity might find non-fields it wants to display(like script name).
 		if(fieldInfo == null)
@@ -469,7 +483,7 @@ where OCType : MonoBehaviour
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	private void FindMissingScripts()
+	private void FindMissingScripts(List< OCPropertyField > allProperties)
 	{
 		EditorPrefs.SetBool("Fix", GUILayout.Toggle(EditorPrefs.GetBool("Fix", true), "Fix broken scripts"));
 		if(!EditorPrefs.GetBool("Fix", true))
@@ -477,57 +491,50 @@ where OCType : MonoBehaviour
 			GUILayout.Label("*** SCRIPT MISSING ***");
 			return;
 		}
-		OCScriptScanner.Start();
-		var iterator = this.serializedObject.GetIterator();
-		var first = true;
-		while(iterator.NextVisible(first))
+
+		foreach(OCPropertyField property in allProperties)
 		{
-			first = false;
-			if(iterator.name == "m_Script" && iterator.objectReferenceValue == null)
+			//Debug.Log("In OCEditor.FindMissingScripts(), property name: " + property.name);
+			if(property.Name == "Script" && property.IsNull())
 			{
-				if((target as Component) != null && TryThisObject == (target as Component).gameObject)
+				//Debug.Log("In OCEditor.FindMissingScripts(), found script");
+				Component targetComponent = target as Component;
+				if(targetComponent != null && TryThisObject == targetComponent.gameObject)
 				{
+					//Debug.Log("In OCEditor.FindMissingScripts(), we have tried this script already");
 					HaveTried = true;
 				}
 
-				//Make a copy of our script serialized property
-				//for later
-				var script = iterator.Copy();
+				List< OCScript > candidates = OCAutomatedScriptScanner.Scripts.ToList();
 
-				//Get a copy of all of the scripts
-				var candidates = OCAutomatedScriptScanner.Scripts.ToList();
-
-				//Step through the remaining properties
-				//while we have anything that might match
-				while(iterator.NextVisible(false) && candidates.Count>0)
+				foreach(OCPropertyField subProperty in allProperties)
 				{
-					//Set candidates to the subset that contain
-					//the current property
-					candidates = candidates.Where(c => c.Properties.ContainsKey(iterator.name)).ToList();
+					if(candidates.Count == 0)
+					{
+						break;
+					}
+					if(subProperty.Name != "Script")
+					{
+						candidates = candidates.Where(c => c.Properties.ContainsKey(subProperty.Name)).ToList();
+					}
 				}
-				//If we have only 1 candidate remaining
-				//then use it
+
 				if(candidates.Count == 1)
 				{
-					//Set the script reference
-					script.objectReferenceValue = candidates[0].Script;
-    
-					//Update the data stream
+					property.SetValue( candidates[0].Script );
+
 					serializedObject.ApplyModifiedProperties();
 					serializedObject.UpdateIfDirtyOrScript();
-
 				}
-        //If we have multiple matches then give
-        //the user a choice
 				else
 				if(candidates.Count > 0)
 				{
-					foreach(var candidate in candidates)
+					foreach(OCScript candidate in candidates)
 					{
 						if(candidate != null && candidate.Script != null && GUILayout.Button("Use " + candidate.Script.name))
 						{
 							//Configure the script
-							script.objectReferenceValue = candidate.Script;
+							property.SetValue( candidate.Script );
 
 							serializedObject.ApplyModifiedProperties();
 							serializedObject.UpdateIfDirtyOrScript();
@@ -535,7 +542,6 @@ where OCType : MonoBehaviour
 						}
 					}
 				}
-        //Otherwise tell them we failed
 				else
 				{
 					GUILayout.Label("> No suitable scripts were found");
@@ -544,7 +550,71 @@ where OCType : MonoBehaviour
 			}
 		}
 
-		//serializedObject.
+//		var iterator = this.serializedObject.GetIterator();
+//		var first = true;
+//		while(iterator.NextVisible(first))
+//		{
+//			first = false;
+//			if(iterator.name == "m_Script" && iterator.objectReferenceValue == null)
+//			{
+//				if((target as Component) != null && TryThisObject == (target as Component).gameObject)
+//				{
+//					HaveTried = true;
+//				}
+//
+//				//Make a copy of our script serialized property
+//				//for later
+//				var script = iterator.Copy();
+//
+//				//Get a copy of all of the scripts
+//				var candidates = OCAutomatedScriptScanner.Scripts.ToList();
+//
+//				//Step through the remaining properties
+//				//while we have anything that might match
+//				while(iterator.NextVisible(false) && candidates.Count>0)
+//				{
+//					//Set candidates to the subset that contain
+//					//the current property
+//					candidates = candidates.Where(c => c.Properties.ContainsKey(iterator.name)).ToList();
+//				}
+//				//If we have only 1 candidate remaining
+//				//then use it
+//				if(candidates.Count == 1)
+//				{
+//					//Set the script reference
+//					script.objectReferenceValue = candidates[0].Script;
+//    
+//					//Update the data stream
+//					serializedObject.ApplyModifiedProperties();
+//					serializedObject.UpdateIfDirtyOrScript();
+//
+//				}
+//        //If we have multiple matches then give
+//        //the user a choice
+//				else
+//				if(candidates.Count > 0)
+//				{
+//					foreach(var candidate in candidates)
+//					{
+//						if(candidate != null && candidate.Script != null && GUILayout.Button("Use " + candidate.Script.name))
+//						{
+//							//Configure the script
+//							script.objectReferenceValue = candidate.Script;
+//
+//							serializedObject.ApplyModifiedProperties();
+//							serializedObject.UpdateIfDirtyOrScript();
+//    
+//						}
+//					}
+//				}
+//        //Otherwise tell them we failed
+//				else
+//				{
+//					GUILayout.Label("> No suitable scripts were found");
+//				}
+//				break;
+//			}
+//		}
 	}
 
 	private bool AreAnyScriptsMissing()
@@ -558,7 +628,7 @@ where OCType : MonoBehaviour
 		//base.OnInspectorGUI();
 		DrawDefaultInspector();
 
-		OCExposePropertiesAttribute.Expose(m_ReadAndWriteFields);
+		OCExposePropertiesAttribute.Expose(m_ReadAndWriteProperties);
 	}
 
 	void SerializeAndHidePrivateDataMembers(System.Object obj)

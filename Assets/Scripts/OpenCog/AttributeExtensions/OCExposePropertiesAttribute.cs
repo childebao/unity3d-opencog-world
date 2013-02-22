@@ -78,7 +78,7 @@ public class OCExposePropertiesAttribute : Attribute
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	public static void Expose(OCProperty[] properties)
+	public static void Expose(OCPropertyField[] properties)
 	{
 		if(properties == null)
 		{
@@ -89,7 +89,7 @@ public class OCExposePropertiesAttribute : Attribute
  
 		EditorGUILayout.BeginVertical(emptyOptions);
 
-		foreach(OCProperty field in properties)//
+		foreach(OCPropertyField field in properties)//
 		{
  
 			EditorGUILayout.BeginHorizontal(emptyOptions);
@@ -140,10 +140,10 @@ public class OCExposePropertiesAttribute : Attribute
 
 	}
 
-	public static bool GetProperties(System.Object obj, out OCProperty[] readOnlyFields, out OCProperty[] readAndWriteFields)
+	public static bool GetProperties(System.Object obj, out OCPropertyField[] readOnlyFields, out OCPropertyField[] readAndWriteFields)
 	{
-		List< OCProperty > readOnlyFieldsList = new List<OCProperty>();
-		List< OCProperty > readAndWriteFieldsList = new List<OCProperty>();
+		List< OCPropertyField > readOnlyFieldsList = new List<OCPropertyField>();
+		List< OCPropertyField > readAndWriteFieldsList = new List<OCPropertyField>();
 
 		if(obj == null)
 		{
@@ -152,18 +152,22 @@ public class OCExposePropertiesAttribute : Attribute
 			return false;
 		}
 
-		System.Type exposePropertiesAttributeType = typeof(OpenCog.AttributeExtensions.OCExposePropertiesAttribute);
+		//@TODO: Only Expose Attributed Classes
+//		System.Type exposePropertiesAttributeType = typeof(OpenCog.AttributeExtensions.OCExposePropertiesAttribute);
+//
+//		object[] attributes = exposePropertiesAttributeType != null ? obj.GetType().GetCustomAttributes(exposePropertiesAttributeType, true) : null;
+//
+//		if(attributes == null || attributes.Length == 0)
+//		{
+//			readOnlyFields = readOnlyFieldsList.ToArray();
+//			readAndWriteFields = readAndWriteFieldsList.ToArray();
+//			return false;
+//		}
 
-		object[] attributes = exposePropertiesAttributeType != null ? obj.GetType().GetCustomAttributes(exposePropertiesAttributeType, true) : null;
+		PropertyInfo[] infos = obj.GetType().GetProperties();
+		FieldInfo[] fieldInfos = obj.GetType().GetFields();
 
-		if(attributes == null || attributes.Length == 0)
-		{
-			readOnlyFields = readOnlyFieldsList.ToArray();
-			readAndWriteFields = readAndWriteFieldsList.ToArray();
-			return false;
-		}
-
-		PropertyInfo[] infos = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic );
+		//fieldInfos[0].
 
 		foreach(PropertyInfo info in infos)
 		{
@@ -184,24 +188,25 @@ public class OCExposePropertiesAttribute : Attribute
 				continue;
 			}
 
+
+
 			if(info.CanRead && !info.CanWrite)
 			{
 				SerializedPropertyType type = new SerializedPropertyType();
 		
-				if(OCProperty.GetPropertyType(info, out type))
+				if(OCPropertyField.GetPropertyType(info, out type))
 				{
-					OCProperty field = new OCProperty(obj, info, type);
+					OCPropertyField field = new OCPropertyField(obj, info, type);
 					readOnlyFieldsList.Add(field);
 				}
 			}
-	
-			if(info.CanRead && info.CanWrite)
+			else if(info.CanRead && info.CanWrite)
 			{
 				SerializedPropertyType type = new SerializedPropertyType();
 
-				if(OCProperty.GetPropertyType(info, out type))
+				if(OCPropertyField.GetPropertyType(info, out type))
 				{
-					OCProperty field = new OCProperty(obj, info, type);
+					OCPropertyField field = new OCPropertyField(obj, info, type);
 					readAndWriteFieldsList.Add(field);
 				}
 			}
