@@ -74,17 +74,17 @@ where OCType : MonoBehaviour
 	/// <summary>
 	/// The mutable public properties of the instance.
 	/// </summary>
-	private OCPropertyField[] m_ReadAndWriteProperties;
+	private List<OCPropertyField> m_ReadAndWriteProperties;
 
 	/// <summary>
 	/// The constant public properties of the instance.
 	/// </summary>
-	private OCPropertyField[] m_ReadOnlyProperties;
+	private List<OCPropertyField> m_ReadOnlyProperties;
 
-	/// <summary>
-	/// The private properties of the instance.
-	/// </summary>
-	private OCPropertyField[] m_PrivateFields;
+//	/// <summary>
+//	/// The private properties of the instance.
+//	/// </summary>
+//	private OCPropertyField[] m_PrivateFields;
 
 	/// <summary>
 	/// Have we tried to find a suitable script for a missing connection?
@@ -146,6 +146,37 @@ where OCType : MonoBehaviour
 	{
 		m_Instance = target as OCType;
 		bool success = OCExposePropertiesAttribute.GetProperties(m_Instance, out m_ReadOnlyProperties, out m_ReadAndWriteProperties);
+
+		MonoScript[] myScripts = Resources.FindObjectsOfTypeAll( typeof( MonoScript ) ).Cast<MonoScript>().Where( c => c.hideFlags == 0 ).Where( c => c.GetClass() == m_Instance.GetType() ).ToArray();
+
+		Debug.Log("OCEditor.OnEnable, MonoScript: " + myScripts[0].ToString());
+
+		Test test = m_Instance.GetComponent<Test>();
+
+		PropertyInfo[] propertyInfos = m_Instance.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+		FieldInfo[] fieldInfos = myScripts[0].GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
+		Debug.Log("OCEditor.OnEnable, Internal Property Fields: " + myScripts[0].GetType().ToString());
+		foreach(PropertyInfo property in propertyInfos)
+		{
+			Debug.Log(property.ToString());
+		}
+		foreach(FieldInfo field in fieldInfos)
+		{
+			Debug.Log(field.Name);
+		}
+
+		Debug.Log("OCEditor.OnEnable, Stored Property Fields:");
+		foreach(OCPropertyField propertyField in m_ReadOnlyProperties)
+		{
+			Debug.Log(propertyField.ToString());
+		}
+		foreach(OCPropertyField propertyField in m_ReadAndWriteProperties)
+		{
+			Debug.Log(propertyField.ToString());
+		}
+
+
 		OCAutomatedScriptScanner.Initialize();
 	}
  
@@ -157,27 +188,33 @@ where OCType : MonoBehaviour
 
 		SerializedProperty serializedPropertyIterator = serializedObject.GetIterator();
 
-		List< OCPropertyField > allProperties = new List<OCPropertyField>();
+		List< OCPropertyField > allPropertiesAndFields = new List<OCPropertyField>();
 
-		allProperties.AddRange(m_ReadOnlyProperties);
-		allProperties.AddRange(m_ReadAndWriteProperties);
+		allPropertiesAndFields.AddRange(m_ReadOnlyProperties);
+		allPropertiesAndFields.AddRange(m_ReadAndWriteProperties);
 
 		while(serializedPropertyIterator.NextVisible(true))
 		{
-			OCPropertyField property = new OCPropertyField(serializedPropertyIterator.Copy());
-			if(allProperties.Find(p => p.Name == property.Name) == null)
-				allProperties.Add(property);
+			OCPropertyField propertyField = new OCPropertyField(m_Instance, serializedPropertyIterator.Copy());
+			if(allPropertiesAndFields.Find(p => p.Name == propertyField.Name) == null)
+				allPropertiesAndFields.Add(propertyField);
+		}
+
+		Debug.Log("All Property Fields:");
+		foreach (OCPropertyField propertyField in allPropertiesAndFields)
+		{
+			Debug.Log(propertyField.Name);
 		}
 
 		// Tests if there is a missing script
 		if(AreAnyScriptsMissing())
 		{
-			FindMissingScripts(allProperties);
+			FindMissingScripts(allPropertiesAndFields);
 		}
 
-		DrawSerializedProperties(allProperties);
+		DrawSerializedProperties(allPropertiesAndFields);
 
-		OCExposePropertiesAttribute.Expose(allProperties);
+		OCExposePropertiesAttribute.Expose(allPropertiesAndFields);
 
 		// Apply changes to the serializedProperty - always do this in the end of
 		// OnInspectorGUI.
@@ -185,43 +222,43 @@ where OCType : MonoBehaviour
 		serializedObject.UpdateIfDirtyOrScript();
 	}
 
-	public void DrawSerializedProperties(List< OCPropertyField > allProperties)
+	public void DrawSerializedProperties(List< OCPropertyField > allPropertiesAndFields)
 	{
-		GUIContent g_content = new GUIContent();
+		GUIContent content = new GUIContent();
 		GUILayoutOption[] emptyOptions = new GUILayoutOption[0];
 
 		EditorGUILayout.BeginVertical(emptyOptions);
 
 		//Loops through all visible fields
-		foreach(OCPropertyField property in allProperties)
+		foreach(OCPropertyField propertyField in allPropertiesAndFields)
 		{
 			EditorGUILayout.BeginHorizontal(emptyOptions);
 
 			//Finds the bool Condition, enum Condition and tooltip if they exists (They are null otherwise).
-			OCBoolPropertyToggleAttribute boolCondition = getAttribute<OCBoolPropertyToggleAttribute>(property);
-			OCEnumPropertyToggleAttribute enumCondition = getAttribute<OCEnumPropertyToggleAttribute>(property);
-			OCDrawMethodAttribute drawMethod = getAttribute<OCDrawMethodAttribute>(property);
-			OCTooltipAttribute tooltip = getAttribute<OCTooltipAttribute>(property);
-			OCFloatSliderAttribute floatSlider = getAttribute<OCFloatSliderAttribute>(property);
-			OCIntSliderAttribute intSlider = getAttribute<OCIntSliderAttribute>(property);
+			OCBoolPropertyToggleAttribute boolCondition = getAttribute<OCBoolPropertyToggleAttribute>(propertyField);
+			OCEnumPropertyToggleAttribute enumCondition = getAttribute<OCEnumPropertyToggleAttribute>(propertyField);
+			OCDrawMethodAttribute drawMethod = getAttribute<OCDrawMethodAttribute>(propertyField);
+			OCTooltipAttribute tooltip = getAttribute<OCTooltipAttribute>(propertyField);
+			OCFloatSliderAttribute floatSlider = getAttribute<OCFloatSliderAttribute>(propertyField);
+			OCIntSliderAttribute intSlider = getAttribute<OCIntSliderAttribute>(propertyField);
 
 			//Evaluates the enum and bool conditions
-			bool allowedVisibleForBoolCondition = AllowedVisibleForBoolCondition(property, boolCondition);
-			bool allowedVisibleForEnumCondition = AllowedVisibleForEnumCondition(property, enumCondition);
+			bool allowedVisibleForBoolCondition = AllowedVisibleForBoolCondition(propertyField, boolCondition);
+			bool allowedVisibleForEnumCondition = AllowedVisibleForEnumCondition(propertyField, enumCondition);
 
 			//Tests is the field is visible
 			if(allowedVisibleForBoolCondition && allowedVisibleForEnumCondition && drawMethod == null)
 			{
 
-				g_content.text = ObjectNames.NicifyVariableName(property.name);
+				content.text = propertyField.Name;
 
 				//Sets the tooltip if avaiable
 				if(tooltip != null)
 				{
-					g_content.tooltip = tooltip.Tooltip;
+					content.tooltip = tooltip.Tooltip;
 				}
 
-				DrawFieldInInspector(property, g_content, emptyOptions, floatSlider, intSlider);
+				DrawFieldInInspector(propertyField, content, emptyOptions, floatSlider, intSlider);
 
 			}
 			else
@@ -231,13 +268,13 @@ where OCType : MonoBehaviour
 				MethodInfo drawMethodInfo = this.GetType().GetMethod(drawMethod.DrawMethod);
 				if(drawMethodInfo == null)
 				{
-					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. Could not find the method '" + drawMethod.DrawMethod + "' in the " + this.ToString() + ". The attribute is attached to the field '" + property.name + "' in '" + property.serializedObject.targetObject + "'.");
+					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. Could not find the method '" + drawMethod.DrawMethod + "' in the " + this.ToString() + ". The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
 					continue;
 				}
 				ParameterInfo[] parametersInfo = drawMethodInfo.GetParameters();
 				if(parametersInfo.Length != (drawMethod.Parameters as object[]).Length)
 				{
-					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The number of parameters in the attribute, did not match the number of parameters in the actual method. The attribute is attached to the field '" + property.name + "' in '" + property.serializedObject.targetObject + "'.");
+					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The number of parameters in the attribute, did not match the number of parameters in the actual method. The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
 					continue;
 				}
 
@@ -248,7 +285,7 @@ where OCType : MonoBehaviour
 					if(!Type.Equals(parametersInfo[i].ParameterType, drawMethod.Parameters[i].GetType()))
 					{
 						_error = true;
-						Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The parameter type ('" + drawMethod.Parameters[i].GetType() + "') in the attribute, did not match the the parameter type ('" + parametersInfo[i].ParameterType + "') of the actual method, parameter index: '" + i + "'. The attribute is attached to the field '" + property.name + "' in '" + property.serializedObject.targetObject + "'.");
+						Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The parameter type ('" + drawMethod.Parameters[i].GetType() + "') in the attribute, did not match the the parameter type ('" + parametersInfo[i].ParameterType + "') of the actual method, parameter index: '" + i + "'. The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
 						continue;
 					}
 				}
@@ -269,38 +306,38 @@ where OCType : MonoBehaviour
 		EditorGUILayout.EndVertical();
 	}
 
-	public void DrawFieldInInspector(SerializedProperty s_property, GUIContent g_content, GUILayoutOption[] emptyOptions, OCFloatSliderAttribute floatSlider, OCIntSliderAttribute intSlider)
+	public void DrawFieldInInspector(OCPropertyField propertyField, GUIContent content, GUILayoutOption[] emptyOptions, OCFloatSliderAttribute floatSlider, OCIntSliderAttribute intSlider)
 	{
 		if(floatSlider != null)
 		{
-			var currentTarget = s_property.serializedObject.targetObject;
-			FieldInfo fieldInfo = currentTarget.GetType().GetField(s_property.name);
+			var currentTarget = propertyField.SerializedPropertyReference.serializedObject.targetObject;
+			FieldInfo fieldInfo = currentTarget.GetType().GetField(propertyField.SerializedPropertyReference.name);
 			//Tests if the field is not a float, if so it will display an error
 			if(fieldInfo.FieldType != typeof(float))
 			{
-				Debug.LogError("The '[FloatSliderInInspector(" + floatSlider.MinValue + " ," + floatSlider.MaxValue + ")]' failed. FloatSliderInInspector does not work with the type '" + fieldInfo.FieldType + "', it only works with float. The attribute is attached to the field '" + s_property.name + "' in '" + s_property.serializedObject.targetObject + "'.");
+				Debug.LogError("The '[FloatSliderInInspector(" + floatSlider.MinValue + " ," + floatSlider.MaxValue + ")]' failed. FloatSliderInInspector does not work with the type '" + fieldInfo.FieldType + "', it only works with float. The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
 				return;
 			}
-			EditorGUILayout.Slider(s_property, floatSlider.MinValue, floatSlider.MaxValue, g_content);
+			EditorGUILayout.Slider(propertyField.SerializedPropertyReference, floatSlider.MinValue, floatSlider.MaxValue, content);
 
 		}
 		else
 		if(intSlider != null)
 		{
-			var currentTarget = s_property.serializedObject.targetObject;
-			FieldInfo fieldInfo = currentTarget.GetType().GetField(s_property.name);
+			var currentTarget = propertyField.SerializedPropertyReference.serializedObject.targetObject;
+			FieldInfo fieldInfo = currentTarget.GetType().GetField(propertyField.SerializedPropertyReference.name);
 			//Tests if the field is not a int, if so it will display an error
 			if(fieldInfo.FieldType != typeof(int))
 			{
-				Debug.LogError("The '[IntSliderInInspector(" + intSlider.MinValue + " ," + intSlider.MaxValue + ")]' failed. IntSliderInInspector does not work with the type '" + fieldInfo.FieldType + "', it only works with int. The attribute is attached to the field '" + s_property.name + "' in '" + s_property.serializedObject.targetObject + "'.");
+				Debug.LogError("The '[IntSliderInInspector(" + intSlider.MinValue + " ," + intSlider.MaxValue + ")]' failed. IntSliderInInspector does not work with the type '" + fieldInfo.FieldType + "', it only works with int. The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
 				return;
 			}
-			EditorGUILayout.IntSlider(s_property, intSlider.MinValue, intSlider.MaxValue, g_content);
+			EditorGUILayout.IntSlider(propertyField.SerializedPropertyReference, intSlider.MinValue, intSlider.MaxValue, content);
 		}
 		else
 		{
 			// VVVV DRAWS THE STANDARD FIELD  VVVV
-			EditorGUILayout.PropertyField(s_property, g_content, true);
+			EditorGUILayout.PropertyField(propertyField.SerializedPropertyReference, content, true);
 			// ^^^^^  DRAWS THE STANDARD FIELD  ^^^^^
 		}   
 	}
@@ -357,7 +394,7 @@ where OCType : MonoBehaviour
 		return attributes[0];
 	}
   
-	public bool AllowedVisibleForEnumCondition(SerializedProperty s_property, OCEnumPropertyToggleAttribute enumCondition)
+	public bool AllowedVisibleForEnumCondition(OCPropertyField property, OCEnumPropertyToggleAttribute enumCondition)
 	{
 		// If there is no enumCondition, it is allowed to be visible, there is nothing to hide it.
 		if(enumCondition == null)
@@ -365,7 +402,7 @@ where OCType : MonoBehaviour
 			return true;
 		}
      
-		var currentTarget = s_property.serializedObject.targetObject;
+		var currentTarget = property.SerializedPropertyReference.serializedObject.targetObject;
   
 		//Retires the fieldInfo for the enum field
 		FieldInfo enumFieldInfo = currentTarget.GetType().GetField(enumCondition.EnumField);
@@ -402,15 +439,15 @@ where OCType : MonoBehaviour
 		}
 	}
   
-	public bool AllowedVisibleForBoolCondition(SerializedProperty s_property, OCBoolPropertyToggleAttribute boolCondition)
+	public bool AllowedVisibleForBoolCondition(OCPropertyField property, OCBoolPropertyToggleAttribute boolCondition)
 	{
 		// If there is no boolCondition, it is allowed to be visible, there is nothing to hide it.
-		if(boolCondition == null)
+		if(boolCondition == null || property == null || property.SerializedPropertyReference == null)
 		{
 			return true;
 		}
      
-		var currentTarget = s_property.serializedObject.targetObject;
+		var currentTarget = property.SerializedPropertyReference.serializedObject.targetObject;
   
 		//Retires the fieldInfo for the boolean field
 		FieldInfo boolInfo = currentTarget.GetType().GetField(boolCondition.BooleanField);

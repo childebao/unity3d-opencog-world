@@ -43,7 +43,7 @@ public class Test : MonoBehaviour
 //	[OCIntSlider(0,100)]
 
 //	[HideInInspector]
-	[SerializeField]
+//	[SerializeField]
 	private int m_ExamplePrivateVar = 0;
 
 //	[OCTooltip("an A")]

@@ -28,10 +28,12 @@ namespace SerializationExtensions
 {
 
 /// <summary>
-/// The OpenCog Property.  Provides meta-data utility for storing and
-/// retrieving arbitrarily typed properties.  Used to expose MonoBehavior
-/// script properties (public or serialized) and to synchronize properties for
-/// missing MonoBehavior script references in auto-generated Unity Editors.
+/// The OpenCog Property Field.  Provides meta-data utility for storing and
+/// retrieving arbitrarily typed properties or fields.  Used to expose
+/// MonoBehavior script properties or fields (public or serialized) and to
+/// synchronize properties for missing MonoBehavior script references in
+/// auto-generated Unity Editors.  Basically an adapter between Unity's
+/// serialization interface and C#'s serialization interface.
 /// </summary>
 #region Class Attributes
 
@@ -122,8 +124,10 @@ public class OCPropertyField
 		{
 			if(m_IsProperty)
 				return ObjectNames.NicifyVariableName(m_PropertyInfo.Name);
-			else
+			else if(m_FieldInfo != null)
 				return ObjectNames.NicifyVariableName(m_FieldInfo.Name);
+			else
+				return ObjectNames.NicifyVariableName(m_SerializedPropertyReference.name);
 		}
 	}
 
@@ -158,8 +162,16 @@ public class OCPropertyField
 		m_PropertyInfo = info;
 		m_Type = type;
  
-		m_Getter = m_PropertyInfo.GetGetMethod();
-		m_Setter = m_PropertyInfo.GetSetMethod();
+		if(m_PropertyInfo != null)
+		{
+			m_Getter = m_PropertyInfo.GetGetMethod();
+			m_Setter = m_PropertyInfo.GetSetMethod();
+		}
+		else
+		{
+			m_Getter = null;
+			m_Setter = null;
+		}
 	}
 
 	public OCPropertyField(OCPropertyField propertyField)
@@ -169,7 +181,7 @@ public class OCPropertyField
 		m_PropertyInfo = propertyField.m_PropertyInfo;
 		m_Type = propertyField.m_Type;
 
-		if(m_PropertyInfo)
+		if(m_PropertyInfo != null)
 		{
 			m_Getter = m_PropertyInfo.GetGetMethod();
 			m_Setter = m_PropertyInfo.GetSetMethod();
@@ -181,25 +193,42 @@ public class OCPropertyField
 		}
 	}
 
-	public OCPropertyField(SerializedProperty serializedProperty)
+	public OCPropertyField(System.Object instance, SerializedProperty serializedProperty)
 	{
-		m_Instance = serializedProperty.serializedObject.targetObject;
+		m_Instance = instance;
 
-		m_PropertyInfo = m_Instance.GetType().GetProperty(serializedProperty.name);
+		m_PropertyInfo = m_Instance.GetType().GetProperty(serializedProperty.name, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
-		m_FieldInfo = m_Instance.GetType().GetField(serializedProperty.name);
+		m_FieldInfo = m_Instance.GetType().GetField(serializedProperty.name, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
+		FieldInfo[] fieldInfos = m_Instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+
+		if(m_FieldInfo != null)
+			Debug.Log("Field Info: " +  m_FieldInfo.ToString());
+		else if(m_PropertyInfo != null)
+			Debug.Log("Property Info: " + m_PropertyInfo.ToString());
+		else
+		{
+			Debug.Log("No Field Info: " + serializedProperty.name + ", " + m_Instance.ToString());
+			foreach( FieldInfo info in fieldInfos)
+			{
+				Debug.Log( info.ToString() );
+			}
+		}
 
 		m_Type = serializedProperty.propertyType;
 
 		m_SerializedPropertyReference = serializedProperty;
 
-		if(m_PropertyInfo)
+		if(m_PropertyInfo != null)
 		{
+			m_IsProperty = true;
 			m_Getter = m_PropertyInfo.GetGetMethod();
 			m_Setter = m_PropertyInfo.GetSetMethod();
 		}
 		else
 		{
+			if(m_FieldInfo != null) m_IsProperty = false;
 			m_Getter = null;
 			m_Setter = null;
 		}
@@ -209,14 +238,25 @@ public class OCPropertyField
 	{
 		if(m_Getter != null)
 			return m_Getter.Invoke(m_Instance, null);
-		else return m_SerializedPropertyReference.objectReferenceValue;
+		else if(m_FieldInfo != null)
+		{
+			return m_FieldInfo.GetValue(m_Instance);
+		}
+		else if (m_SerializedPropertyReference != null)
+		{
+			return m_SerializedPropertyReference.objectReferenceValue;
+		}
+		else return null;
 	}
  
 	public void SetValue(System.Object value)
 	{
-		if(m_Setter)
+		if(m_Setter != null)
 			m_Setter.Invoke(m_Instance, new System.Object[] { value });
-		else m_SerializedPropertyReference.objectReferenceValue = value;
+		else if(m_FieldInfo != null)
+			m_FieldInfo.SetValue(m_Instance, value);
+		else if(m_SerializedPropertyReference != null)
+			m_SerializedPropertyReference.objectReferenceValue = (UnityEngine.Object)value;
 	}
 
 	public bool IsNull()
@@ -230,6 +270,8 @@ public class OCPropertyField
 		propertyType = SerializedPropertyType.Generic;
  
 		Type type = info.DeclaringType;
+
+		//Debug.Log("In OCPropertyField.GetPropertyType, declaring type:" + type.ToString());
  
 		if(type == typeof(int))
 		{

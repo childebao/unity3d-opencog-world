@@ -78,7 +78,7 @@ public class OCExposePropertiesAttribute : Attribute
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	public static void Expose(OCPropertyField[] properties)
+	public static void Expose(List<OCPropertyField> properties)
 	{
 		if(properties == null)
 		{
@@ -140,15 +140,15 @@ public class OCExposePropertiesAttribute : Attribute
 
 	}
 
-	public static bool GetProperties(System.Object obj, out OCPropertyField[] readOnlyFields, out OCPropertyField[] readAndWriteFields)
+	public static bool GetProperties(System.Object obj, out List<OCPropertyField> readOnlyFields, out List<OCPropertyField> readAndWriteFields)
 	{
 		List< OCPropertyField > readOnlyFieldsList = new List<OCPropertyField>();
 		List< OCPropertyField > readAndWriteFieldsList = new List<OCPropertyField>();
 
 		if(obj == null)
 		{
-			readOnlyFields = readOnlyFieldsList.ToArray();
-			readAndWriteFields = readAndWriteFieldsList.ToArray();
+			readOnlyFields = readOnlyFieldsList;
+			readAndWriteFields = readAndWriteFieldsList;
 			return false;
 		}
 
@@ -164,15 +164,17 @@ public class OCExposePropertiesAttribute : Attribute
 //			return false;
 //		}
 
-		PropertyInfo[] infos = obj.GetType().GetProperties();
-		FieldInfo[] fieldInfos = obj.GetType().GetFields();
+		PropertyInfo[] infos = obj.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+		FieldInfo[] fieldInfos = obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
-		//fieldInfos[0].
+//		Debug.Log("In OCExposePropertiesAttribute.GetProperties(), Property Infos:");
 
 		foreach(PropertyInfo info in infos)
 		{
 			string nicifiedName = ObjectNames.NicifyVariableName(info.Name);
 			bool isExcluded = false;
+
+//			Debug.Log(nicifiedName);
 
 			foreach(string excludedName in excludedPropertyNames)
 			{
@@ -187,8 +189,6 @@ public class OCExposePropertiesAttribute : Attribute
 			{
 				continue;
 			}
-
-
 
 			if(info.CanRead && !info.CanWrite)
 			{
@@ -212,8 +212,8 @@ public class OCExposePropertiesAttribute : Attribute
 			}
 		}
 
-		readOnlyFields = readOnlyFieldsList.ToArray();
-		readAndWriteFields = readAndWriteFieldsList.ToArray();
+		readOnlyFields = readOnlyFieldsList;
+		readAndWriteFields = readAndWriteFieldsList;
 		return true;
 
 	}

@@ -37,10 +37,10 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>D:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -56,7 +56,6 @@
      <Compile Include="Assets\Scripts\Action\OCInputController.cs" />
      <Compile Include="Assets\Scripts\Action\OCSoundEffect.cs" />
      <Compile Include="Assets\Scripts\Action\Test.cs" />
-     <Compile Include="Assets\Scripts\Action\Test2.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Avatar.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Player.cs" />
      <Compile Include="Assets\Scripts\Animation\Animator.cs" />
@@ -184,7 +183,7 @@
      <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCIntSliderInterface.cs" />
      <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCTooltipAttribute.cs" />
      <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCTooltipInterface.cs" />
-     <Compile Include="Assets\Scripts\OpenCog\SerializationExtensions\OCProperty.cs" />
+     <Compile Include="Assets\Scripts\OpenCog\SerializationExtensions\OCPropertyField.cs" />
      <Compile Include="Assets\Scripts\OpenCog\SerializationExtensions\OCScript.cs" />
      <Compile Include="Assets\Scripts\Terrain\Block.cs" />
      <Compile Include="Assets\Scripts\Terrain\Chunk.cs" />
