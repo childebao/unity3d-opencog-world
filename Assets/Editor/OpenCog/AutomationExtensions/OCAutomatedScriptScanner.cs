@@ -173,7 +173,7 @@ public class OCAutomatedScriptScanner : MonoBehaviour
 		allProperties.AddRange(readOnlyProperties);
 		allProperties.AddRange(readAndWriteProperties);
 
-		return allProperties.ToDictionary( p => p.Name );
+		return allProperties.ToDictionary( p => p.PublicName );
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

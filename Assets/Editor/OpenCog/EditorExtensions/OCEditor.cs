@@ -193,7 +193,7 @@ where OCType : MonoBehaviour
 		while(serializedPropertyIterator.NextVisible(true))
 		{
 			OCPropertyField propertyField = new OCPropertyField(m_Instance, serializedPropertyIterator.Copy());
-			if(allPropertiesAndFields.Find(p => p.Name == propertyField.Name) == null)
+			if(allPropertiesAndFields.Find(p => p.PublicName == propertyField.PublicName) == null)
 				allPropertiesAndFields.Add(propertyField);
 		}
 
@@ -250,7 +250,7 @@ where OCType : MonoBehaviour
 			if(allowedVisibleForBoolCondition && allowedVisibleForEnumCondition && drawMethod == null)
 			{
 
-				content.text = propertyField.Name;
+				content.text = propertyField.PublicName;
 
 				//Sets the tooltip if avaiable
 				if(tooltip != null)
@@ -268,13 +268,13 @@ where OCType : MonoBehaviour
 				MethodInfo drawMethodInfo = this.GetType().GetMethod(drawMethod.DrawMethod);
 				if(drawMethodInfo == null)
 				{
-					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. Could not find the method '" + drawMethod.DrawMethod + "' in the " + this.ToString() + ". The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
+					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. Could not find the method '" + drawMethod.DrawMethod + "' in the " + this.ToString() + ". The attribute is attached to the field '" + propertyField.PublicName + "' in '" + propertyField.UnityPropertyField.serializedObject.targetObject + "'.");
 					continue;
 				}
 				ParameterInfo[] parametersInfo = drawMethodInfo.GetParameters();
 				if(parametersInfo.Length != (drawMethod.Parameters as object[]).Length)
 				{
-					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The number of parameters in the attribute, did not match the number of parameters in the actual method. The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
+					Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The number of parameters in the attribute, did not match the number of parameters in the actual method. The attribute is attached to the field '" + propertyField.PublicName + "' in '" + propertyField.UnityPropertyField.serializedObject.targetObject + "'.");
 					continue;
 				}
 
@@ -285,7 +285,7 @@ where OCType : MonoBehaviour
 					if(!Type.Equals(parametersInfo[i].ParameterType, drawMethod.Parameters[i].GetType()))
 					{
 						_error = true;
-						Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The parameter type ('" + drawMethod.Parameters[i].GetType() + "') in the attribute, did not match the the parameter type ('" + parametersInfo[i].ParameterType + "') of the actual method, parameter index: '" + i + "'. The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
+						Debug.LogError("The '[CustomDrawMethod(" + drawMethod.DrawMethod + "" + drawMethod.ParametersToString() + ")]' failed. The parameter type ('" + drawMethod.Parameters[i].GetType() + "') in the attribute, did not match the the parameter type ('" + parametersInfo[i].ParameterType + "') of the actual method, parameter index: '" + i + "'. The attribute is attached to the field '" + propertyField.PublicName + "' in '" + propertyField.UnityPropertyField.serializedObject.targetObject + "'.");
 						continue;
 					}
 				}
@@ -311,7 +311,7 @@ where OCType : MonoBehaviour
 		if(floatSlider != null)
 		{
 			var currentTarget = m_Instance;
-			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.UnNicifiedName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.PrivateName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 			//Tests if the field is not a float, if so it will display an error
 //			if
 //			(		memberInfo == null
@@ -329,7 +329,7 @@ where OCType : MonoBehaviour
 		if(intSlider != null)
 		{
 			var currentTarget = m_Instance;
-			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.UnNicifiedName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.PrivateName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 			//Tests if the field is not a int, if so it will display an error
 //			if
 //			(		memberInfo == null
@@ -342,15 +342,15 @@ where OCType : MonoBehaviour
 //			}
 			propertyField.SetValue(EditorGUILayout.IntSlider(content, (int)propertyField.GetValue(), intSlider.MinValue, intSlider.MaxValue));
 		}
-		else if(propertyField.SerializedPropertyReference != null)
+		else if(propertyField.UnityPropertyField != null)
 		{
 			// VVVV DRAWS THE STANDARD FIELD  VVVV
-			EditorGUILayout.PropertyField(propertyField.SerializedPropertyReference, content, true);
+			EditorGUILayout.PropertyField(propertyField.UnityPropertyField, content, true);
 			// ^^^^^  DRAWS THE STANDARD FIELD  ^^^^^
 		}
 		else
 		{
-			switch(propertyField.Type)
+			switch(propertyField.UnityType)
 			{
 			case SerializedPropertyType.Integer:
 				propertyField.SetValue(EditorGUILayout.IntField(content, (int)propertyField.GetValue(), emptyOptions));
@@ -369,11 +369,11 @@ where OCType : MonoBehaviour
 				break;
 
 			case SerializedPropertyType.Vector2:
-				propertyField.SetValue(EditorGUILayout.Vector2Field(propertyField.Name, (Vector2)propertyField.GetValue(), emptyOptions));
+				propertyField.SetValue(EditorGUILayout.Vector2Field(propertyField.PublicName, (Vector2)propertyField.GetValue(), emptyOptions));
 				break;
 
 			case SerializedPropertyType.Vector3:
-				propertyField.SetValue(EditorGUILayout.Vector3Field(propertyField.Name, (Vector3)propertyField.GetValue(), emptyOptions));
+				propertyField.SetValue(EditorGUILayout.Vector3Field(propertyField.PublicName, (Vector3)propertyField.GetValue(), emptyOptions));
 				break;
  
  
@@ -421,7 +421,7 @@ where OCType : MonoBehaviour
 		}
 
 		//Retires the fieldInfo for the current field
-		MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.UnNicifiedName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+		MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.PrivateName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
      
 		//If there is no field, Unity might find non-fields it wants to display(like script name).
 		if(memberInfo == null || memberInfo.Length == 0)
@@ -451,7 +451,7 @@ where OCType : MonoBehaviour
 			return true;
 		}
      
-		var currentTarget = property.SerializedPropertyReference.serializedObject.targetObject;
+		var currentTarget = property.UnityPropertyField.serializedObject.targetObject;
   
 		//Retires the fieldInfo for the enum field
 		FieldInfo enumFieldInfo = currentTarget.GetType().GetField(enumCondition.EnumField);
@@ -491,7 +491,7 @@ where OCType : MonoBehaviour
 	public bool AllowedVisibleForBoolCondition(OCPropertyField propertyField, OCBoolPropertyToggleAttribute boolCondition)
 	{
 		// If there is no boolCondition, it is allowed to be visible, there is nothing to hide it.
-		if(boolCondition == null || propertyField == null || propertyField.Type != SerializedPropertyType.Boolean)
+		if(boolCondition == null || propertyField == null || propertyField.UnityType != SerializedPropertyType.Boolean)
 		{
 			return true;
 		}
@@ -563,7 +563,7 @@ where OCType : MonoBehaviour
 		foreach(OCPropertyField property in allProperties)
 		{
 			//Debug.Log("In OCEditor.FindMissingScripts(), property name: " + property.name);
-			if(property.Name == "Script" && property.IsNull())
+			if(property.PublicName == "Script" && property.MemberInfo == null)
 			{
 				//Debug.Log("In OCEditor.FindMissingScripts(), found script");
 				Component targetComponent = target as Component;
@@ -581,9 +581,9 @@ where OCType : MonoBehaviour
 					{
 						break;
 					}
-					if(subProperty.Name != "Script")
+					if(subProperty.PublicName != "Script")
 					{
-						candidates = candidates.Where(c => c.Properties.ContainsKey(subProperty.Name)).ToList();
+						candidates = candidates.Where(c => c.Properties.ContainsKey(subProperty.PublicName)).ToList();
 					}
 				}
 

@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
+//namespace oldOpenCog
+//{
+
 // Require a character controller to be attached to the same game object
 [RequireComponent(typeof(CharacterController))]
 [AddComponentMenu("Character/Character Motor")]
@@ -654,3 +658,5 @@ public class CharacterMotor : MonoBehaviour
         SendMessage("OnExternalVelocity");
     }
 }
+
+//}

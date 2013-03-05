@@ -185,6 +185,7 @@
      <Compile Include="Assets\Scripts\OpenCog\AttributeExtensions\OCTooltipInterface.cs" />
      <Compile Include="Assets\Scripts\OpenCog\SerializationExtensions\OCPropertyField.cs" />
      <Compile Include="Assets\Scripts\OpenCog\SerializationExtensions\OCScript.cs" />
+     <Compile Include="Assets\Scripts\OpenCog\SerializationExtensions\OCTypeSwitch.cs" />
      <Compile Include="Assets\Scripts\Terrain\Block.cs" />
      <Compile Include="Assets\Scripts\Terrain\Chunk.cs" />
      <Compile Include="Assets\Scripts\Terrain\ChunkBatch.cs" />

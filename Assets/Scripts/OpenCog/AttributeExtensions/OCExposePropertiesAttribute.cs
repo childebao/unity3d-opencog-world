@@ -94,36 +94,36 @@ public class OCExposePropertiesAttribute : Attribute
  
 			EditorGUILayout.BeginHorizontal(emptyOptions);
  
-			switch(field.Type)
+			switch(field.UnityType)
 			{
 			case SerializedPropertyType.Integer:
-				field.SetValue(EditorGUILayout.IntField(field.Name, (int)field.GetValue(), emptyOptions)); 
+				field.SetValue(EditorGUILayout.IntField(field.PublicName, (int)field.GetValue(), emptyOptions)); 
 				break;
  
 			case SerializedPropertyType.Float:
-				field.SetValue(EditorGUILayout.FloatField(field.Name, (float)field.GetValue(), emptyOptions));
+				field.SetValue(EditorGUILayout.FloatField(field.PublicName, (float)field.GetValue(), emptyOptions));
 				break;
  
 			case SerializedPropertyType.Boolean:
-				field.SetValue(EditorGUILayout.Toggle(field.Name, (bool)field.GetValue(), emptyOptions));
+				field.SetValue(EditorGUILayout.Toggle(field.PublicName, (bool)field.GetValue(), emptyOptions));
 				break;
  
 			case SerializedPropertyType.String:
-				field.SetValue(EditorGUILayout.TextField(field.Name, (String)field.GetValue(), emptyOptions));
+				field.SetValue(EditorGUILayout.TextField(field.PublicName, (String)field.GetValue(), emptyOptions));
 				break;
  
 			case SerializedPropertyType.Vector2:
-				field.SetValue(EditorGUILayout.Vector2Field(field.Name, (Vector2)field.GetValue(), emptyOptions));
+				field.SetValue(EditorGUILayout.Vector2Field(field.PublicName, (Vector2)field.GetValue(), emptyOptions));
 				break;
  
 			case SerializedPropertyType.Vector3:
-				field.SetValue(EditorGUILayout.Vector3Field(field.Name, (Vector3)field.GetValue(), emptyOptions));
+				field.SetValue(EditorGUILayout.Vector3Field(field.PublicName, (Vector3)field.GetValue(), emptyOptions));
 				break;
  
  
  
 			case SerializedPropertyType.Enum:
-				field.SetValue(EditorGUILayout.EnumPopup(field.Name, (Enum)field.GetValue(), emptyOptions));
+				field.SetValue(EditorGUILayout.EnumPopup(field.PublicName, (Enum)field.GetValue(), emptyOptions));
 				break;
  
 			default:
@@ -164,8 +164,8 @@ public class OCExposePropertiesAttribute : Attribute
 //			return false;
 //		}
 
-		PropertyInfo[] infos = obj.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-		FieldInfo[] fieldInfos = obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+		PropertyInfo[] infos = obj.GetType().GetProperties(OCPropertyField.OCBindingFlags);
+		FieldInfo[] fieldInfos = obj.GetType().GetFields(OCPropertyField.OCBindingFlags);
 
 //		Debug.Log("In OCExposePropertiesAttribute.GetProperties(), Property Infos:");
 
@@ -192,23 +192,13 @@ public class OCExposePropertiesAttribute : Attribute
 
 			if(info.CanRead && !info.CanWrite)
 			{
-				SerializedPropertyType type = new SerializedPropertyType();
-		
-				if(OCPropertyField.GetPropertyType(info, out type))
-				{
-					OCPropertyField field = new OCPropertyField(obj, info, type);
-					readOnlyFieldsList.Add(field);
-				}
+				OCPropertyField field = new OCPropertyField(obj, info);
+				readOnlyFieldsList.Add(field);
 			}
 			else if(info.CanRead && info.CanWrite)
 			{
-				SerializedPropertyType type = new SerializedPropertyType();
-
-				if(OCPropertyField.GetPropertyType(info, out type))
-				{
-					OCPropertyField field = new OCPropertyField(obj, info, type);
-					readAndWriteFieldsList.Add(field);
-				}
+				OCPropertyField field = new OCPropertyField(obj, info);
+				readAndWriteFieldsList.Add(field);
 			}
 		}
 
