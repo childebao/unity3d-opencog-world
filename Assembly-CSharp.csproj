@@ -55,7 +55,6 @@
      <Compile Include="Assets\Scripts\Action\OCEventDispatcher.cs" />
      <Compile Include="Assets\Scripts\Action\OCInputController.cs" />
      <Compile Include="Assets\Scripts\Action\OCSoundEffect.cs" />
-     <Compile Include="Assets\Scripts\Action\Test.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Avatar.cs" />
      <Compile Include="Assets\Scripts\Animation\Actors\Player.cs" />
      <Compile Include="Assets\Scripts\Animation\Animator.cs" />
@@ -206,6 +205,7 @@
      <Compile Include="Assets\Scripts\Terrain\World.cs" />
      <Compile Include="Assets\Scripts\Terrain\WorldData.cs" />
      <Compile Include="Assets\Scripts\Terrain\WorldMover.cs" />
+     <Compile Include="Assets\Scripts\Test.cs" />
      <Compile Include="Assets\Scripts\Unused\Detector.cs" />
      <Compile Include="Assets\Scripts\Unused\Interactor.cs" />
      <Compile Include="Assets\Scripts\Unused\OptionalParameterExtensions.cs" />

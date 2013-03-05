@@ -15,12 +15,18 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using UnityEngine;
-using System.Collections;
+using UnityEditor;
 using ProtoBuf;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
-using UnityEditor;
-using System;
+
+using Type = System.Type;
+using TypeCode = System.TypeCode;
+using Exception = System.Exception;
+using Enum = System.Enum;
+using Object = UnityEngine.Object;
 
 namespace OpenCog
 {
@@ -52,23 +58,18 @@ public class OCPropertyField
 	/////////////////////////////////////////////////////////////////////////////
 
 	/// <summary>
-	/// The property' or field's instance.  When we call the get or set method
-	/// on this OCPropertyField, we access or mutate the corresponding property
-	/// or field on this instance of an object.
+	/// The excluded property field public names.  Some Unity properties and
+	/// fields cause strange behavior when we expose them.  Best to exclude them.
 	/// </summary>
-	private System.Object m_Instance = null;
-
-	/// <summary>
-	/// The property or field info.  May be null when we're wrapping a
-	/// SerializedProperty for which we don't know the MemberInfo
-	/// (e.g., m_Script).
-	/// </summary>
-	private MemberInfo m_MemberInfo = null;
-
-	/// <summary>
-	/// The unity serialized property reference.
-	/// </summary>
-	private SerializedProperty m_UnityPropertyField = null;
+	private static string[] m_ExcludedPropertyFieldPublicNames =
+	{
+		"Use GUILayout"
+	,	"Enabled"
+	,	"Active"
+	, "Tag"
+	,	"Name"
+	,	"Hide Flags"
+	};
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -90,13 +91,13 @@ public class OCPropertyField
 	{
 		get
 		{
-			if(m_UnityPropertyField != null)
+			if(UnityPropertyField != null)
 			{
-				return m_UnityPropertyField.propertyType;
+				return UnityPropertyField.propertyType;
 			}
 			else
 			{
-				return UnityTypeFromCSTypeObject(m_Instance);
+				return GetUnityTypeFromCSTypeObject(Instance);
 			}
 		}
 	}
@@ -111,16 +112,16 @@ public class OCPropertyField
 	{
 		get
 		{
-			if(m_MemberInfo != null)
+			if(MemberInfo != null)
 			{
-				if(m_MemberInfo.MemberType == MemberTypes.Field)
+				if(MemberInfo.MemberType == MemberTypes.Field)
 				{
-					return (m_MemberInfo as FieldInfo).FieldType;
+					return (MemberInfo as FieldInfo).FieldType;
 				}
 				else
-				if(m_MemberInfo.MemberType == MemberTypes.Property)
+				if(MemberInfo.MemberType == MemberTypes.Property)
 				{
-					return (m_MemberInfo as PropertyInfo).PropertyType;
+					return (MemberInfo as PropertyInfo).PropertyType;
 				}
 				else
 				{
@@ -128,9 +129,9 @@ public class OCPropertyField
 				}
 			}
 			else
-			if(m_UnityPropertyField != null)
+			if(UnityPropertyField != null)
 			{
-				return CSTypeFromUnityTypePropertyField(m_UnityPropertyField);
+				return GetCSTypeFromUnityTypePropertyField(UnityPropertyField);
 			}
 			else
 			{
@@ -146,7 +147,7 @@ public class OCPropertyField
 	/// <value>
 	/// A string representing the public name.  Null on error.
 	/// </value>
-	public String PublicName
+	public string PublicName
 	{
 		get
 		{
@@ -161,18 +162,18 @@ public class OCPropertyField
 	/// <value>
 	/// A string representing the private name.  Null on error.
 	/// </value>
-	public String PrivateName
+	public string PrivateName
 	{
 		get
 		{
-			if(m_MemberInfo != null)
+			if(MemberInfo != null)
 			{
-				return m_MemberInfo.Name;
+				return MemberInfo.Name;
 			}
 			else
-			if(m_UnityPropertyField != null)
+			if(UnityPropertyField != null)
 			{
-				return m_UnityPropertyField.name;
+				return UnityPropertyField.name;
 			}
 			else
 			{
@@ -182,34 +183,44 @@ public class OCPropertyField
 	}
 
 	/// <summary>
-	/// Gets Unity's version of the serialized property.  Will be null for C#
-	/// properties or fields that we've exposed separately.
+	/// Gets or sets the property' or field's instance.  When we call the get or
+	/// set method on this OCPropertyField, we access or mutate the corresponding
+	/// property or field on this instance of an object.
 	/// </summary>
 	/// <value>
-	/// The serialized unity property field.
+	/// The property' or field's instance.
 	/// </value>
-	public SerializedProperty UnityPropertyField
+	public object Instance
 	{
-		get
-		{
-			return m_UnityPropertyField;
-		}
+		get;
+		set;
 	}
 
 	/// <summary>
-	/// Gets the property or field member info.  Will be null for serialized
-	/// unity properties for which we do not know the MemberInfo
-	/// (e.g., m_Script).
+	/// Gets or sets Unity's version of the serialized property.  Will be null
+	/// for C# Type properties or fields that we've exposed separately.
 	/// </summary>
 	/// <value>
-	/// The property or field member info.
+	/// The serialized Unity Type property field.
+	/// </value>
+	public SerializedProperty UnityPropertyField
+	{
+		get;
+		set;
+	}
+
+	/// <summary>
+	/// Gets or sets the C# Type property or field info.  Will be null when
+	/// we're wrapping a SerializedProperty for which we don't know the
+	/// MemberInfo or Instance (e.g., m_Script).
+	/// </summary>
+	/// <value>
+	/// The C# Type property or field member info.
 	/// </value>
 	public MemberInfo MemberInfo
 	{
-		get
-		{
-			return m_MemberInfo;
-		}
+		get;
+		set;
 	}
 
 	/// <summary>
@@ -225,6 +236,22 @@ public class OCPropertyField
 		{
 			return
 				BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public;
+		}
+	}
+
+	/// <summary>
+	/// Gets the excluded property or field public names.  Some Unity properties
+	/// and fields cause strange behavior when we expose them.  Best to exclude
+	/// them.
+	/// </summary>
+	/// <value>
+	/// The excluded property or field public names.
+	/// </value>
+	public static string[] ExcludedPropertyFieldPublicNames
+	{
+		get
+		{
+			return m_ExcludedPropertyFieldPublicNames;
 		}
 	}
 
@@ -251,13 +278,13 @@ public class OCPropertyField
 	/// </param>
 	public OCPropertyField
 	(
-		System.Object instance
+		object instance
 	, MemberInfo info
 	)
 	{
-		m_Instance = instance;
-		m_MemberInfo = info;
-		m_UnityPropertyField = null;
+		Instance = instance;
+		MemberInfo = info;
+		UnityPropertyField = null;
 	}
 
 	/// <summary>
@@ -272,30 +299,30 @@ public class OCPropertyField
 	/// </param>
 	public OCPropertyField
 	(
-		System.Object instance
+		object instance
 	, SerializedProperty unityPropertyField
 	)
 	{
-		m_Instance = instance;
-		m_UnityPropertyField = unityPropertyField;
+		Instance = instance;
+		UnityPropertyField = unityPropertyField;
 
-		PropertyInfo propertyInfo =
-			m_Instance
-		. GetType()
-		. GetProperty(unityPropertyField.name, OCBindingFlags);
+		MemberInfo[] memberInfos = null;
 
-		FieldInfo fieldInfo =
-			m_Instance.GetType()
-		. GetField(unityPropertyField.name, OCBindingFlags);
-
-		if(fieldInfo != null)
+		if(Instance != null)
 		{
-			m_MemberInfo = fieldInfo;
+			memberInfos =
+				Instance
+			. GetType()
+			. GetMember(unityPropertyField.name, OCBindingFlags);
+
+			if(memberInfos != null && memberInfos.Count() > 0)
+				MemberInfo = memberInfos[0];
+			else
+				MemberInfo = null;
 		}
 		else
-		if(propertyInfo != null)
 		{
-			m_MemberInfo = propertyInfo;
+			MemberInfo = null;
 		}
 	}
 
@@ -308,9 +335,9 @@ public class OCPropertyField
 	/// </param>
 	public OCPropertyField(OCPropertyField propertyField)
 	{
-		m_Instance = propertyField.m_Instance;
-		m_MemberInfo = propertyField.m_MemberInfo;
-		m_UnityPropertyField = propertyField.m_UnityPropertyField;
+		Instance = propertyField.Instance;
+		MemberInfo = propertyField.MemberInfo;
+		UnityPropertyField = propertyField.UnityPropertyField;
 	}
 
 	/// <summary>
@@ -319,18 +346,18 @@ public class OCPropertyField
 	/// <returns>
 	/// The property' or field's value.  Null on error.
 	/// </returns>
-	public System.Object GetValue()
+	public object GetValue()
 	{
-		if(m_MemberInfo != null)
+		if(MemberInfo != null)
 		{
-			if(m_MemberInfo.MemberType == MemberTypes.Field)
+			if(MemberInfo.MemberType == MemberTypes.Field)
 			{
-				return (m_MemberInfo as FieldInfo).GetValue(m_Instance);
+				return (MemberInfo as FieldInfo).GetValue(Instance);
 			}
 			else
-			if(m_MemberInfo.MemberType == MemberTypes.Property)
+			if(MemberInfo.MemberType == MemberTypes.Property)
 			{
-				return (m_MemberInfo as PropertyInfo).GetValue(m_Instance, null);
+				return (MemberInfo as PropertyInfo).GetValue(Instance, null);
 			}
 			else
 			{
@@ -338,9 +365,9 @@ public class OCPropertyField
 			}
 		}
 		else
-		if(m_UnityPropertyField != null)
+		if(UnityPropertyField != null)
 		{
-			return m_UnityPropertyField.objectReferenceValue;
+			return UnityPropertyField.objectReferenceValue;
 		}
 		else
 		{
@@ -354,18 +381,18 @@ public class OCPropertyField
 	/// <param name='value'>
 	/// The property' or field's value.  Throws on error.
 	/// </param>
-	public void SetValue(System.Object value)
+	public void SetValue(object value)
 	{
-		if(m_MemberInfo != null)
+		if(MemberInfo != null)
 		{
-			if(m_MemberInfo.MemberType == MemberTypes.Field)
+			if(MemberInfo.MemberType == MemberTypes.Field)
 			{
-				(m_MemberInfo as FieldInfo).SetValue(m_Instance, value);
+				(MemberInfo as FieldInfo).SetValue(Instance, value);
 			}
 			else
-			if(m_MemberInfo.MemberType == MemberTypes.Property)
+			if(MemberInfo.MemberType == MemberTypes.Property)
 			{
-				(m_MemberInfo as PropertyInfo).SetValue(m_Instance, value, null);
+				(MemberInfo as PropertyInfo).SetValue(Instance, value, null);
 			}
 			else
 			{
@@ -375,9 +402,9 @@ public class OCPropertyField
 			}
 		}
 		else
-		if(m_UnityPropertyField != null)
+		if(UnityPropertyField != null)
 		{
-			m_UnityPropertyField.objectReferenceValue = (UnityEngine.Object)value;
+			UnityPropertyField.objectReferenceValue = (Object)value;
 		}
 		else
 		{
@@ -413,7 +440,7 @@ public class OCPropertyField
 			return false;
 		}
 
-		unityType = UnityTypeFromCSTypeObject(obj);
+		unityType = GetUnityTypeFromCSTypeObject(obj);
 
 		if(unityType == null)
 		{
@@ -451,7 +478,7 @@ public class OCPropertyField
 			return false;
 		}
 
-		csType = CSTypeFromUnityTypePropertyField(unityPropertyField);
+		csType = GetCSTypeFromUnityTypePropertyField(unityPropertyField);
 
 		if(csType == null)
 		{
@@ -460,6 +487,100 @@ public class OCPropertyField
 		else
 		{
 			return true;
+		}
+	}
+
+	/// <summary>
+	/// Gets all properties and fields from a given C# Type object and/or Unity
+	/// Type property field.  Returns true if we found any.
+	/// </summary>
+	/// <returns>
+	/// All properties and fields exposed (does not overwrite existing list).
+	/// </returns>
+	/// <param name='obj'>
+	/// The optional C# Type object.
+	/// </param>
+	/// <param name='unityPropertyField'>
+	/// The optional Unity Type property field.
+	/// </param>
+	/// <param name='allPropertiesAndFields'>
+	/// If set to <c>true</c>, all the properties and fields.
+	/// </param>
+	public static bool GetAllPropertiesAndFields
+	(
+		ref List<OCPropertyField> allPropertyFields
+	, object obj = null
+	, SerializedProperty unityPropertyField = null
+	)
+	{
+		if
+		(
+			 obj == null
+		&& unityPropertyField == null
+		)
+		{
+			return false;
+		}
+
+		if(obj != null)
+		{
+			MemberInfo[] memberInfos = obj.GetType().GetMembers(OCBindingFlags);
+
+			foreach(MemberInfo info in memberInfos)
+			{
+				string publicName = ObjectNames.NicifyVariableName(info.Name);
+
+				if(ExcludedPropertyFieldPublicNames.Contains(publicName))
+				{
+					continue;
+				}
+
+				if(allPropertyFields.Find(p => p.PublicName == publicName) != null)
+				{
+					continue;
+				}
+	
+				OCPropertyField field = new OCPropertyField(obj, info);
+				allPropertyFields.Add(field);
+			}
+		}
+
+		if(unityPropertyField != null)
+		{
+			while(unityPropertyField.NextVisible(true))
+			{
+				string publicName =
+					ObjectNames.NicifyVariableName(unityPropertyField.name);
+
+				if(ExcludedPropertyFieldPublicNames.Contains(publicName))
+				{
+					continue;
+				}
+
+				OCPropertyField matchingPropertyField =
+					allPropertyFields.Find(p => p.PublicName == publicName);
+
+				if(matchingPropertyField != null)
+				{
+					matchingPropertyField.UnityPropertyField = unityPropertyField;
+					continue;
+				}
+
+				OCPropertyField propertyField =
+					new OCPropertyField(obj, unityPropertyField.Copy());
+
+				allPropertyFields.Add(propertyField);
+			}
+			//unityPropertyField.Reset();
+		}
+
+		if(allPropertyFields.Count > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
@@ -483,7 +604,7 @@ public class OCPropertyField
 	/// <param name='object'>
 	/// The C# Type object.
 	/// </param>
-	private static SerializedPropertyType UnityTypeFromCSTypeObject
+	private static SerializedPropertyType GetUnityTypeFromCSTypeObject
 	(
 		object obj
 	)
@@ -560,21 +681,16 @@ public class OCPropertyField
 					(
 						() => unityType = SerializedPropertyType.Vector3
 					)
-				, OCTypeSwitch.Case<Enum>
-					(
-						() =>
-				{
-					if(csType.IsEnum)
-					{
-						unityType = SerializedPropertyType.Enum;
-					}
-				}
-					)
 				, OCTypeSwitch.Default
 					(
 						() => unityType = SerializedPropertyType.ObjectReference
 					)
 				);
+
+				if(csType.IsEnum)
+				{
+					unityType = SerializedPropertyType.Enum;
+				}
 
 				return unityType;
 			}
@@ -601,7 +717,7 @@ public class OCPropertyField
 	/// <param name='unityPropertyField'>
 	/// The serialized Unity Type property field.
 	/// </param>
-	private static Type CSTypeFromUnityTypePropertyField
+	private static Type GetCSTypeFromUnityTypePropertyField
 	(
 		SerializedProperty unityPropertyField
 	)
@@ -619,13 +735,13 @@ public class OCPropertyField
 			return typeof(AnimationCurve);
 
 		case SerializedPropertyType.Boolean:
-			return typeof(Boolean);
+			return typeof(bool);
 
 		case SerializedPropertyType.Bounds:
 			return typeof(Bounds);
 
 		case SerializedPropertyType.Character:
-			return typeof(Char);
+			return typeof(char);
 
 		case SerializedPropertyType.Color:
 			return typeof(Color);
@@ -646,13 +762,13 @@ public class OCPropertyField
 			return typeof(LayerMask);
 
 		case SerializedPropertyType.ObjectReference:
-			return typeof(UnityEngine.Object);
+			return typeof(Object);
 
 		case SerializedPropertyType.Rect:
 			return typeof(Rect);
 
 		case SerializedPropertyType.String:
-			return typeof(String);
+			return typeof(string);
 
 		case SerializedPropertyType.Vector2:
 			return typeof(Vector2);

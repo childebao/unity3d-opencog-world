@@ -19,7 +19,6 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System;
-using ProtoBuf;
 
 namespace OpenCog
 {
