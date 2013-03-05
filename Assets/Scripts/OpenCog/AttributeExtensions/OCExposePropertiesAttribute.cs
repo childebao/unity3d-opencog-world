@@ -174,8 +174,6 @@ public class OCExposePropertiesAttribute : Attribute
 			string nicifiedName = ObjectNames.NicifyVariableName(info.Name);
 			bool isExcluded = false;
 
-//			Debug.Log(nicifiedName);
-
 			foreach(string excludedName in excludedPropertyNames)
 			{
 				if(nicifiedName == excludedName)
@@ -189,6 +187,8 @@ public class OCExposePropertiesAttribute : Attribute
 			{
 				continue;
 			}
+
+//			Debug.Log(nicifiedName);
 
 			if(info.CanRead && !info.CanWrite)
 			{

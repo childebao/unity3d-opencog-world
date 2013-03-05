@@ -149,32 +149,32 @@ where OCType : MonoBehaviour
 
 		MonoScript[] myScripts = Resources.FindObjectsOfTypeAll( typeof( MonoScript ) ).Cast<MonoScript>().Where( c => c.hideFlags == 0 ).Where( c => c.GetClass() == m_Instance.GetType() ).ToArray();
 
-		Debug.Log("OCEditor.OnEnable, MonoScript: " + myScripts[0].ToString());
+//		Debug.Log("OCEditor.OnEnable, MonoScript: " + m_Instance.ToString());
 
-		Test test = m_Instance.GetComponent<Test>();
+//		Test test = m_Instance.GetComponent<Test>();
 
 		PropertyInfo[] propertyInfos = m_Instance.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-		FieldInfo[] fieldInfos = myScripts[0].GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+		FieldInfo[] fieldInfos = m_Instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
-		Debug.Log("OCEditor.OnEnable, Internal Property Fields: " + myScripts[0].GetType().ToString());
-		foreach(PropertyInfo property in propertyInfos)
-		{
-			Debug.Log(property.ToString());
-		}
-		foreach(FieldInfo field in fieldInfos)
-		{
-			Debug.Log(field.Name);
-		}
+//		Debug.Log("OCEditor.OnEnable, Internal Property Fields: " + m_Instance.GetType().ToString());
+//		foreach(PropertyInfo property in propertyInfos)
+//		{
+//			Debug.Log(property.ToString());
+//		}
+//		foreach(FieldInfo field in fieldInfos)
+//		{
+//			Debug.Log(field.Name);
+//		}
 
-		Debug.Log("OCEditor.OnEnable, Stored Property Fields:");
-		foreach(OCPropertyField propertyField in m_ReadOnlyProperties)
-		{
-			Debug.Log(propertyField.ToString());
-		}
-		foreach(OCPropertyField propertyField in m_ReadAndWriteProperties)
-		{
-			Debug.Log(propertyField.ToString());
-		}
+//		Debug.Log("OCEditor.OnEnable, Stored Property Fields:");
+//		foreach(OCPropertyField propertyField in m_ReadOnlyProperties)
+//		{
+//			Debug.Log(propertyField.Name);
+//		}
+//		foreach(OCPropertyField propertyField in m_ReadAndWriteProperties)
+//		{
+//			Debug.Log(propertyField.Name);
+//		}
 
 
 		OCAutomatedScriptScanner.Initialize();
@@ -190,9 +190,6 @@ where OCType : MonoBehaviour
 
 		List< OCPropertyField > allPropertiesAndFields = new List<OCPropertyField>();
 
-		allPropertiesAndFields.AddRange(m_ReadOnlyProperties);
-		allPropertiesAndFields.AddRange(m_ReadAndWriteProperties);
-
 		while(serializedPropertyIterator.NextVisible(true))
 		{
 			OCPropertyField propertyField = new OCPropertyField(m_Instance, serializedPropertyIterator.Copy());
@@ -200,11 +197,14 @@ where OCType : MonoBehaviour
 				allPropertiesAndFields.Add(propertyField);
 		}
 
-		Debug.Log("All Property Fields:");
-		foreach (OCPropertyField propertyField in allPropertiesAndFields)
-		{
-			Debug.Log(propertyField.Name);
-		}
+		allPropertiesAndFields.AddRange(m_ReadOnlyProperties);
+		allPropertiesAndFields.AddRange(m_ReadAndWriteProperties);
+
+//		Debug.Log("All Property Fields:");
+//		foreach (OCPropertyField propertyField in allPropertiesAndFields)
+//		{
+//			Debug.Log(propertyField.Name);
+//		}
 
 		// Tests if there is a missing script
 		if(AreAnyScriptsMissing())
@@ -214,7 +214,7 @@ where OCType : MonoBehaviour
 
 		DrawSerializedProperties(allPropertiesAndFields);
 
-		OCExposePropertiesAttribute.Expose(allPropertiesAndFields);
+//		OCExposePropertiesAttribute.Expose(allPropertiesAndFields);
 
 		// Apply changes to the serializedProperty - always do this in the end of
 		// OnInspectorGUI.
@@ -234,7 +234,7 @@ where OCType : MonoBehaviour
 		{
 			EditorGUILayout.BeginHorizontal(emptyOptions);
 
-			//Finds the bool Condition, enum Condition and tooltip if they exists (They are null otherwise).
+			//Finds the bool Condition, enum Condition and tooltip if they exist (They are null otherwise).
 			OCBoolPropertyToggleAttribute boolCondition = getAttribute<OCBoolPropertyToggleAttribute>(propertyField);
 			OCEnumPropertyToggleAttribute enumCondition = getAttribute<OCEnumPropertyToggleAttribute>(propertyField);
 			OCDrawMethodAttribute drawMethod = getAttribute<OCDrawMethodAttribute>(propertyField);
@@ -310,36 +310,84 @@ where OCType : MonoBehaviour
 	{
 		if(floatSlider != null)
 		{
-			var currentTarget = propertyField.SerializedPropertyReference.serializedObject.targetObject;
-			FieldInfo fieldInfo = currentTarget.GetType().GetField(propertyField.SerializedPropertyReference.name);
+			var currentTarget = m_Instance;
+			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.UnNicifiedName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 			//Tests if the field is not a float, if so it will display an error
-			if(fieldInfo.FieldType != typeof(float))
-			{
-				Debug.LogError("The '[FloatSliderInInspector(" + floatSlider.MinValue + " ," + floatSlider.MaxValue + ")]' failed. FloatSliderInInspector does not work with the type '" + fieldInfo.FieldType + "', it only works with float. The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
-				return;
-			}
-			EditorGUILayout.Slider(propertyField.SerializedPropertyReference, floatSlider.MinValue, floatSlider.MaxValue, content);
+//			if
+//			(		memberInfo == null
+//			|| ((memberInfo[0] as FieldInfo) == null && (memberInfo[0] as PropertyInfo) == null)
+//			|| ((memberInfo[0] as FieldInfo).FieldType != typeof(float) && (memberInfo[0] as PropertyInfo).PropertyType != typeof(float))
+//			)
+//			{
+//				Debug.LogError("The '[FloatSliderInInspector(" + floatSlider.MinValue + " ," + floatSlider.MaxValue + ")]' failed. FloatSliderInInspector does not work with the type '" + memberInfo[0].MemberType + "', it only works with float. The attribute is attached to the field '" + propertyField.Name + "' in '" + m_Instance + "'.");
+//				return;
+//			}
+			propertyField.SetValue(EditorGUILayout.Slider(content, (float)propertyField.GetValue(), floatSlider.MinValue, floatSlider.MaxValue));
 
 		}
 		else
 		if(intSlider != null)
 		{
-			var currentTarget = propertyField.SerializedPropertyReference.serializedObject.targetObject;
-			FieldInfo fieldInfo = currentTarget.GetType().GetField(propertyField.SerializedPropertyReference.name);
+			var currentTarget = m_Instance;
+			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.UnNicifiedName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 			//Tests if the field is not a int, if so it will display an error
-			if(fieldInfo.FieldType != typeof(int))
-			{
-				Debug.LogError("The '[IntSliderInInspector(" + intSlider.MinValue + " ," + intSlider.MaxValue + ")]' failed. IntSliderInInspector does not work with the type '" + fieldInfo.FieldType + "', it only works with int. The attribute is attached to the field '" + propertyField.Name + "' in '" + propertyField.SerializedPropertyReference.serializedObject.targetObject + "'.");
-				return;
-			}
-			EditorGUILayout.IntSlider(propertyField.SerializedPropertyReference, intSlider.MinValue, intSlider.MaxValue, content);
+//			if
+//			(		memberInfo == null
+//			|| ((memberInfo[0] as FieldInfo) == null && (memberInfo[0] as PropertyInfo) == null)
+//			|| ((memberInfo[0] as FieldInfo).FieldType != typeof(int) && (memberInfo[0] as PropertyInfo).PropertyType != typeof(int))
+//			)
+//			{
+//				Debug.LogError("The '[IntSliderInInspector(" + intSlider.MinValue + " ," + intSlider.MaxValue + ")]' failed. IntSliderInInspector does not work with the type '" + memberInfo[0].MemberType + "', it only works with int. The attribute is attached to the field '" + propertyField.Name + "' in '" + m_Instance + "'.");
+//				return;
+//			}
+			propertyField.SetValue(EditorGUILayout.IntSlider(content, (int)propertyField.GetValue(), intSlider.MinValue, intSlider.MaxValue));
 		}
-		else
+		else if(propertyField.SerializedPropertyReference != null)
 		{
 			// VVVV DRAWS THE STANDARD FIELD  VVVV
 			EditorGUILayout.PropertyField(propertyField.SerializedPropertyReference, content, true);
 			// ^^^^^  DRAWS THE STANDARD FIELD  ^^^^^
-		}   
+		}
+		else
+		{
+			switch(propertyField.Type)
+			{
+			case SerializedPropertyType.Integer:
+				propertyField.SetValue(EditorGUILayout.IntField(content, (int)propertyField.GetValue(), emptyOptions));
+				break;
+ 
+			case SerializedPropertyType.Float:
+				propertyField.SetValue(EditorGUILayout.FloatField(content, (float)propertyField.GetValue(), emptyOptions));
+				break;
+ 
+			case SerializedPropertyType.Boolean:
+				propertyField.SetValue(EditorGUILayout.Toggle(content, (bool)propertyField.GetValue(), emptyOptions));
+				break;
+ 
+			case SerializedPropertyType.String:
+				propertyField.SetValue(EditorGUILayout.TextField(content, (String)propertyField.GetValue(), emptyOptions));
+				break;
+
+			case SerializedPropertyType.Vector2:
+				propertyField.SetValue(EditorGUILayout.Vector2Field(propertyField.Name, (Vector2)propertyField.GetValue(), emptyOptions));
+				break;
+
+			case SerializedPropertyType.Vector3:
+				propertyField.SetValue(EditorGUILayout.Vector3Field(propertyField.Name, (Vector3)propertyField.GetValue(), emptyOptions));
+				break;
+ 
+ 
+ 
+			case SerializedPropertyType.Enum:
+				propertyField.SetValue(EditorGUILayout.EnumPopup(content, (Enum)propertyField.GetValue(), emptyOptions));
+				break;
+ 
+			default:
+ 
+				break;
+ 
+			}
+		}
 	}
   
 	/// <summary>
@@ -348,45 +396,46 @@ where OCType : MonoBehaviour
 	/// <returns>
 	/// The attribute of type T.
 	/// </returns>
-	/// <param name='property'>
+	/// <param name='propertyField'>
 	/// The Serialized Property.
 	/// </param>
 	/// <typeparam name='T'>
 	/// The type of attribute to find.
 	/// </typeparam>
-	public T getAttribute<T>(OCPropertyField property)
+	public T getAttribute<T>(OCPropertyField propertyField)
 	{
-		if(property == null)
+		Type t = typeof(T);
+
+		if(propertyField == null)
 		{
+//			Debug.Log("In OCEditor.getAttribute, no propertyField" + ", " + t.ToString());
 			return default(T);
 		}
 
-		var currentTarget = property.SerializedPropertyReference.serializedObject.targetObject;
+		var currentTarget = m_Instance;
 
 		if(currentTarget == null)
 		{
+//			Debug.Log("In OCEditor.getAttribute, no currentTarget: " + propertyField.Name + ", " + t.ToString());
 			return default(T);
 		}
 
 		//Retires the fieldInfo for the current field
-		FieldInfo fieldInfo = currentTarget.GetType().GetField(property.SerializedPropertyReference.name);
+		MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.UnNicifiedName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
      
 		//If there is no field, Unity might find non-fields it wants to display(like script name).
-		if(fieldInfo == null)
+		if(memberInfo == null || memberInfo.Length == 0)
 		{
+//			Debug.Log("In OCEditor.getAttribute, no memberInfo: " + propertyField.Name + ", " + t.ToString());
 			return default(T);
 		}
      
 		//Findes all attributes of type T attached to the field
-		T[] attributes = fieldInfo.GetCustomAttributes(typeof(T), true) as T[];
+		T[] attributes = memberInfo[0].GetCustomAttributes(typeof(T), true) as T[];
      
-		if(attributes == null)
+		if(attributes == null || attributes.Length == 0)
 		{
-			return default(T);
-		}
-     
-		if(attributes.Length == 0)
-		{
+//			Debug.Log("In OCEditor.getAttribute, no attributes: " + propertyField.Name + ", " + t.ToString());
 			return default(T);
 		}
   
@@ -439,35 +488,35 @@ where OCType : MonoBehaviour
 		}
 	}
   
-	public bool AllowedVisibleForBoolCondition(OCPropertyField property, OCBoolPropertyToggleAttribute boolCondition)
+	public bool AllowedVisibleForBoolCondition(OCPropertyField propertyField, OCBoolPropertyToggleAttribute boolCondition)
 	{
 		// If there is no boolCondition, it is allowed to be visible, there is nothing to hide it.
-		if(boolCondition == null || property == null || property.SerializedPropertyReference == null)
+		if(boolCondition == null || propertyField == null || propertyField.Type != SerializedPropertyType.Boolean)
 		{
 			return true;
 		}
      
-		var currentTarget = property.SerializedPropertyReference.serializedObject.targetObject;
-  
-		//Retires the fieldInfo for the boolean field
-		FieldInfo boolInfo = currentTarget.GetType().GetField(boolCondition.BooleanField);
-     
-		if(boolInfo == null)
-		{
-			//If the field in boolCondition.BooleanField doesn't exist.
-			Debug.LogError("The '[ShowInInspectorIfBool(" + boolCondition.BooleanField + ", " + boolCondition.EqualsValue + ")]' failed. The field '" + boolCondition.BooleanField + "' does not exisit in '" + currentTarget + "'.");
-			return true;
-		}
-     
-		if(boolInfo.FieldType != typeof(bool) && boolInfo.FieldType != typeof(Boolean))
-		{
-			//If the wanted field is not a bool
-			Debug.LogError("The '[ShowInInspectorIfBool(" + boolCondition.BooleanField + ", " + boolCondition.EqualsValue + ")]' failed. The field '" + boolCondition.BooleanField + "' is not a type of bool in '" + currentTarget + "'.");
-			return true;
-		}
+//		var currentTarget = property.SerializedPropertyReference.serializedObject.targetObject;
+//  
+//		//Retires the fieldInfo for the boolean field
+//		FieldInfo boolInfo = currentTarget.GetType().GetField(boolCondition.BooleanField);
+//     
+//		if(boolInfo == null)
+//		{
+//			//If the field in boolCondition.BooleanField doesn't exist.
+//			Debug.LogError("The '[ShowInInspectorIfBool(" + boolCondition.BooleanField + ", " + boolCondition.EqualsValue + ")]' failed. The field '" + boolCondition.BooleanField + "' does not exisit in '" + currentTarget + "'.");
+//			return true;
+//		}
+//     
+//		if(boolInfo.FieldType != typeof(bool) && boolInfo.FieldType != typeof(Boolean))
+//		{
+//			//If the wanted field is not a bool
+//			Debug.LogError("The '[ShowInInspectorIfBool(" + boolCondition.BooleanField + ", " + boolCondition.EqualsValue + ")]' failed. The field '" + boolCondition.BooleanField + "' is not a type of bool in '" + currentTarget + "'.");
+//			return true;
+//		}
      
 		//Finds the current value
-		bool currentValue = (bool)boolInfo.GetValue(currentTarget);
+		bool currentValue = (bool)propertyField.GetValue();
      
 		//Tests if the current Value is equal to the value it should be to be shown
 		if(currentValue == boolCondition.EqualsValue)

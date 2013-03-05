@@ -43,12 +43,18 @@ public class Test : MonoBehaviour
 //	[OCIntSlider(0,100)]
 
 //	[HideInInspector]
+//	[OCTooltip("Hiya!")]
 //	[SerializeField]
 	private int m_ExamplePrivateVar = 0;
 
-//	[OCTooltip("an A")]
-//	[OCIntSlider(0,100)]
-//	public int a = 0;
+	[SerializeField]
+	private bool m_ShowMe = false;
+
+	[OCTooltip("an A")]
+	[OCFloatSlider(0.0f,100.0f)]
+	[SerializeField]
+	[OCBoolPropertyToggle("m_ShowMe", true)]
+	public float a = 0.0f;
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -61,6 +67,7 @@ public class Test : MonoBehaviour
 	/////////////////////////////////////////////////////////////////////////////
 
 	[OCTooltip("Hiya!")]
+	[OCIntSlider(0,100)]
 	public int ExamplePublicVar
 	{
 		get

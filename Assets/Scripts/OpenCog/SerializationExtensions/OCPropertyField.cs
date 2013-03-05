@@ -131,6 +131,19 @@ public class OCPropertyField
 		}
 	}
 
+	public String UnNicifiedName
+	{
+		get
+		{
+			if(m_IsProperty)
+				return m_PropertyInfo.Name;
+			else if(m_FieldInfo != null)
+				return m_FieldInfo.Name;
+			else
+				return m_SerializedPropertyReference.name;
+		}
+	}
+
 	/// <summary>
 	/// Gets the serialized property reference.
 	/// </summary>
@@ -203,18 +216,18 @@ public class OCPropertyField
 
 		FieldInfo[] fieldInfos = m_Instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 
-		if(m_FieldInfo != null)
-			Debug.Log("Field Info: " +  m_FieldInfo.ToString());
-		else if(m_PropertyInfo != null)
-			Debug.Log("Property Info: " + m_PropertyInfo.ToString());
-		else
-		{
-			Debug.Log("No Field Info: " + serializedProperty.name + ", " + m_Instance.ToString());
-			foreach( FieldInfo info in fieldInfos)
-			{
-				Debug.Log( info.ToString() );
-			}
-		}
+//		if(m_FieldInfo != null)
+//			Debug.Log("Field Info: " +  m_FieldInfo.ToString());
+//		else if(m_PropertyInfo != null)
+//			Debug.Log("Property Info: " + m_PropertyInfo.ToString());
+//		else
+//		{
+//			Debug.Log("No Field Info: " + serializedProperty.name + ", " + m_Instance.ToString());
+//			foreach( FieldInfo info in fieldInfos)
+//			{
+//				Debug.Log( info.ToString() );
+//			}
+//		}
 
 		m_Type = serializedProperty.propertyType;
 
@@ -268,10 +281,18 @@ public class OCPropertyField
 	{
  
 		propertyType = SerializedPropertyType.Generic;
- 
-		Type type = info.DeclaringType;
 
-		//Debug.Log("In OCPropertyField.GetPropertyType, declaring type:" + type.ToString());
+		Type type = null;
+		if(info.MemberType == MemberTypes.Field)
+		{
+			type = (info as FieldInfo).FieldType;
+		}
+		else
+		{
+			type = (info as PropertyInfo).PropertyType;
+		}
+
+//		Debug.Log("In OCPropertyField.GetPropertyType, member type:" + type.ToString());
  
 		if(type == typeof(int))
 		{
