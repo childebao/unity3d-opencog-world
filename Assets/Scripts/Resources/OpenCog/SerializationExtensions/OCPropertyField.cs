@@ -704,6 +704,7 @@ public class OCPropertyField
 
 		if(type != null)
 		{
+//			Debug.Log("We found a type!");
 			MemberInfo[] memberInfos = type.GetMembers(OCBindingFlags);
 
 			foreach(MemberInfo info in memberInfos)
@@ -720,13 +721,15 @@ public class OCPropertyField
 						)
 					)
 				{
+//					Debug.Log("We found a good member info! :" + info.Name);
+
 					string publicName = ObjectNames.NicifyVariableName(info.Name);
 		
 					if(ExcludedPropertyFieldPublicNames.Contains(publicName))
 					{
 						continue;
 					}
-
+//					Debug.Log("We found a good candidate! :" + info.Name);
 					candidates.Push(new OCPropertyField(obj, info));
 				}
 			}

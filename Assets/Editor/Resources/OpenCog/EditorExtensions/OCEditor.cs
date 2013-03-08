@@ -92,6 +92,10 @@ where OCType : MonoBehaviour
 	/// </summary>
 	private static bool m_willRepaint = false;
 
+	private OCDefaultEditor m_Editor = null;
+
+	private Type m_Type = typeof(OCType);
+
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -166,63 +170,74 @@ where OCType : MonoBehaviour
  
 	public override void OnInspectorGUI()
 	{
-		// Update the serializedObject - always do this in the beginning of
-		// OnInspectorGUI.
-		serializedObject.Update();
-
-		SerializedProperty unityPropertyField = serializedObject.GetIterator();
-
-		Object currentInstance = m_Instance;
-
-		Type currentType = null;
-
-		if(m_Attributes != null && m_Attributes.Length > 0)
+		if(m_Editor != null)
 		{
-			if(m_Instance != null) currentType = m_Instance.GetType();
-//			else if(unityPropertyField != null) currentType = unityPropertyField.propertyType;
+			m_Editor.OnInspectorGUI();
 		}
-
-		bool success =
-			OCPropertyField.GetAllPropertiesAndFields
-			(
-				ref m_AllPropertyFields
-			, currentInstance
-			, currentType
-			, unityPropertyField
-			)
-		;
-
-		//Debug.Log("In OCEditor.OnInspectorGUI, allPropertyFields: ");
-		DrawSerializedProperties(m_AllPropertyFields);
-
-		// Tests if there is a missing script
-		if(AreAnyScriptsMissing())
+		else if(m_Editor == null)
 		{
-			FindMissingScripts(ref m_AllPropertyFields);
-		}
-
-		OCPropertyField scriptPropertyField = m_AllPropertyFields.Find(p => p.PublicName == "Script");
-
-		if(scriptPropertyField != null
-		&& scriptPropertyField != default(OCPropertyField)
-		&& scriptPropertyField.CSType == typeof(string))
-		{
-			OCScript script =
-				OCAutomatedScriptScanner.Scripts.Find
+			// Update the serializedObject - always do this in the beginning of
+			// OnInspectorGUI.
+			serializedObject.Update();
+	
+			EditorGUIUtility.LookLikeInspector();
+	
+			SerializedProperty unityPropertyField = serializedObject.GetIterator();
+	
+			if(m_Attributes != null && m_Attributes.Length > 0)
+			{
+				if(m_Instance != null) m_Type = m_Instance.GetType();
+	//			else if(unityPropertyField != null) currentType = unityPropertyField.propertyType;
+			}
+	
+			bool success =
+				OCPropertyField.GetAllPropertiesAndFields
 				(
-					s => s.Script.name == (string)scriptPropertyField.GetValue()
+					ref m_AllPropertyFields
+				, m_Instance
+				, m_Type
+				, unityPropertyField
 				)
 			;
 
-			script.Properties = m_AllPropertyFields.ToDictionary(p => p.PublicName);
+//			Debug.Log("Property Field Count: " + m_AllPropertyFields.Count);
+	
+			//Debug.Log("In OCEditor.OnInspectorGUI, allPropertyFields: ");
+			DrawSerializedProperties(m_AllPropertyFields);
+	
+			OCPropertyField scriptPropertyField = m_AllPropertyFields.Find(p => p.PublicName == "Script");
+	
+			if(scriptPropertyField != null
+			&& scriptPropertyField != default(OCPropertyField))
+	//		&& scriptPropertyField.CSType == typeof(string))
+			{
+				// Tests if there is a missing script
+				MonoScript sourceScript = (MonoScript)scriptPropertyField.GetValue();
+				if(sourceScript == null)
+				{
+					m_Editor = null;
+					FindMissingScripts(ref m_AllPropertyFields);
+				}
+				else
+				{
+					OCScript targetScript =
+						OCAutomatedScriptScanner.Scripts.Find
+						(
+							s => s.Script.name == sourceScript.name
+						)
+					;
+	
+					targetScript.Properties = m_AllPropertyFields.ToDictionary(p => p.PublicName);
+				}
+			}
+	
+			// Apply changes to the serializedProperty - always do this in the end of
+			// OnInspectorGUI.
+			serializedObject.ApplyModifiedProperties();
+			serializedObject.UpdateIfDirtyOrScript();
+	
+			m_AllPropertyFields.Clear();
 		}
-
-		// Apply changes to the serializedProperty - always do this in the end of
-		// OnInspectorGUI.
-		serializedObject.ApplyModifiedProperties();
-		serializedObject.UpdateIfDirtyOrScript();
-
-		m_AllPropertyFields.Clear();			
 	}
 
 	public void DrawSerializedProperties(List< OCPropertyField > allPropertiesAndFields)
@@ -319,8 +334,8 @@ where OCType : MonoBehaviour
 	{
 		if(floatSlider != null)
 		{
-			var currentTarget = m_Instance;
-			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.PrivateName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+//			var currentTarget = m_Instance;
+//			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.PrivateName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 			//Tests if the field is not a float, if so it will display an error
 //			if
 //			(		memberInfo == null
@@ -337,8 +352,8 @@ where OCType : MonoBehaviour
 		else
 		if(intSlider != null)
 		{
-			var currentTarget = m_Instance;
-			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.PrivateName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
+//			var currentTarget = m_Instance;
+//			MemberInfo[] memberInfo = currentTarget.GetType().GetMember(propertyField.PrivateName, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
 			//Tests if the field is not a int, if so it will display an error
 //			if
 //			(		memberInfo == null
@@ -438,20 +453,20 @@ where OCType : MonoBehaviour
 
 				foreach(OCPropertyField subPropertyField in allPropertyFields)
 				{
-					Debug.Log("SubPropertyField Name: " + subPropertyField.PublicName);
+					//Debug.Log("SubPropertyField Name: " + subPropertyField.PublicName);
 
 					if(candidates.Count == 0)
 					{
-						Debug.Log("candidates = 0");
+						//Debug.Log("candidates = 0");
 						break;
 					}
 
 					if(subPropertyField.PublicName != "Script"
 					&& subPropertyField.PrivateName != propertyField.PrivateName)
 					{
-						Debug.Log("Before selection: " + candidates.Count);
+						//Debug.Log("Before selection: " + candidates.Count);
 						candidates = candidates.Where(c => c.Properties.ContainsKey(subPropertyField.PublicName)).ToList();
-						Debug.Log("After  selection: " + candidates.Count); 
+						//Debug.Log("After  selection: " + candidates.Count); 
 					}
 				}
 
@@ -462,7 +477,6 @@ where OCType : MonoBehaviour
 					serializedObject.ApplyModifiedProperties();
 					serializedObject.UpdateIfDirtyOrScript();
 
-					Repaint();
 				}
 				else
 				if(candidates.Count > 0)
@@ -473,13 +487,85 @@ where OCType : MonoBehaviour
 						{
 							//Configure the script
 							propertyField.SetValue(candidate.Script);
+							m_Type = candidate.Script.GetClass();
 
-							allPropertyFields = candidate.Properties.Values.ToList();
+							//if(m_Instance != null) UnityEditor.EditorUtility.SetDirty(m_Instance);
 
 							serializedObject.ApplyModifiedProperties();
 							serializedObject.UpdateIfDirtyOrScript();
 
-							//Repaint();
+							m_Editor = (OCDefaultEditor)Editor.CreateEditor(target);
+//							m_Editor.OnEnable();
+							m_Editor.m_AllPropertyFields = candidate.Properties.Values.ToList();
+							//m_Editor. .OnEnable();
+
+							//if(candidate.Script != null)
+							{
+								//Debug.Log("Creating a new editor.");
+								//UnityEditor.EditorWindow.
+
+								//EditorUtility.SetDirty(target);
+							}
+
+//							System.Type type = default(Type);
+//
+//							Assembly []referencedAssemblies = System.AppDomain.CurrentDomain.GetAssemblies();
+//							for(int i = 0; i < referencedAssemblies.Length; ++i)
+//							{
+//							  type = referencedAssemblies[i].GetType( "UnityEditor.InspectorWindow" );
+//							
+//							  if( type != null )
+//							  {   // I want all the declared methods from the specific class.
+//							      //System.Reflection.MethodInfo []methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+//										Debug.Log("Found Type: " + type);
+//										break;
+//							  }
+//							}
+
+
+
+							//Editor.DestroyImmediate(this);
+
+							//EditorWindow.focusedWindow.Repaint();
+
+							//this.DrawDefaultInspector();
+
+							//UnityEditor.InspectorWindow.DrawEditors
+
+							//UnityEditor.EditorWindow.GetWindow(Type.GetType("UnityEditor.InspectorWindow")).Repaint();
+
+							//EditorApplication.ExecuteMenuItem("Window/Hierarchy");
+
+//							EditorWindow inspector = (Resources.FindObjectsOfTypeAll(type) as EditorWindow[]).FirstOrDefault();//(Editor.FindObjectsOfTypeIncludingAssets(typeof(EditorWindow)) as EditorWindow[]).Where(x => x.GetType().ToString() == "UnityEditor.InspectorWindow").FirstOrDefault();
+//
+//							if(inspector != default(EditorWindow))
+//								Debug.Log("Inspector: " + inspector.ToString());
+//
+//							System.Reflection.MethodInfo []methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+//
+//							foreach(System.Reflection.MethodInfo method in methods)
+//							{
+//								Debug.Log("---" + method.Name);
+//								if(method.Name == "GetInspectedObject")
+//								{
+////									ParameterInfo[] infos = method.GetParameters();
+////									foreach(ParameterInfo info in infos)
+////									{
+////										Debug.Log("-----" + info.ParameterType + ", " + info.Name);
+////									}
+////									Editor[] editors = {this};
+////									object[] parameters = {editors, 0};
+////									method.Invoke(inspector, parameters);
+////									GameObject o = (GameObject)method.Invoke(inspector, null);
+////									Debug.Log("What am I? : " + o.GetType());
+////									Editor editor = (Editor)o;
+////									editor.
+//								}
+//							}
+
+//							inspector.Close();
+//							EditorApplication.ExecuteMenuItem("Window/Inspector");			
+//							inspector.Show();
 
 							return;
     
@@ -561,11 +647,11 @@ where OCType : MonoBehaviour
 //		}
 	}
 
-	private bool AreAnyScriptsMissing()
-	{
-		//@TODO: fix this test
-		return target.GetType() != typeof(OCType) || target.GetType() == typeof(MonoBehaviour);
-	}
+//	private bool IsScriptMissing(OCPropertyField scriptPropertyField)
+//	{
+//		//@TODO: fix this test
+//		return target.GetType() != typeof(OCType) || scriptPropertyField.GetValue() == null;
+//	}
 
 //	void DisplayInspectorGUI()
 //	{

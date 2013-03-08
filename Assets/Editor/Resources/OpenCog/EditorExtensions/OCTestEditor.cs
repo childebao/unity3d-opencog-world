@@ -6,7 +6,7 @@ using OpenCog.EditorExtensions;
 
 [ExecuteInEditMode]
 [CustomEditor(typeof(Test))]
-public class OCTestEditor : OCEditor<Test>
+public class OCTestEditor : OCDefaultEditor
 {
 }
 
