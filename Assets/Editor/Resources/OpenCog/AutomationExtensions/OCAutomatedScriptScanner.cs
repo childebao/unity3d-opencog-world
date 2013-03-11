@@ -128,17 +128,17 @@ public class OCAutomatedScriptScanner : MonoBehaviour
       )
       .ToList();
 
-			foreach(OCScript script in m_Scripts)
-			{
-				//if(script.Script.name == "Test")
-				{
-					Debug.Log("Script: " + script.Script.name);
-					foreach(var keyAndValue in script.Properties)
-					{
-						Debug.Log("-----PropertyField: " + keyAndValue.Key + ", " + keyAndValue.Value.PublicName);
-					}
-				}
-			}
+//			foreach(OCScript script in m_Scripts)
+//			{
+//				//if(script.Script.name == "Test")
+//				{
+//					Debug.Log("Script: " + script.Script.name);
+//					foreach(var keyAndValue in script.Properties)
+//					{
+//						Debug.Log("-----PropertyField: " + keyAndValue.Key + ", " + keyAndValue.Value.PublicName);
+//					}
+//				}
+//			}
 
 	}
 
