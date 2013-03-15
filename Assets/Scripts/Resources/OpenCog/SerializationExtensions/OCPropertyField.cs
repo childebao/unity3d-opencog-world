@@ -742,7 +742,7 @@ public class OCPropertyField
 			OCPropertyField match =
 				allPropertyFields.Find(p => p.PublicName == candidate.PublicName);
 
-			if(match != null && match != default(OCPropertyField))
+			if(match != null && match != default(OCPropertyField) && (match.UnityPropertyField != null || match.Instance != null))
 			{
 				match = candidate;
 			}
