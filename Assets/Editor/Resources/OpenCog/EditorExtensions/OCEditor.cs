@@ -94,7 +94,7 @@ where OCType : MonoBehaviour
 
 	private OCDefaultEditor m_Editor = null;
 
-	private Type m_Type = typeof(OCType);
+	private Type m_Type = null;//typeof(OCType);
 
 
 	/////////////////////////////////////////////////////////////////////////////

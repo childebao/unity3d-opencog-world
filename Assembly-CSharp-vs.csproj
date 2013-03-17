@@ -167,7 +167,6 @@
      <Compile Include="Assets\Scripts\Resources\OpenCog\Action\OCEventDispatcher.cs" />
      <Compile Include="Assets\Scripts\Resources\OpenCog\Action\OCInputController.cs" />
      <Compile Include="Assets\Scripts\Resources\OpenCog\Action\OCSoundEffect.cs" />
-     <Compile Include="Assets\Scripts\Resources\OpenCog\Action\Test.cs" />
      <Compile Include="Assets\Scripts\Resources\OpenCog\AttributeExtensions\OCBoolPropertyToggleAttribute.cs" />
      <Compile Include="Assets\Scripts\Resources\OpenCog\AttributeExtensions\OCBoolPropertyToggleInterface.cs" />
      <Compile Include="Assets\Scripts\Resources\OpenCog\AttributeExtensions\OCDrawMethodAttribute.cs" />
@@ -186,6 +185,7 @@
      <Compile Include="Assets\Scripts\Resources\OpenCog\SerializationExtensions\OCPropertyField.cs" />
      <Compile Include="Assets\Scripts\Resources\OpenCog\SerializationExtensions\OCScript.cs" />
      <Compile Include="Assets\Scripts\Resources\OpenCog\SerializationExtensions\OCTypeSwitch.cs" />
+     <Compile Include="Assets\Scripts\Resources\OpenCog\Test.cs" />
      <Compile Include="Assets\Scripts\Terrain\Block.cs" />
      <Compile Include="Assets\Scripts\Terrain\Chunk.cs" />
      <Compile Include="Assets\Scripts\Terrain\ChunkBatch.cs" />
