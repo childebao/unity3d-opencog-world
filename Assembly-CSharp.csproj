@@ -216,6 +216,8 @@
      <Compile Include="Assets\Scripts\WorldDecorations\CarDecorator.cs" />
      <Compile Include="Assets\Scripts\WorldDecorations\Decoration.cs" />
      <Compile Include="Assets\Scripts\WorldDecorations\IDecoration.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\OCHouseDecorator.cs" />
+     <Compile Include="Assets\Scripts\WorldDecorations\OCTableDecorator.cs" />
      <Compile Include="Assets\Scripts\WorldDecorations\PalmTreeDecorator.cs" />
      <Compile Include="Assets\Scripts\WorldDecorations\PineTreeDecorator.cs" />
      <Compile Include="Assets\Scripts\WorldDecorations\PrefabDecorations\GameObjectCreationData.cs" />

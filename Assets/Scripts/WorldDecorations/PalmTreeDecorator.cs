@@ -30,7 +30,7 @@ public class PalmTreeDecorator : IDecoration
     private bool IsAValidLocationforDecoration(int blockX, int blockY, int blockZ, IRandom random)
     {
         // We don't want TOO many trees...make it a 1% chance to be drawn there.
-        if (random.RandomRange(1, 1000) < 999)
+        if (random.RandomRange(1, 100) < 95)
         {
             return false;
         }
@@ -98,7 +98,7 @@ public class PalmTreeDecorator : IDecoration
 
     private void CreateTrunkAt(int blockX, int blockY, int z)
     {
-        m_WorldData.SetBlockType(blockX, blockY, z, BlockType.Dirt);
+        m_WorldData.SetBlockType(blockX, blockY, z, BlockType.Wood);
     }
 
     private void CreateLeavesAt(int blockX, int blockY, int z)

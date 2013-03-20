@@ -33,7 +33,7 @@ public class CarDecorator : IDecoration
     private bool IsAValidLocationforDecoration(int blockX, int blockY, int blockZ, IRandom random)
     {
         // We don't want TOO many cars...make it a 1% chance to be drawn there.
-        if (random.RandomRange(1, 10) < 9)
+        if (random.RandomRange(1, 100) < 99)
         {
             return false;
         }
@@ -93,20 +93,13 @@ public class CarDecorator : IDecoration
 	//@TODO: Swap Depth and Height once we normalize y and z nomenclature
     private void CreateDecorationAt(int blockX, int blockY, int blockZ, IRandom random)
     {
-		int frameWidth = random.RandomRange(5,8);
-		int frameHeight = random.RandomRange(3,4);		
+		int frameWidth = random.RandomRange(5,9);
+		int frameHeight = random.RandomRange(3,4);
 		int frameDepth = random.RandomRange(3,4);
 		
 		bool isForward = random.RandomRange(0,2) == 1;
-		
-		if (isForward)
-		{
-			CreateCar (blockX, blockY, blockZ, frameWidth, frameHeight, frameDepth, isForward);
-		}
-		else
-		{
-			CreateCar (blockY, blockX, blockZ, frameWidth, frameHeight, frameDepth, isForward);
-		}
+
+		CreateCar (blockX, blockY, blockZ, frameWidth, frameHeight, frameDepth, isForward);
 
     }
 	

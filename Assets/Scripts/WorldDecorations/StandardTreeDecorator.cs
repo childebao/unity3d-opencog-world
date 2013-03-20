@@ -54,7 +54,7 @@
     {
         int trunkLength = random.RandomRange(6, 10);
         // Trunk
-        CreateColumnAt(blockX, blockY, blockZ, trunkLength, BlockType.Dirt);
+        CreateColumnAt(blockX, blockY, blockZ, trunkLength, BlockType.Wood);
 
         // Leaves
         CreateSphereAt(blockX, blockY, blockZ + trunkLength, random.RandomRange(3, 4));
