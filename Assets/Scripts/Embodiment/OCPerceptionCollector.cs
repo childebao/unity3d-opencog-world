@@ -7,6 +7,7 @@ using System.Threading;
 using System.Globalization;
 using Embodiment;
 using System.Reflection;
+using oldOpenCog;
 
 public class OCPerceptionCollector : MonoBehaviour
 {

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using Embodiment;
 using ProtoBuf;
 
+namespace oldOpenCog
+{
+
 public enum PropertyType {
     STRING,
     INT,
@@ -83,3 +86,5 @@ public class OCPropertyManager : MonoBehaviour {
 		return false;
 	}
 }
+
+}// namespace oldOpenCog
