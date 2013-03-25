@@ -105,7 +105,7 @@ public class OCTableDecorator : IDecoration
 	private bool IsAValidLocationforDecoration(int blockX, int blockY, int blockZ, IRandom random)
 	{
 		// We don't want TOO many cars...make it a 1% chance to be drawn there.
-		if(random.RandomRange(1, 100) < 99)
+		if(random.RandomRange(1, 100) < 95)
 		{
 			return false;
 		}
@@ -120,8 +120,13 @@ public class OCTableDecorator : IDecoration
 		return SpaceAboveIsEmpty(blockX, blockY, blockZ, 8, 8, 8);
 	}
 	
+	int decorationNumber = 0;
 	private void CreateTable(int blockX, int blockY, int blockZ, int frameWidth, int frameHeight, int frameDepth)
 	{
+		decorationNumber ++;
+		string entityName = "table_" + decorationNumber;
+		m_WorldData.printOneEntityToCorpus("Table",entityName);
+			
 		for(int x = blockX + 1; x <= blockX + frameWidth; ++x)
 		{
 			for(int y = blockY + 1; y <= blockY + frameHeight; ++y)
@@ -130,26 +135,28 @@ public class OCTableDecorator : IDecoration
 				{
 					if((x == blockX + 1 || x == blockX + frameWidth) && z < blockZ + frameDepth && (y == blockY + 1 || y == blockY + frameHeight))
 					{
-						CreateLegAt(x, y, z);
+						CreateLegAt(x, y, z,entityName);
 					}
 					else
 					if(z == blockZ + frameDepth)
 					{
-							CreateTopAt(x, y, z);
+							CreateTopAt(x, y, z,entityName);
 					}
 				}
 			}
 		}
 	}
 
-	private void CreateLegAt(int x, int y, int z)
+	private void CreateLegAt(int x, int y, int z,string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.Wood);
+		m_WorldData.printOneBlockToCorpus(entityName,"Wood",x,y,z);
 	}
 
-	private void CreateTopAt(int x, int y, int z)
+	private void CreateTopAt(int x, int y, int z,string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.WoodenPlanks);
+		m_WorldData.printOneBlockToCorpus(entityName,"WoodenPlanks",x,y,z);
 	}
 
 	//@TODO: Swap Depth and Height once we normalize y and z nomenclature

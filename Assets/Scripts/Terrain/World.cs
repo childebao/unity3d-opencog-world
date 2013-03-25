@@ -89,6 +89,7 @@ public class World : IWorld
             {
                 Debug.Log("Total Time: " + (DateTime.Now - start));
 				Debug.Log("Hurray! Level loaded!");
+				WorldData.finishGenerateCorpus();
             }
 			else
 			{

@@ -36,28 +36,33 @@
     private bool IsAValidLocationforDecoration(int blockX, int blockY, int blockZ, IRandom random)
     {
         // We don't want TOO many trees...make it a 1% chance to be drawn there.
-        if (random.RandomRange(1, 1000) < 999)
+        if (random.RandomRange(1, 200) < 199)
         {
             return false;
         }
 
-        if (!IsLocationLowEnough(blockZ))
-        {
-            return false;
-        }
+//        if (!IsLocationLowEnough(blockZ))
+//        {
+//            return false;
+//        }
 
         // Trees like to have a minimum amount of space to grow in.
         return TheSpaceHereIsEmpty(blockX, blockY, blockZ);
     }
-
+	
+	int decorationNumber = 0;
     private void CreateDecorationAt(int blockX, int blockY, int blockZ, IRandom random)
     {
+		decorationNumber ++;
+		string entityName = "tree_" + decorationNumber;
+		WorldData.printOneEntityToCorpus("Tree",entityName);
+		
         int trunkLength = random.RandomRange(6, 10);
         // Trunk
-        CreateColumnAt(blockX, blockY, blockZ, trunkLength, BlockType.Wood);
+        CreateColumnAt(blockX, blockY, blockZ, trunkLength, BlockType.Wood,entityName);
 
         // Leaves
-        CreateSphereAt(blockX, blockY, blockZ + trunkLength, random.RandomRange(3, 4));
+        CreateSphereAt(blockX, blockY, blockZ + trunkLength, random.RandomRange(3, 4),entityName);
     }
 
 

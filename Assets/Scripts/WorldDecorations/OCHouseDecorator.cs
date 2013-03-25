@@ -105,10 +105,10 @@ public class OCHouseDecorator : IDecoration
 	private bool IsAValidLocationforDecoration(int blockX, int blockY, int blockZ, IRandom random)
 	{
 		// We don't want TOO many cars...make it a 1% chance to be drawn there.
-//		if(random.RandomRange(1, 10) < 2)
-//		{
-//			return false;
-//		}
+		if(random.RandomRange(1, 100) < 90)
+		{
+			return false;
+		}
 
 		 //Cars don't pile up too high
 //        if (blockZ >= (int)(m_WorldData.DepthInBlocks*0.1f))
@@ -119,9 +119,14 @@ public class OCHouseDecorator : IDecoration
 		// Cars like to have a minimum amount of space to drive in.
 		return SpaceAboveIsEmpty(blockX, blockY, blockZ, 15, 15, 15);
 	}
-	
+		
+	int decorationNumber = 0;
 	private void CreateHouse(int blockX, int blockY, int blockZ, int frameWidth, int frameHeight, int frameDepth, bool forward)
 	{
+		decorationNumber ++;
+		string entityName = "house_" + decorationNumber;
+		m_WorldData.printOneEntityToCorpus("House",entityName);
+			
 		for(int x = blockX + 1; x <= blockX + frameWidth; ++x)
 		{
 			for(int y = blockY + 1; y <= blockY + frameHeight; ++y)
@@ -130,19 +135,19 @@ public class OCHouseDecorator : IDecoration
 				{
 					if(z == blockZ + 1 && x != blockX + 1 && x != blockX + frameWidth && y != blockY + 1 && y != blockY + frameHeight)
 					{
-						CreateFloorAt(x, y, z);
+						CreateFloorAt(x, y, z,entityName);
 					}
 					else
 					if(z == blockZ + frameDepth && (x != blockX + 1 || x != blockX + frameWidth) && (y != blockY + 1 || y != blockY + frameHeight))
 					{
-						CreateRoofAt(x, y, z);
+						CreateRoofAt(x, y, z,entityName);
 					}
 					else
 					if((x == blockX + (frameWidth)/2 || x == blockX + (frameWidth)/2 + 1) && y == blockY + 1 && z < blockZ + frameDepth - 1) // front door
 					{
 						if(!forward)
 						{
-							//CreateDoorAt(x, y, z);
+							//CreateDoorAt(x, y, z,entityName);
 						}
 					}
 					else
@@ -150,7 +155,7 @@ public class OCHouseDecorator : IDecoration
 					{
 						if(forward)
 						{
-							CreateDoorAt(x, y, z);
+							CreateDoorAt(x, y, z,entityName);
 						}
 					}
 					else
@@ -158,25 +163,25 @@ public class OCHouseDecorator : IDecoration
 					{
 						if(forward)
 							if(z > blockZ + 2 && z < blockZ + frameDepth - 2)
-								CreateGlassAt(x,y,z);
+								CreateGlassAt(x,y,z,entityName);
 							else
-								CreateWallAt(x,y,z);
+								CreateWallAt(x,y,z,entityName);
 					}
 					else
 					if((y == blockY + frameHeight/2 || y == blockY + frameHeight/2 + 1) && x == blockX + frameWidth && z < blockZ + frameDepth - 1) // side window
 					{
 						if(!forward)
 							if(z > blockZ + 2 && z < blockZ + frameDepth - 2)
-								CreateGlassAt(x,y,z);
+								CreateGlassAt(x,y,z,entityName);
 							else
-								CreateWallAt(x,y,z);
+								CreateWallAt(x,y,z,entityName);
 					}
 					else
 					if((x == blockX + 1 || x == blockX + frameWidth || y == blockY + 1 || y == blockY + frameHeight) && z < blockZ + frameDepth)
 					{
 						//if((x != (blockX + frameWidth)/2 && x != ((blockX + frameWidth)/2+1) && y != (blockY + frameHeight)/2 && y != ((blockY + frameHeight)/2+1)))
 						{
-							CreateWallAt(x, y, z);
+							CreateWallAt(x, y, z,entityName);
 						}
 					}
 				}
@@ -184,29 +189,34 @@ public class OCHouseDecorator : IDecoration
 		}
 	}
 
-	private void CreateWallAt(int x, int y, int z)
+	private void CreateWallAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.Cobblestone);
+		m_WorldData.printOneBlockToCorpus(entityName,"Cobblestone",x,y,z);
 	}
 
-	private void CreateFloorAt(int x, int y, int z)
+	private void CreateFloorAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.WoodenPlanks);
+		m_WorldData.printOneBlockToCorpus(entityName,"WoodenPlanks",x,y,z);
 	}
 
-	private void CreateRoofAt(int x, int y, int z)
+	private void CreateRoofAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.MossStone);
+		m_WorldData.printOneBlockToCorpus(entityName,"MossStone",x,y,z);
 	}
 
-	private void CreateDoorAt(int x, int y, int z)
+	private void CreateDoorAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.IronDoor);
+		m_WorldData.printOneBlockToCorpus(entityName,"IronDoor",x,y,z);
 	}
 
-	private void CreateGlassAt(int x, int y, int z)
+	private void CreateGlassAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.GlassPane);
+		m_WorldData.printOneBlockToCorpus(entityName,"GlassPane",x,y,z);
 	}
 
 	//@TODO: Swap Depth and Height once we normalize y and z nomenclature

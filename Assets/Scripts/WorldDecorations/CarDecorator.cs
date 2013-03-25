@@ -33,7 +33,7 @@ public class CarDecorator : IDecoration
     private bool IsAValidLocationforDecoration(int blockX, int blockY, int blockZ, IRandom random)
     {
         // We don't want TOO many cars...make it a 1% chance to be drawn there.
-        if (random.RandomRange(1, 100) < 99)
+        if (random.RandomRange(1, 100) < 95)
         {
             return false;
         }
@@ -48,8 +48,13 @@ public class CarDecorator : IDecoration
         return SpaceAboveIsEmpty(blockX, blockY, blockZ, 8, 8, 8);
     }
 	
+	int decorationNumber = 0;
 	private void CreateCar(int blockX, int blockY, int blockZ, int frameWidth, int frameHeight, int frameDepth, bool isForward)
 	{
+		decorationNumber ++;
+		string entityName = "car_" + decorationNumber;
+		m_WorldData.printOneEntityToCorpus("Car",entityName);
+		
 		for (int x = blockX + 1; x <= blockX + frameWidth; ++x)
 		{
 			for (int y = blockY + 1; y <= blockY + frameHeight; ++y)
@@ -59,31 +64,31 @@ public class CarDecorator : IDecoration
 					if((x == blockX + 2 || x == blockX + frameWidth - 1) && z == blockZ + 1 && (y == blockY + 1 || y == blockY + frameHeight))
 					{
 						if(isForward)
-							CreateWheelAt(x,y,z);
+							CreateWheelAt(x,y,z,entityName);
 						else 
-							CreateWheelAt(y,x,z);
+							CreateWheelAt(y,x,z,entityName);
 					}
 					else if(((x == blockX + 1 || x == blockX + frameWidth) && z == blockZ + frameDepth - 1) 
 						 || ((x == blockX + 2 || x == blockX + frameWidth - 1) && z == blockZ + frameDepth))
 					{
 						if(isForward)
-							CreateGlassAt(x,y,z);
+							CreateGlassAt(x,y,z,entityName);
 						else 
-							CreateGlassAt(y,x,z);
+							CreateGlassAt(y,x,z,entityName);
 					}
 					else if(Mathf.Abs(x - (blockX + frameWidth) / 2) <= 1 && Mathf.Abs(z - (blockZ + frameDepth) / 2) <= 1 && (y == blockY + 1 || y == blockY + frameHeight))
 					{
 						if(isForward)
-							CreateDoorAt(x,y,z);
+							CreateDoorAt(x,y,z,entityName);
 						else 
-							CreateDoorAt(y,x,z);
+							CreateDoorAt(y,x,z,entityName);
 					}
 					else if((x != blockX + 1 && x != blockX + frameWidth || z != blockZ + frameDepth) && z != blockZ + 1 )
 					{
 						if(isForward)
-							CreateBodyAt(x,y,z);
+							CreateBodyAt(x,y,z,entityName);
 						else 
-							CreateBodyAt(y,x,z);
+							CreateBodyAt(y,x,z,entityName);
 					}
 				}
 			}
@@ -98,7 +103,7 @@ public class CarDecorator : IDecoration
 		int frameDepth = random.RandomRange(3,4);
 		
 		bool isForward = random.RandomRange(0,2) == 1;
-
+		
 		CreateCar (blockX, blockY, blockZ, frameWidth, frameHeight, frameDepth, isForward);
 
     }
@@ -136,24 +141,28 @@ public class CarDecorator : IDecoration
 //        m_WorldData.SetBlockType(blockX, blockY, z, BlockType.Leaves);
 //    }
 	
-	private void CreateWheelAt(int x, int y, int z)
+	private void CreateWheelAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.Wheel);
+		m_WorldData.printOneBlockToCorpus(entityName,"Wheel",x,y,z);
 	}
 	
-	private void CreateGlassAt(int x, int y, int z)
+	private void CreateGlassAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.GlassPane);
+		m_WorldData.printOneBlockToCorpus(entityName,"GlassPane",x,y,z);
 	}
 	
-	private void CreateBodyAt(int x, int y, int z)
+	private void CreateBodyAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType(x,y,z, BlockType.BlockOfIron);
+		m_WorldData.printOneBlockToCorpus(entityName,"BlockOfIron",x,y,z);
 	}
 	
-	private void CreateDoorAt(int x, int y, int z)
+	private void CreateDoorAt(int x, int y, int z, string entityName)
 	{
 		m_WorldData.SetBlockType (x,y,z, BlockType.IronDoor);
+		m_WorldData.printOneBlockToCorpus(entityName,"IronDoor",x,y,z);
 	}
 
     private bool SpaceAboveIsEmpty(int blockX, int blockY, int blockZ, int depthAbove, int widthAround, int heightAround)

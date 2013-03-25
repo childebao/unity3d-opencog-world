@@ -26,7 +26,7 @@ public abstract class Decoration : IDecoration
     /// <param name="blockY"></param>
     /// <param name="blockZ"></param>
     /// <param name="radius"></param>
-    protected void CreateSphereAt(int blockX, int blockY, int blockZ, int radius)
+    protected void CreateSphereAt(int blockX, int blockY, int blockZ, int radius,string entityName = "")
     {
         for (int x = blockX - radius; x <= blockX + radius; x++)
         {
@@ -37,24 +37,26 @@ public abstract class Decoration : IDecoration
                     if (Vector3.Distance(new Vector3(blockX, blockY, blockZ), new Vector3(x, y, z)) <= radius)
                     {
                         WorldData.SetBlockType(x, y, z, BlockType.Leaves);
+						WorldData.printOneBlockToCorpus(entityName,"Leaves" ,x,y,z);
                     }
                 }
             }
         }
     }
 
-    public void CreateColumnAt(int blockX, int blockY, int blockZ, int columnLength, BlockType blockType)
+    public void CreateColumnAt(int blockX, int blockY, int blockZ, int columnLength, BlockType blockType,string entityName = "")
     {
         // Trunk
         for (int z = blockZ + 1; z <= blockZ + columnLength; z++)
         {
-            CreateColumnAt(blockX, blockY, z, blockType);
+            CreateColumnAt(blockX, blockY, z, blockType,entityName);
         }
     }
 
-    private void CreateColumnAt(int blockX, int blockY, int z, BlockType blockType)
+    private void CreateColumnAt(int blockX, int blockY, int z, BlockType blockType,string entityName = "")
     {
         WorldData.SetBlockType(blockX, blockY, z, blockType);
+		WorldData.printOneBlockToCorpus(entityName,blockType.ToString() ,blockX,blockY,z);
     }
 
     protected bool TheSpaceHereIsEmpty(int blockX, int blockY, int blockZ)

@@ -16,6 +16,8 @@ public class WorldData
     private int m_ChunkBlockDepth = 128;
     private int m_NumberOfLightShades = 10;
     private Vector3i m_MapChunkOffset = new Vector3i(0, 0, 0);
+	private bool generalCorpus = true;
+	private StreamWriter corpusFileWriter ;
 	
 	private float m_NoiseBlockXOffset = UnityEngine.Random.Range(0,100000);
 	
@@ -39,8 +41,64 @@ public class WorldData
     {
         m_ChunkProcessor = chunkProcessor;
         SetShadesOfLight(m_NumberOfLightShades);
-    }
+		
+		// GenerateBlockEntityCorpus
+		if (generalCorpus)
+			corpusFileWriter = new StreamWriter("ScmCorpus.scm");
 
+    }
+	
+	public void printOneEntityToCorpus(string entityClass,string entityName)
+	{
+		if (! generalCorpus)
+			return;
+		
+		lock(corpusFileWriter)
+		{
+		// add the entity InheritanceLink
+		corpusFileWriter.WriteLine("(InheritanceLink (stv 1 0.0012484394) (av 0 1 0)");
+		corpusFileWriter.WriteLine("   (BlockEntityNode \"" + entityName + "\" (av 0 1 0))");
+		corpusFileWriter.WriteLine("   (ConceptNode \"" + entityClass + "\" (stv 1 0.0012484394))");
+		corpusFileWriter.WriteLine("   )");
+		corpusFileWriter.WriteLine(")\n");
+		}
+	}
+	
+	public void printOneBlockToCorpus(string entityName,
+		string blockType, int blockX, int blockY, int blockZ)
+	{
+		if (! generalCorpus)
+			return;
+
+		lock(corpusFileWriter)
+		{
+		// add material predicate for this block
+		corpusFileWriter.WriteLine("(EvaluationLink (stv 1 0.0012484394) (av 0 1 0)");
+		corpusFileWriter.WriteLine("   (PredicateNode \"material\" (av 0 1 0))");
+		corpusFileWriter.WriteLine("   (ListLink");
+		corpusFileWriter.WriteLine("      (StructureNode \"BLOCK_" + blockX + "_" + blockY + "_" + blockZ + "\")");
+		corpusFileWriter.WriteLine("      (ConceptNode \"" + blockType + "\")");
+		corpusFileWriter.WriteLine("   )");
+		corpusFileWriter.WriteLine(")\n");
+		
+		// add this block part-of this entity
+		corpusFileWriter.WriteLine("(EvaluationLink (stv 1 0.0012484394) (av 0 1 0)");
+		corpusFileWriter.WriteLine("   (PredicateNode \"Part_Of\" (av 0 1 0))");
+		corpusFileWriter.WriteLine("   (ListLink");
+		corpusFileWriter.WriteLine("      (StructureNode \"BLOCK_" + blockX + "_" + blockY + "_" + blockZ + "\")");
+		corpusFileWriter.WriteLine("      (BlockEntityNode \"" + entityName + "\" (av 1000 0 0))");
+		corpusFileWriter.WriteLine("   )");
+		corpusFileWriter.WriteLine(")\n");
+		}
+
+	}
+	
+	public void finishGenerateCorpus()
+	{
+		if (generalCorpus)
+			corpusFileWriter.Close();
+	}
+	
     public void GenerateUVCoordinatesForAllBlocks()
     {
         // Topsoil
@@ -615,4 +673,5 @@ public class WorldData
 		}
 		return true;
 	}
+	
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 /// <summary>
 /// Initializes World, Tracks Player Position, and Streams Chunks into the Game.
@@ -47,15 +48,15 @@ public class WorldGameObject : MonoBehaviour
 	/// Chunk Dimensions
 	/// </summary>
 	//[NonSerialized]
-	public static int chunkBlocksWidth = 10;
+	public static int chunkBlocksWidth = 16;
 	//[NonSerialized]
-	public static int chunkBlocksHeight = 10;
+	public static int chunkBlocksHeight = 16;
 	//[NonSerialized]
-	public static int chunkBlocksDepth = 32;
+	public static int chunkBlocksDepth = 36;
 	//[NonSerialized]
-	public static int chunksWide = 5;
+	public static int chunksWide = 6;
     //[NonSerialized]
-	public static int chunksHigh = 5;
+	public static int chunksHigh = 6;
     //[NonSerialized]
 	public static int chunksDeep = 1;
 
@@ -806,10 +807,23 @@ public class WorldGameObject : MonoBehaviour
 			}
 			m_WorldData.saveData(saveToFile);
 			Debug.Log("Saved the current map to " + saveToFile);
-		}		
+		}
+		
+		
+		// to generate a test scm file for pln
+		if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKey(KeyCode.P))
+		{
+			if (saveToFile.Length == 0)
+			{
+				saveToFile = "Corpus.scm";
+			}
+			m_WorldData.saveData(saveToFile);
+			
+		}
 
 	}
-
+	
+	
     private void CreateFinishedChunk()
     {
         while (WorldData.FinishedChunks.Count > 0)
