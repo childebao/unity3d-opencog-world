@@ -18,7 +18,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_1_0;UNITY_4_1;ENABLE_PROFILER;UNITY_EDITOR</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_1_0;UNITY_4_1;ENABLE_PROFILER;UNITY_EDITOR;UNITY_TEAM_LICENSE</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -47,14 +47,14 @@
      <Compile Include="Assets\Editor\AutomationManager\AutomationManager.cs" />
      <Compile Include="Assets\Editor\DevelopmentExtensions\ExposeProperties.cs" />
      <Compile Include="Assets\Editor\DevelopmentExtensions\OCEditorAutomatedFactory.cs" />
-     <Compile Include="Assets\Editor\Resources\OpenCog\AutomationExtensions\OCAutomatedEditorBuilder.cs" />
-     <Compile Include="Assets\Editor\Resources\OpenCog\AutomationExtensions\OCAutomatedPlayerBuilder.cs" />
-     <Compile Include="Assets\Editor\Resources\OpenCog\AutomationExtensions\OCAutomatedScriptScanner.cs" />
-     <Compile Include="Assets\Editor\Resources\OpenCog\EditorExtensions\OCDefaultEditor.cs" />
-     <Compile Include="Assets\Editor\Resources\OpenCog\EditorExtensions\OCEditor.cs" />
-     <Compile Include="Assets\Editor\Resources\OpenCog\EditorExtensions\OCScriptFixer.cs" />
-     <Compile Include="Assets\Editor\Resources\OpenCog\EditorExtensions\OCScriptScanner.cs" />
-     <Compile Include="Assets\Editor\Resources\OpenCog\EditorExtensions\OCTestEditor.cs" />
+     <Compile Include="Assets\Editor\OpenCog\AutomationExtensions\OCAutomatedEditorBuilder.cs" />
+     <Compile Include="Assets\Editor\OpenCog\AutomationExtensions\OCAutomatedPlayerBuilder.cs" />
+     <Compile Include="Assets\Editor\OpenCog\AutomationExtensions\OCAutomatedScriptScanner.cs" />
+     <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCDefaultEditor.cs" />
+     <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCEditor.cs" />
+     <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCScriptFixer.cs" />
+     <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCScriptScanner.cs" />
+     <Compile Include="Assets\Editor\OpenCog\EditorExtensions\OCTestEditor.cs" />
      <Compile Include="Assets\Editor\unitygems.com\whydoidoit.com\FindAndFixBrokenScripts.cs" />
      <Compile Include="Assets\Editor\unitygems.com\whydoidoit.com\FixMissingScripts.cs" />
      <Compile Include="Assets\Third Party\EZ GUI\Editor\AnBSoft\Editors\UICtlEditor.cs" />
