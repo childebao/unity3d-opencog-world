@@ -2,196 +2,188 @@
 <Template Originator="Lake Watkins" Language="C#" Created="1/30/2013" LastModified="1/30/2013">
 	
     <TemplateConfiguration>
-        <_Name>GO Script</_Name>
+        <_Name>GameObject Script</_Name>
         <Icon>md-text-file-icon</Icon>
-        <_Category>OC\Unity\C#</_Category>
+        <_Category>OpenCog</_Category>
         <LanguageName>C#</LanguageName>
         <_Description>Creates MonoBehaviour script for Unity. Attach to GameObject.</_Description>
     </TemplateConfiguration>
 
     <TemplateFiles>
-        <File DefaultExtension=".cs" DefaultName="OCGOScript" AddStandardHeader="True"><![CDATA[
+        <File DefaultExtension=".cs" DefaultName="OCGameObjectScript" AddStandardHeader="True"><![CDATA[
+/// Unity3D OpenCog World Embodiment Program
+/// Copyright (C) 2013  Novamente			
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Affero General Public License as
+/// published by the Free Software Foundation, either version 3 of the
+/// License, or (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Affero General Public License for more details.
+///
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using UnityEngine;
 using System.Collections;
+using ProtoBuf;
+using OpenCog.AttributeExtensions;
+using System;
 
 namespace OpenCog
-{			
+{
 
 /// <summary>
-/// The ${Name}.
-/// </summary>			
-[ProtoContract]			
-public class ${Name} : MonoBehaviour
+/// The Test.
+/// </summary>
+#region Class Attributes
+
+[ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
+[OCExposeProperties]
+[Serializable]
+#endregion
+public class Test : MonoBehaviour
 {
-	//////////////////////////////////////////////////
-	
-	#region Public Member Data
-	
-	//////////////////////////////////////////////////
-			
-	#endregion
-	
-	//////////////////////////////////////////////////
-	
-	#region Private Member Data
-	
-	//////////////////////////////////////////////////		
-	
-	#endregion		
-			
-	//////////////////////////////////////////////////
-			
-	#region Accessors and Mutators		
-			
-	//////////////////////////////////////////////////
-			
-	#endregion
-	
-	//////////////////////////////////////////////////
-	
-	#region Public Member Functions...
-	
-	//////////////////////////////////////////////////
-			
-	void Awake() // Called when the script instance is being loaded.
-	{
-		
-	}
-	
-	void Start() // Use this for initialization
-	{
-		
-	}
-	
-	void FixedUpdate() // Called every fixed framerate frame, used mostly for physics
-	{
-		
-	}
-	
-	void Update() // Update is called once per frame
-	{
-		
-	}
-	
-	void LateUpdate() // Called once per frame after all Update calls
-	{
-		
-	}
-	
-	void OnJointBreak(float breakForce) //Called when a joint attached to the same game object broke.
-	{	Debug.Log("Joint Broke!, force: " + breakForce);	}
-	
-	void OnLevelWasLoaded(int level) //called after a new level was loaded.
-	{	Debug.Log("Level " + level + " was loaded.");	}
 
-	
-	void OnGUI() //OnGUI is called for rendering and handling GUI events.
-	{
-		if (GUI.Button(new Rect(10, 10, 150, 100), "I am a button"))
-			Debug.Log("You clicked the button!");
-	}
-	
-	
-	void OnControllerColliderHit(ControllerColliderHit hit)
-	{}
-	
-	void OnCollisionEnter(Collision collision)
-	{}
-	void OnCollisionStay(Collision collision)
-	{}
-	void OnCollisionExit(Collision collision)
-	{}
-	
-	void OnTriggerEnter(Collider collider)
-	{}
-	void OnTriggerStay(Collider collider)
-	{}
-	void OnTriggerExit(Collider collider)
-	{}	
-	
-	void OnMouseDown()
-	{}
-	void OnMouseUp()
-	{}
-	void OnMouseEnter()
-	{}
-	void OnMouseOver()
-	{}
-	void OnMouseExit()
-	{}
-	void OnMouseDrag()
-	{}
-	
-	
-	void OnBecameVisible()
-	{}
-	void OnBecameInvisible()
-	{}
-	void OnWillRenderObject() //Called once for each camera if the object is visible
-	{}
-	void OnRenderObject() //Called on object after camera has rendered the scene
-	{}
-	
-	
-	void OnApplicationPause(bool pause)
-	{}
-	void OnApplicationFocus(bool focus)
-	{}
-	void OnApplicationQuit()
-	{}
-	
-		
-	void OnServerInitialized() //Called on the server whenever a Network.InitializeServer was invoked and has completed.
-	{	Debug.Log("Server initialized and ready");	}
-	void OnPlayerConnected(NetworkPlayer player) //Called on the server whenever a new player has successfully connected.
-	{	Debug.Log("Player  connected from " + player.ipAddress + ":" + player.port);	}
-	void OnPlayerDisconnected(NetworkPlayer player) //Called on the server whenever a player disconnected from the server.
-	{
-		Debug.Log("Clean up after player " + player);
-		Network.RemoveRPCs(player);
-		Network.DestroyPlayerObjects(player);
-	}
-	
-	void OnConnectedToServer() //Called on the client when you have successfully connected to a server
-	{	Debug.Log("Connected to server");	}
-	void OnFailedToConnect(NetworkConnectionError error) //Called on the client when a connection attempt fails for some reason.
-	{	Debug.Log("Could not connect to server: " + error);	}
-	void OnDisconnectedFromServer(NetworkDisconnection info) //Called on the client when the connection was lost or you disconnected from the server.
-	{	Debug.Log("Disconnected from server: " + info);	}
-	
-	void OnFailedToConnectToMasterServer(NetworkConnectionError info) //Called on clients or servers when there is a problem connecting to the MasterServer.
-	{	Debug.Log("Could not connect to master server: " + info);	}
-	void OnMasterServerEvent(MasterServerEvent msEvent) //Called on clients or servers when reporting events from the MasterServer.
-	{	Debug.Log("MasterServer event: " + msEvent);	}
-	
-	void OnNetworkInstantiate(NetworkMessageInfo info) //Called on objects which have been network instantiated with Network.Instantiate
-	{	Debug.Log("New object instantiated by " + info.sender);	}
-	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) //Used to customize synchronization of variables in a script watched by a network view.
-	{}
-		
-	
-	void OnEnable() //Called when MonoBehaviour is loaded
-	{	Debug.Log(string.Format("MonoBehaviour[{0}].OnEnable", gameObject.name + "\\" + GetType().Name ));	}
-	
-	void OnDisable() //Called when MonoBehaviour goes out of scope
-	{	Debug.Log(string.Format("MonoBehaviour[{0}].OnDisable", gameObject.name + "\\" + GetType().Name ));	}
+	/////////////////////////////////////////////////////////////////////////////
 
-	void OnDestroy() //Called when MonoBehaviour is about to be destroyed.
-	{	Debug.Log(string.Format("MonoBehaviour[{0}].OnDestroy", gameObject.name + "\\" + GetType().Name ));	}
-			
-			
+  #region Private Member Data
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	private int m_ExamplePrivateVar = 0;
+
+	/////////////////////////////////////////////////////////////////////////////
+
 	#endregion
-	
-	//////////////////////////////////////////////////
-	
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	#region Accessors and Mutators
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	public int ExamplePublicVar
+	{
+		get
+		{
+			return m_ExamplePrivateVar;
+		}
+
+		set
+		{
+			m_ExamplePrivateVar = value;
+		}
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	#endregion
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	#region Public Member Functions
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	/// <summary>
+	/// Called when the script instance is being loaded.
+	/// </summary>
+	void Awake()
+	{
+	}
+
+	/// <summary>
+	/// Use this for initialization
+	/// </summary>
+	void Start()
+	{
+	}
+
+	/// <summary>
+	/// Update is called once per frame.
+	/// </summary>
+	void Update()
+	{
+	}
+
+	/// <summary>
+	/// Called once per frame after all Update calls
+	/// </summary>
+	void LateUpdate()
+	{
+	}
+
+	/// <summary>
+	/// Raises the enable event when Test is loaded.
+	/// </summary>
+	void OnEnable()
+	{
+		Debug.Log
+  	(
+  		string.Format
+  		(
+  			"In {0}.OnEnable"
+  		, gameObject.name + "\\" + GetType().Name
+  		)
+  	);
+	}
+
+	/// <summary>
+	/// Raises the disable event when Test goes out of
+	/// scope.
+	/// </summary>
+	void OnDisable()
+	{
+		Debug.Log
+		(
+			string.Format
+			(
+				"In {0}.OnDisable"
+			, gameObject.name + "\\" + GetType().Name
+			)
+		);
+	}
+
+	/// <summary>
+	/// Raises the destroy event when Test is about to be
+	/// destroyed.
+	/// </summary>
+	void OnDestroy()
+	{
+		Debug.Log
+		(
+			string.Format
+			(
+				"In {0}.OnDestroy"
+			, gameObject.name + "\\" + GetType().Name
+			)
+		);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	#endregion
+
+	/////////////////////////////////////////////////////////////////////////////
+
 	#region Private Member Functions
-	
-	//////////////////////////////////////////////////	
-	
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	/////////////////////////////////////////////////////////////////////////////
+
 	#endregion
 
-	//////////////////////////////////////////////////		
-}
+	/////////////////////////////////////////////////////////////////////////////
+
+}// class Test
+
+}// namespace OpenCog
+
 
 
 ]]>
