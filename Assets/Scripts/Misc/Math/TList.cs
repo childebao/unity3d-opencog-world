@@ -86,6 +86,7 @@ public class TList<T> : ICollection<T>
         List<T> localList;
 
         // init enumerator
+		Console.print ("EnterReadLock Tlist 90");
         LockList.EnterReadLock();
         try
         {
@@ -118,6 +119,7 @@ public class TList<T> : ICollection<T>
         List<T> localList;
 
         // init enumerator
+		Console.print ("EnterReadLock Tlist 123");
         LockList.EnterReadLock();
         try
         {
@@ -288,6 +290,7 @@ public class TList<T> : ICollection<T>
     /// </summary>
     public ReadOnlyCollection<T> AsReadOnly()
     {
+		Console.print ("EnterReadLock Tlist 294");
         LockList.EnterReadLock();
         try
         {
@@ -312,6 +315,7 @@ public class TList<T> : ICollection<T>
     /// <param name="item">the item to search for</param>
     public int BinarySearch(T item)
     {
+		Console.print ("EnterReadLock Tlist 319");
         LockList.EnterReadLock();
         try
         {
@@ -330,6 +334,7 @@ public class TList<T> : ICollection<T>
     /// <param name="comparer">the IComparer to use when searching, or null to use the default</param>
     public int BinarySearch(T item, IComparer<T> comparer)
     {
+		Console.print ("EnterReadLock Tlist 338");
         LockList.EnterReadLock();
         try
         {
@@ -350,6 +355,7 @@ public class TList<T> : ICollection<T>
     /// <param name="comparer">the IComparer to use when searching, or null to use the default</param>
     public int BinarySearch(int index, int count, T item, IComparer<T> comparer)
     {
+		Console.print ("EnterReadLock Tlist 359");
         LockList.EnterReadLock();
         try
         {
@@ -374,6 +380,7 @@ public class TList<T> : ICollection<T>
     {
         get
         {
+			Console.print ("EnterReadLock Tlist 383");
             LockList.EnterReadLock();
             try
             {
@@ -411,6 +418,7 @@ public class TList<T> : ICollection<T>
     /// </summary>
     public void Clear()
     {
+		Console.print ("EnterReadLock Tlist 422");
         LockList.EnterReadLock();
         try
         {
@@ -435,6 +443,7 @@ public class TList<T> : ICollection<T>
     /// <param name="item">the item to find in the collection</param>
     public bool Contains(T item)
     {
+		Console.print ("EnterReadLock Tlist 447");
         LockList.EnterReadLock();
         try
         {
@@ -460,6 +469,7 @@ public class TList<T> : ICollection<T>
     /// <param name="converter">delegate to convert the items to a new type</param>
     public List<TOutput> ConvertAll<TOutput>(Converter<T, TOutput> converter)
     {
+		Console.print ("EnterReadLock Tlist 473");
         LockList.EnterReadLock();
         try
         {
@@ -485,6 +495,7 @@ public class TList<T> : ICollection<T>
     /// <param name="arrayIndex">index at which copying begins</param>
     public void CopyTo(T[] array, int arrayIndex)
     {
+		Console.print ("EnterReadLock Tlist 499");
         LockList.EnterReadLock();
         try
         {
@@ -510,6 +521,7 @@ public class TList<T> : ICollection<T>
     {
         get
         {
+			Console.print ("EnterReadLock Tlist 525");
             LockList.EnterReadLock();
             try
             {
@@ -535,6 +547,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public bool Exists(Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 551");
         LockList.EnterReadLock();
         try
         {
@@ -558,6 +571,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public T Find(Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 575");
         LockList.EnterReadLock();
         try
         {
@@ -581,6 +595,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public List<T> FindAll(Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 599");
         LockList.EnterReadLock();
         try
         {
@@ -604,6 +619,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public int FindIndex(Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 623");
         LockList.EnterReadLock();
         try
         {
@@ -622,6 +638,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public int FindIndex(int startIndex, Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 642");
         LockList.EnterReadLock();
         try
         {
@@ -641,6 +658,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public int FindIndex(int startIndex, int count, Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 662");
         LockList.EnterReadLock();
         try
         {
@@ -664,6 +682,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public T FindLast(Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 686");
         LockList.EnterReadLock();
         try
         {
@@ -687,6 +706,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public int FindLastIndex(Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 710");
         LockList.EnterReadLock();
         try
         {
@@ -705,6 +725,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public int FindLastIndex(int startIndex, Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 729");
         LockList.EnterReadLock();
         try
         {
@@ -724,6 +745,7 @@ public class TList<T> : ICollection<T>
     /// <param name="match">delegate that defines the conditions to search for</param>
     public int FindLastIndex(int startIndex, int count, Predicate<T> match)
     {
+		Console.print ("EnterReadLock Tlist 749");
         LockList.EnterReadLock();
         try
         {
@@ -770,6 +792,7 @@ public class TList<T> : ICollection<T>
     /// <returns></returns>
     public List<T> GetRange(int index, int count)
     {
+		Console.print ("EnterReadLock Tlist 795");
         LockList.EnterReadLock();
         try
         {
@@ -787,6 +810,7 @@ public class TList<T> : ICollection<T>
     /// <param name="item">the item to find</param>
     public int IndexOf(T item)
     {
+		Console.print ("EnterReadLock Tlist 814");
         LockList.EnterReadLock();
         try
         {
@@ -805,6 +829,7 @@ public class TList<T> : ICollection<T>
     /// <param name="index">the zero-based index to begin searching from</param>
     public int IndexOf(T item, int index)
     {
+		Console.print ("EnterReadLock Tlist 833");
         LockList.EnterReadLock();
         try
         {
@@ -824,6 +849,7 @@ public class TList<T> : ICollection<T>
     /// <param name="count">the number of elements to search</param>
     public int IndexOf(T item, int index, int count)
     {
+		Console.print ("EnterReadLock Tlist 853");
         LockList.EnterReadLock();
         try
         {
@@ -882,6 +908,7 @@ public class TList<T> : ICollection<T>
     /// <param name="item">the item to find</param>
     public int LastIndexOf(T item)
     {
+		Console.print ("EnterReadLock Tlist 912");
         LockList.EnterReadLock();
         try
         {
@@ -900,6 +927,7 @@ public class TList<T> : ICollection<T>
     /// <param name="index">the index at which to start searching</param>
     public int LastIndexOf(T item, int index)
     {
+		Console.print ("EnterReadLock Tlist 931");
         LockList.EnterReadLock();
         try
         {
@@ -919,6 +947,7 @@ public class TList<T> : ICollection<T>
     /// <param name="count">number of elements to search</param>
     public int LastIndexOf(T item, int index, int count)
     {
+		Console.print ("EnterReadLock Tlist 951");
         LockList.EnterReadLock();
         try
         {
@@ -1107,6 +1136,7 @@ public class TList<T> : ICollection<T>
     /// </summary>
     public T[] ToArray()
     {
+		Console.print ("EnterReadLock Tlist 1140");
         LockList.EnterReadLock();
         try
         {

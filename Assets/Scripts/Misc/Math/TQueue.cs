@@ -19,7 +19,7 @@ public class TQueue<T> : ICollection
     /// <summary>
     /// Lock for the Q
     /// </summary>
-    private readonly ReaderWriterLockSlim LockQ = new ReaderWriterLockSlim();
+    private readonly ReaderWriterLockSlim LockQ = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
     /// <summary>
     /// Used only for the SyncRoot properties
@@ -72,6 +72,7 @@ public class TQueue<T> : ICollection
         Queue<T> localQ;
 
         // init enumerator
+		Console.print ("EnterReadLock TQueue 76");
         LockQ.EnterReadLock();
         try
         {
@@ -102,6 +103,7 @@ public class TQueue<T> : ICollection
         Queue<T> localQ;
 
         // init enumerator
+		Console.print ("EnterReadLock TQueue 107");
         LockQ.EnterReadLock();
         try
         {
@@ -133,6 +135,7 @@ public class TQueue<T> : ICollection
     /// <param name="index">the zero-based index at which copying begins</param>
     public void CopyTo(Array array, int index)
     {
+		Console.print ("EnterReadLock TQueue 139");
         LockQ.EnterReadLock();
         try
         {
@@ -153,6 +156,7 @@ public class TQueue<T> : ICollection
     /// <param name="index">the zero-based index at which copying begins</param>
     public void CopyTo(T[] array, int index)
     {
+		Console.print ("EnterReadLock TQueue 160");
         LockQ.EnterReadLock();
         try
         {
@@ -179,16 +183,38 @@ public class TQueue<T> : ICollection
     {
         get
         {
-            LockQ.EnterReadLock();
-            try
-            {
-                return m_Queue.Count;
-            }
-
-            finally
-            {
-                LockQ.ExitReadLock();
-            }
+			//Console.print ("EnterReadLock TQueue 187, current thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+            //LockQ.EnterReadLock();
+			Boolean bLockAcquired = false;
+			
+			try {
+				LockQ.EnterUpgradeableReadLock();
+				bLockAcquired = true;
+			} catch (Exception ex) {
+				throw new Exception("Lock not acquired: " + ex.ToString());
+			}
+			
+			if (bLockAcquired)
+			{
+				try
+	            {
+	                return m_Queue.Count;
+	            }
+	
+	            finally
+	            {
+	                LockQ.ExitUpgradeableReadLock();
+	            }
+			}
+			else
+			{
+				Console.print ("Failed to acquire lock in TQueue.Count()");	
+				
+				throw new Exception("Lock not acquired in TQueue.Count()");
+				
+				return int.MaxValue;
+			}
+            
         }
     }
 
@@ -228,16 +254,100 @@ public class TQueue<T> : ICollection
     /// <param name="item">the item to add to the queue</param>
     public void Enqueue(T item)
     {
-        LockQ.EnterWriteLock();
-        try
-        {
-            m_Queue.Enqueue(item);
-        }
-
-        finally
-        {
-            LockQ.ExitWriteLock();
-        }
+		Boolean bLockAcquired = false;
+		
+		Console.print ("In Enqueue, before EnterWriteLock");
+		Console.print ("Enqueing item: " + item.ToString() + ", current thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+		
+		try 
+		{
+			LockQ.EnterWriteLock();
+			bLockAcquired = true;
+		} 
+		catch(LockRecursionException lre)
+		{
+			Console.print("Catch on EnterWriteLock: Type: " + lre.GetType().Name + ", message: " + lre.Message + ", Source: " + lre.Source);
+			
+			if (LockQ.IsReadLockHeld)
+			{
+				Console.print ("Read lock is held");	
+				
+				Console.print ("Current read count: " + LockQ.CurrentReadCount);
+				
+				Console.print ("Trying to upgrade read lock");
+				
+				if (LockQ.IsUpgradeableReadLockHeld)
+				{
+					Console.print ("IsUpgradeableReadLockHeld = true");					
+				}
+				else
+				{
+					Console.print ("IsUpgradeableReadLockHeld = false");	
+				}
+				
+				LockQ.EnterWriteLock ();
+				bLockAcquired = true;
+				
+				Console.print ("Upgrade read lock complete.");
+			}
+			else
+			{
+				Console.print ("No read lock is held, trying again");
+				
+				Console.print ("Current read count: " + LockQ.CurrentReadCount);
+				
+				try 
+				{
+					LockQ.EnterWriteLock();
+					bLockAcquired = true;
+				} 
+				catch(LockRecursionException lre2)
+				{
+					Console.print("Catch on EnterWriteLock attempt 2: Type: " + lre.GetType().Name + ", message: " + lre.Message + ", Source: " + lre.Source);
+					
+					throw lre2;
+				}
+			}
+			
+			if (1 == 0)
+			{
+				try {
+					Console.print ("Attempting ExitReadLock...");
+					LockQ.ExitReadLock();
+					Console.print ("Exit succesful");
+				} catch (Exception ex) {
+					Console.print (ex.ToString ());
+				}
+				
+				try {
+					LockQ.EnterWriteLock ();
+					bLockAcquired = true;
+				} catch (Exception ex) {
+					Console.print ("Nope, second attempt failed too...");
+				}	
+			}
+		}
+        
+		Console.print ("In Enqueue, after EnterWriteLock");
+		
+		if (bLockAcquired) 
+		{
+			try
+	        {
+	            m_Queue.Enqueue(item);
+	        }
+			catch(LockRecursionException lre)
+			{
+				 Console.print("Catch on m_Queue.Enqueue: Type: " + lre.GetType().Name + ", message: " + lre.Message);
+			}
+			
+	        finally
+	        {
+	            LockQ.ExitWriteLock();
+	        }
+		}
+		
+        
     }
 
     // Enqueue
@@ -284,6 +394,7 @@ public class TQueue<T> : ICollection
                 m_Queue.Enqueue(item);
             }
         }
+		
 
         finally
         {
@@ -381,6 +492,7 @@ public class TQueue<T> : ICollection
     /// <param name="item">the item to find in the queue</param>
     public bool Contains(T item)
     {
+		Console.print ("EnterReadLock TQueue 474");
         LockQ.EnterReadLock();
         try
         {
@@ -404,6 +516,7 @@ public class TQueue<T> : ICollection
     /// </summary>
     public T Peek()
     {
+		Console.print ("EnterReadLock TQueue 498");
         LockQ.EnterReadLock();
         try
         {
@@ -427,6 +540,7 @@ public class TQueue<T> : ICollection
     /// </summary>
     public T[] ToArray()
     {
+		Console.print ("EnterReadLock TQueue 522");
         LockQ.EnterReadLock();
         try
         {

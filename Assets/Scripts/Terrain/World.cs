@@ -87,8 +87,8 @@ public class World : IWorld
 
             if (batch.Chunks.Count > 0)
             {
-                Debug.Log("Total Time: " + (DateTime.Now - start));
-				Debug.Log("Hurray! Level loaded!");
+                //Debug.Log("Total Time: " + (DateTime.Now - start));
+				Debug.Log("Woohoo! Level loaded!");
             }
 			else
 			{
@@ -135,24 +135,44 @@ public class World : IWorld
 
     public void RegenerateChunks(int chunkX, int chunkY, int chunkZ)
     {
-		Debug.Log("In RegenerateChunks...");
+		Debug.Log("In RegenerateChunks, before AddBatchOfChunks");
         m_ChunkProcessor.AddBatchOfChunks(new List<Chunk>(){m_WorldData.Chunks[chunkX, chunkY, chunkZ]}, BatchType.Lighting );
-        //List<Chunk> chunksNeedingRegeneration = WorldData.ChunksNeedingRegeneration;
-        //if (chunksNeedingRegeneration.Count == 0)
-        //{
-        //    return;
-        //}
-
-        //Chunk targetChunk = WorldData.Chunks[chunkX, chunkY, chunkZ];
-
-        ////Put our target chunk as the first in the list.
-        //if (chunksNeedingRegeneration.Contains(targetChunk))
-        //{
-        //    chunksNeedingRegeneration.Remove(targetChunk);
-        //    chunksNeedingRegeneration.Insert(0, targetChunk);
-        //}
-
-        //RegenerateChunks(chunksNeedingRegeneration);
+		Debug.Log("In RenegerateChunks, after AddBatchOfChunks");
+		
+		// Added:
+		Boolean bDoStuff = false;
+		
+		if (bDoStuff)
+		{
+			Debug.Log ("Getting ChunksNeedingRegeneration from WorldData");
+			List<Chunk> chunksNeedingRegeneration = WorldData.ChunksNeedingRegeneration;
+			Debug.Log ("Got chunksNeedingRegeneration from WorldData");
+			        
+	        if (chunksNeedingRegeneration.Count == 0)
+	        {
+				Debug.Log ("No chunks need regeneration");
+	            return;
+	        }
+			else
+			{
+				Debug.Log("Some chunks need regeneration");	
+			}
+	
+	        Chunk targetChunk = WorldData.Chunks[chunkX, chunkY, chunkZ];
+	
+	        //Put our target chunk as the first in the list.
+	        if (chunksNeedingRegeneration.Contains(targetChunk))
+	        {
+	            chunksNeedingRegeneration.Remove(targetChunk);
+				Debug.Log("About to insert a chunk to chunksNeedingRegeneration");
+	            chunksNeedingRegeneration.Insert(0, targetChunk);
+				Debug.Log("Just inserted a chunk to chunksNeedingRegeneration");
+	        }
+	
+	        RegenerateChunks(chunksNeedingRegeneration);
+		}
+		
+		Debug.Log ("Exited RegenerateChunks(x, y, z)");
     }
 
     public void RegenerateChunks()

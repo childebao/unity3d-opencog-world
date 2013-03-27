@@ -693,6 +693,7 @@ public class CharacterGridMotor : MonoBehaviour
 					if (Input.GetKeyDown("g")) {
 		
 						//if (isInValidRange(sum)) {
+							Debug.Log ("Someone pressed G at line 696...lol");
 							iTween.MoveBy(this.gameObject, createBlockHT);
 						
 							if(!isBlockDirectlyInFront)
@@ -841,7 +842,6 @@ public class CharacterGridMotor : MonoBehaviour
 							}
 						//}
 					}
-
 					if (Input.GetKeyDown(KeyCode.V))
 					{ 
 						Vector3 blockPos = wgo.getTheBlockPositionDirectlyInFront(this.gameObject.transform);

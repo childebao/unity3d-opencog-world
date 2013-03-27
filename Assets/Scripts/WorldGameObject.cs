@@ -53,9 +53,9 @@ public class WorldGameObject : MonoBehaviour
 	//[NonSerialized]
 	public static int chunkBlocksDepth = 10;
 	//[NonSerialized]
-	public static int chunksWide = 5;
+	public static int chunksWide = 10;
     //[NonSerialized]
-	public static int chunksHigh = 5;
+	public static int chunksHigh = 10;
     //[NonSerialized]
 	public static int chunksDeep = 1;
 

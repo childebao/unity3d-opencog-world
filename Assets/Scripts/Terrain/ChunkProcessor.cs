@@ -180,7 +180,9 @@ public class ChunkProcessor : IChunkProcessor
     private readonly TQueue<ChunkBatch> m_ChunkBatches = new TQueue<ChunkBatch>();
     public void AddBatchOfChunks(List<Chunk> chunks, BatchType batchType)
     { 
+		Debug.Log ("In AddBatchOfChunks, before Enqueue");
         m_ChunkBatches.Enqueue(new ChunkBatch(chunks, batchType));
+		Debug.Log ("In AddBatchOfChunks, after Enqueue");
     }
 
     public ChunkBatch GetBatchOfChunksToProcess()

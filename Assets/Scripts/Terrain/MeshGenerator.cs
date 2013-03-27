@@ -55,7 +55,7 @@ public class MeshGenerator : IMeshGenerator
 		Debug.LogError("In GenerateChunkMeshData");
         m_WorldData.AddFinishedChunk(chunk);
 
-        Debug.Log("Mesh Data generation took " + (DateTime.Now - start));
+        //Debug.Log("Mesh Data generation took " + (DateTime.Now - start));
     }
 
     private int CreateDataMeshForBlock(int blockX, int blockY, int blockZ, Chunk chunk, int x, int y, int z, int index)
