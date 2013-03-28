@@ -55,10 +55,12 @@ public class World : IWorld
                 continue;
             }
 			
-			//Debug.Log("In Process Chunks...1");
+			//Debug.Log("In ProcessChunks, acquiring BatchOfChunksToProcess...");
 			
             ChunkBatch batch = m_ChunkProcessor.GetBatchOfChunksToProcess();
-
+			
+			//Debug.Log ("Acquired " + batch.Chunks.Count + "chunk(s) for processing...");
+			
             if (batch == null)
             {
                 continue;
@@ -82,6 +84,7 @@ public class World : IWorld
 			
 			//Debug.Log("In Process Chunks...3");
             m_LightProcessor.LightChunks(batch.Chunks);
+			//Debug.Log ("In World.ProcessChunks: Sending " + batch.Chunks.Count + " chunk(s) to m_MeshDataGenerator.GenerateMeshData(batch.Chunks)");
             m_MeshDataGenerator.GenerateMeshData(batch.Chunks);
             m_CurrentBatchBeingProcessed = null;
 
@@ -127,6 +130,7 @@ public class World : IWorld
         foreach (Chunk chunk in chunks)
         {
             chunk.NeedsRegeneration = false;
+			Debug.Log ("Cleared NeedsRegeneration status on a chunk.");
         }
     }
 
@@ -140,14 +144,14 @@ public class World : IWorld
 		Debug.Log("In RenegerateChunks, after AddBatchOfChunks");
 		
 		// Added:
-		Boolean bDoStuff = false;
+		Boolean bDoStuff = true;
 		
 		if (bDoStuff)
 		{
 			Debug.Log ("Getting ChunksNeedingRegeneration from WorldData");
 			List<Chunk> chunksNeedingRegeneration = WorldData.ChunksNeedingRegeneration;
-			Debug.Log ("Got chunksNeedingRegeneration from WorldData");
-			        
+			Debug.Log ("Got chunksNeedingRegeneration from WorldData, count: " + chunksNeedingRegeneration.Count);
+			
 	        if (chunksNeedingRegeneration.Count == 0)
 	        {
 				Debug.Log ("No chunks need regeneration");
@@ -169,6 +173,8 @@ public class World : IWorld
 				Debug.Log("Just inserted a chunk to chunksNeedingRegeneration");
 	        }
 	
+			Debug.Log ("Sending " + chunksNeedingRegeneration.Count + " chunks to RegenerateChunks function.");
+			
 	        RegenerateChunks(chunksNeedingRegeneration);
 		}
 		
@@ -188,6 +194,7 @@ public class World : IWorld
 
     public void RegenerateChunks(List<Chunk> chunksNeedingRegeneration)
     {
+		Debug.Log ("In RegenerateChunks(List<Chunk> chunksNeedingRegeneration)");
         m_ChunkProcessor.AddChunksToLightingQueue(chunksNeedingRegeneration);
         //m_LightProcessor.LightChunks(chunksNeedingRegeneration);
         //m_MeshDataGenerator.GenerateMeshData(chunksNeedingRegeneration);

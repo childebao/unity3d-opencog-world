@@ -14,8 +14,9 @@ public class BatchPoolProcessor<T> : IBatchProcessor<T> where T : class
     {
         //ThreadPool.SetMaxThreads(10, 10);
         int workerThreads, completionPortThreads;
+		
         ThreadPool.GetMaxThreads(out workerThreads, out completionPortThreads);
-        Debug.Log("Total Threads: " + workerThreads + ", " + completionPortThreads);
+        //Debug.Log("Total Threads: " + workerThreads + ", " + completionPortThreads);
         if (itemsToProcess.Count == 0)
         {
             return;

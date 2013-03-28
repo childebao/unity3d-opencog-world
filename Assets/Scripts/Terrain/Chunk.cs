@@ -26,12 +26,12 @@ public class Chunk
     private Vector3i m_Position;
     private Object m_ChunkTransform;
     private TQueue<GameObjectCreationData> m_GameObjectCreationQueue = new TQueue<GameObjectCreationData>();
-
+	
     /// <summary>
     /// Some decorations only consider topsoil. Let's cache these, for quicker evaluation.
     /// </summary>
     public readonly List<Vector3i> TopSoilBlocks = new List<Vector3i>();
-
+	
 
     public Chunk(int arrayX, int arrayY, int arrayZ, WorldData worldData)
     {

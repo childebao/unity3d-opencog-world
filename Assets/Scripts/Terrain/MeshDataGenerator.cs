@@ -25,10 +25,15 @@ public class MeshDataGenerator : IMeshDataGenerator
 
     public void GenerateMeshData(List<Chunk> chunks)
     {
-		Debug.Log ("In MeshDataGenerator, GenerateMeshData (List<Chunk> chunks");
+		Debug.Log ("In GenerateMeshData lol");
+		//Debug.Log ("In MeshDataGenerator, GenerateMeshData (List<Chunk> chunks");
+		Debug.Log ("Sending " + chunks.Count + " chunk(s) to m_BatchProcessor.Process");
         m_BatchProcessor.Process(chunks, GenerateMeshData, true);
+		Debug.Log (chunks.Count + " chunk(s) deferred to m_BatchProcessor.Process, sorting chunks by distance.");
         chunks.Sort(ChunksComparedByDistanceFromMapCenter);
+		Debug.Log ("Sending " + chunks.Count + " chunk(s) to MeshCreationQueue");
         m_ChunkProcessor.AddChunksToMeshCreationQueue(chunks);
+		Debug.Log ("Sent " + chunks + " chunk(s) to MeshCreationQueue.");
     }
 
     // Chunk distance comparison
@@ -46,7 +51,7 @@ public class MeshDataGenerator : IMeshDataGenerator
 
     public void GenerateMeshData(Chunk chunk)
     {
-		Debug.Log("In MeshDataGenerator, GenerateMeshData (Chunk chunk)");
+		//Debug.Log("In MeshDataGenerator, GenerateMeshData (Chunk chunk)");
 		//@TODO: Add this back in
 //        if (chunk.IsOnTheBorder)
 //        {
@@ -98,7 +103,7 @@ public class MeshDataGenerator : IMeshDataGenerator
             }
         }
 		
-        Debug.Log("Mesh Data generation took " + (DateTime.Now - start));
+        //Debug.Log("Mesh Data generation took " + (DateTime.Now - start));
     }
 	
 	//private int max_blockX = 0;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -25,6 +25,9 @@ public class TQueue<T> : ICollection
     /// Used only for the SyncRoot properties
     /// </summary>
     private readonly object objSyncRoot = new object();
+	
+	public String Name;
+	
 
     // Variables
 
@@ -37,6 +40,12 @@ public class TQueue<T> : ICollection
     /// </summary>
     public TQueue()
     {
+        m_Queue = new Queue<T>();
+    }
+	
+	public TQueue(string queueName)
+    {
+		this.Name = queueName;
         m_Queue = new Queue<T>();
     }
 
@@ -256,8 +265,8 @@ public class TQueue<T> : ICollection
     {
 		Boolean bLockAcquired = false;
 		
-		Console.print ("In Enqueue, before EnterWriteLock");
-		Console.print ("Enqueing item: " + item.ToString() + ", current thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+		//Console.print ("In Enqueue, before EnterWriteLock");
+		//Console.print ("Enqueing item: " + item.ToString() + ", current thread: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
 		
 		try 
 		{
@@ -308,33 +317,16 @@ public class TQueue<T> : ICollection
 					throw lre2;
 				}
 			}
-			
-			if (1 == 0)
-			{
-				try {
-					Console.print ("Attempting ExitReadLock...");
-					LockQ.ExitReadLock();
-					Console.print ("Exit succesful");
-				} catch (Exception ex) {
-					Console.print (ex.ToString ());
-				}
-				
-				try {
-					LockQ.EnterWriteLock ();
-					bLockAcquired = true;
-				} catch (Exception ex) {
-					Console.print ("Nope, second attempt failed too...");
-				}	
-			}
 		}
         
-		Console.print ("In Enqueue, after EnterWriteLock");
+		//Console.print ("In Enqueue, after EnterWriteLock");
 		
 		if (bLockAcquired) 
 		{
 			try
 	        {
-	            m_Queue.Enqueue(item);
+				//Console.print ("Enqueueing something with hascode: " + item.GetHashCode() + "!");
+				m_Queue.Enqueue(item);
 	        }
 			catch(LockRecursionException lre)
 			{

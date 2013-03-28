@@ -35,11 +35,12 @@ public interface IChunkProcessor
 
 public class ChunkProcessor : IChunkProcessor
 {
-    private readonly TQueue<Chunk> m_TerrainQueue = new TQueue<Chunk>();
-    private readonly TQueue<Chunk> m_DecorationQueue = new TQueue<Chunk>();
-    private readonly TQueue<Chunk> m_LightingQueue = new TQueue<Chunk>();
-    private readonly TQueue<Chunk> m_MeshDataCreationQueue = new TQueue<Chunk>();
-    private readonly TQueue<Chunk> m_MeshCreationQueue = new TQueue<Chunk>();
+    private readonly TQueue<Chunk> m_TerrainQueue = new TQueue<Chunk>("TerrainQueue");
+    private readonly TQueue<Chunk> m_DecorationQueue = new TQueue<Chunk>("DecorationQueue");
+    private readonly TQueue<Chunk> m_LightingQueue = new TQueue<Chunk>("LightingQueue");
+    private readonly TQueue<Chunk> m_MeshDataCreationQueue = new TQueue<Chunk>("MeshDataCreationQueue");
+    private readonly TQueue<Chunk> m_MeshCreationQueue = new TQueue<Chunk>("MeshCreationQueue");
+	private readonly TQueue<ChunkBatch> m_ChunkBatches = new TQueue<ChunkBatch>();
     private readonly Queue<Chunk> m_PrefabRemovalQueue = new Queue<Chunk>();
 
     public TQueue<Chunk> LightingQueue
@@ -64,7 +65,9 @@ public class ChunkProcessor : IChunkProcessor
 
     public void AddChunksToLightingQueue(List<Chunk> chunks)
     {
+		Debug.Log ("AddChunksToLightingQueue: Enqueueing " + chunks.Count + " chunks.");
         EnqueueChunks(chunks, LightingQueue);
+		Debug.Log ("AddChunksToLightingQueue done.");
     }
 
     public void AddChunksToMeshDataCreationQueue(List<Chunk> chunks)
@@ -74,7 +77,9 @@ public class ChunkProcessor : IChunkProcessor
 
     public void AddChunksToMeshCreationQueue(List<Chunk> chunks)
     {
+		Debug.Log ("Adding " + chunks.Count + " chunks to MeshCreationQueue");
         EnqueueChunks(chunks, MeshCreationQueue);
+		Debug.Log ("AddChunksToMeshCreationQueue finished");
     }
 
     public List<Chunk> GetChunksForTerrainGeneration()
@@ -130,6 +135,7 @@ public class ChunkProcessor : IChunkProcessor
 
     private static List<Chunk> DequeueChunks(TQueue<Chunk> queue)
     {
+		Debug.Log ("Dequeueing a chunk!");
         List<Chunk> chunks = new List<Chunk>();
         while (queue.Count > 0)
         {
@@ -143,6 +149,7 @@ public class ChunkProcessor : IChunkProcessor
     {
         foreach (Chunk chunk in chunks)
         {
+			Debug.Log ("EnqueueChunks, enqueueing a chunk to " + queue.Name + ", specifically the chunk at [" + (chunk.Position.X / 16) + ", " + (chunk.Position.Y / 16) + ", " + chunk.Position.Z + "]");
             queue.Enqueue(chunk);
         }
     }
@@ -177,12 +184,11 @@ public class ChunkProcessor : IChunkProcessor
         m_LightingQueue.Enqueue(originalChunk);
     }
 
-    private readonly TQueue<ChunkBatch> m_ChunkBatches = new TQueue<ChunkBatch>();
     public void AddBatchOfChunks(List<Chunk> chunks, BatchType batchType)
     { 
-		Debug.Log ("In AddBatchOfChunks, before Enqueue");
+		//Debug.Log ("In AddBatchOfChunks, before Enqueue, adding " + chunks.Count + " chunks.");
         m_ChunkBatches.Enqueue(new ChunkBatch(chunks, batchType));
-		Debug.Log ("In AddBatchOfChunks, after Enqueue");
+		Debug.Log ("In AddBatchOfChunks, after Enqueue, added " + chunks.Count + " chunks.");
     }
 
     public ChunkBatch GetBatchOfChunksToProcess()

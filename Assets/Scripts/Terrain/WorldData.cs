@@ -404,28 +404,76 @@ public class WorldData
         int blockY = y % ChunkBlockHeight;
         int blockZ = z % ChunkBlockDepth;
 		
-        Chunks[chunkX, chunkY, 0].SetBlockType(blockX, blockY, blockZ, blockType);
-        Chunks[chunkX, chunkY, chunkZ].NeedsRegeneration = true;
+		Debug.Log ("Received instruction to create block at global coordinates[" + x + ", " + y + ", " + z + "]");
+		
+		//Debug.Log ("Received instruction to create block in chunk coordinates[" + chunkX + ", " + chunkY + ", " + chunkZ + "]");
+		
+		//Debug.Log ("Received instruction to create block at local coordinates[" + blockX + ", " + blockY + ", " + blockZ + "]");
+		
+		Chunks[chunkX, chunkY, 0].SetBlockType(blockX, blockY, blockZ, blockType);
+		
+		//Debug.Log("Determining which chunks need regeneration...");
+		
+		//Debug.Log ("  Telling the modified chunk at [" + chunkX + ", " + chunkY + ", 0] that it NeedsRegeneration.");
+		
+		Chunks[chunkX, chunkY, chunkZ].NeedsRegeneration = true;
 
         // If we change a block on the border of a chunk, the adjacent chunk
         // needs to be regenerated also.
-        if (DoesBlockExist(blockX + 1, blockY, blockZ) && blockX == ChunkBlockWidth - 1)
+		
+		// Check ahead along X axis - In my current level, this point to an empty chunk...
+        if (DoesBlockExist(x + 1, y, z) && blockX == ChunkBlockWidth - 1)
         {
+			//Debug.Log ("  Telling the chunk at [" + (chunkX + 1) + ", " + chunkY + ", " + chunkZ + "] that it NeedsRegeneration.");
+			
             Chunks[chunkX + 1, chunkY, chunkZ].NeedsRegeneration = true;
         }
-        else if (DoesBlockExist(blockX - 1, blockY, blockZ) && blockX == 0)
+		else
+		{
+			//Debug.Log ("  Telling the chunk at [" + (chunkX + 1) + ", " + chunkY + ", " + chunkZ + "] that it DOESN'T NeedsRegeneration.");	
+		}
+        
+		//
+		
+		// Check back along X axis - This one works too now.
+		if (DoesBlockExist(x - 1, y, z) && blockX == 0)
         {
+			//Debug.Log ("  Telling the chunk at [" + (chunkX - 1) + ", " + chunkY + ", " + chunkZ + "] that it NeedsRegeneration.");
+			
             Chunks[chunkX - 1, chunkY, chunkZ].NeedsRegeneration = true;
         }
-
-        if (DoesBlockExist(blockX, blockY - 1, blockZ) && blockY == 0)
+		else
+		{
+			//Debug.Log ("  Telling the chunk at [" + (chunkX - 1) + ", " + chunkY + ", " + chunkZ + "] that it DOESN'T NeedsRegeneration.");	
+		}
+		
+		//
+		
+		// Check back along Y axis - the one we want right now. Ok, this one works now.
+        if (DoesBlockExist(x, y - 1, z) && blockY == 0)
         {
+			//Debug.Log ("  Telling the chunk at [" + chunkX + ", " + (chunkY - 1) + ", " + chunkZ + "] that it NeedsRegeneration.");
+			
             Chunks[chunkX, chunkY - 1, chunkZ].NeedsRegeneration = true;
         }
-        else if (DoesBlockExist(blockX, blockY + 1, blockZ) && blockY == ChunkBlockHeight - 1)
+		else
+		{
+			//Debug.Log ("  Telling the chunk at [" + chunkX + ", " + (chunkY - 1) + ", " + chunkZ + "] that it DOESN'T NeedsRegeneration.");	
+		}
+		
+		//
+		
+		// Check ahead along Y axis - In the 4 chunk level, this points at an empty chunk.
+		if (DoesBlockExist(x, y + 1, z) && blockY == ChunkBlockHeight - 1)
         {
+			//Debug.Log ("  Telling the chunk at [" + chunkX + ", " + (chunkY + 1) + ", " + chunkZ + "] that it NeedsRegeneration.");
+			
             Chunks[chunkX, chunkY + 1, chunkZ].NeedsRegeneration = true;
         }
+		else
+		{
+			//Debug.Log ("  Telling the chunk at [" + chunkX + ", " + (chunkY + 1) + ", " + chunkZ + "] that it DOESN'T NeedsRegeneration.");
+		}
     }
 
     /// <summary>
@@ -485,17 +533,32 @@ public class WorldData
             // Add all world chunks to the batch for processing
             for (int x = LeftChunkBorderColumn; x <= RightChunkBorderColumn; x++)
             {
+				//Debug.Log ("Looping through x, current value: " + x + ", LeftChunkBorderColumn: " + LeftChunkBorderColumn + ", RightChunkBorderColumn: " + RightChunkBorderColumn);
+				
                 for (int y = BottomChunkBorderRow; y <= TopChunkBorderRow; y++)
                 {
+					//Debug.Log ("Looping through y, current value: " + y + ", BottomChunkBorderRow: " + BottomChunkBorderRow + ", TopChunkBorderRow: " + TopChunkBorderRow);
+					
                     for (int z = 0; z < m_ChunksDeep; z++)
                     {
+						//Debug.Log ("Looping through z, current value: " + z + ", m_ChunksDeep: " + m_ChunksDeep);
+						
                         if (Chunks[x, y, z].NeedsRegeneration)
                         {
+							//Debug.Log ("Chunk at [" + x + ", " + y + ", " + z + "] does INDEED need regeneration.");	
+							
                             chunks.Add(Chunks[x, y, z]);
                         }
+						else
+						{
+							//Debug.Log ("Chunk at [" + x + ", " + y + ", " + z + "] does NOT need regeneration.");	
+						}	
                     }
                 }
             }
+			
+			Debug.Log ("ChunksNeedingRegeneration function determined that " + chunks.Count + " chunks need regeneration.");
+			
             return chunks;
         }
     }
